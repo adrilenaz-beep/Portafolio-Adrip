@@ -7,13 +7,13 @@
 <meta property="og:title" content="ADRIANO LENAZ — PORTAFOLIO">
 <meta property="og:description" content="Selección de proyectos de diseño gráfico, periodismo visual e investigación. ADRIP Disruptive Media.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://adrilenaz-beep.github.io/la-gotera-web/portafolio.html">
+<meta property="og:url" content="https://adrilenaz-beep.github.io/Portafolio-Adrip/portafolio.html">
 <meta property="og:image" content="https://res.cloudinary.com/dmvmqykud/image/upload/v1775351852/1AdripSVG_oijqbk.svg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ADRIANO LENAZ — PORTAFOLIO">
 <meta name="twitter:description" content="Selección de proyectos de diseño gráfico, periodismo visual e investigación. ADRIP Disruptive Media.">
 <title>ADRIANO LENAZ — PORTAFOLIO</title>
-<link rel="canonical" href="https://adrilenaz-beep.github.io/la-gotera-web/portafolio.html">
+<link rel="canonical" href="https://adrilenaz-beep.github.io/Portafolio-Adrip/portafolio.html">
 <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dmvmqykud/image/upload/v1775351852/1AdripSVG_oijqbk.svg">
 <meta name="robots" content="index, follow">
 <script type="application/ld+json">
@@ -21,7 +21,7 @@
   "@context": "https://schema.org",
   "@type": "ProfilePage",
   "name": "Portafolio — Adriano Lenaz Zenteno",
-  "url": "https://adrilenaz-beep.github.io/la-gotera-web/portafolio.html",
+  "url": "https://adrilenaz-beep.github.io/Portafolio-Adrip/portafolio.html",
   "about": {
     "@type": "Person",
     "name": "Adriano Lenaz Zenteno",
@@ -446,6 +446,218 @@ img { max-width: 100%; height: auto; display: block; }
 .gallery-item-title { font-size: 10px; color: var(--ink); letter-spacing: 0.04em; line-height: 1.3; }
 .gallery-item-count { font-size: 8px; color: var(--ink-dim); letter-spacing: 0.12em; margin-top: 4px; }
 
+/* ── PUBLICACIONES · CONTACT SHEET ── */
+.pub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  padding: 2px;
+  border-top: 1px solid var(--border);
+}
+.pub-grid-hint {
+  padding: 14px 32px;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.pub-item {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  background: var(--surface);
+}
+.pub-item img {
+  width: 100%; height: 100%;
+  object-fit: contain; display: block;
+  padding: 10px;
+  box-sizing: border-box;
+  transition: transform 0.45s ease, opacity 0.25s, filter 0.25s;
+  filter: grayscale(18%) brightness(0.92);
+}
+.pub-item:hover img {
+  transform: scale(1.04);
+  opacity: 0.88;
+  filter: grayscale(0%) brightness(1);
+}
+.pub-frame-num {
+  position: absolute; top: 12px; left: 12px;
+  font-size: 9px; letter-spacing: 0.22em;
+  color: var(--accent); font-family: 'IBM Plex Mono', monospace;
+  background: rgba(14,14,12,0.75); padding: 2px 7px;
+  pointer-events: none;
+}
+.pub-item-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8,8,6,0.92) 0%, rgba(8,8,6,0.1) 60%, transparent 100%);
+  opacity: 0; transition: opacity 0.25s;
+  display: flex; flex-direction: column;
+  justify-content: flex-end; padding: 18px;
+}
+.pub-item:hover .pub-item-overlay { opacity: 1; }
+.pub-item-title {
+  font-size: 11px; color: var(--ink);
+  letter-spacing: 0.03em; display: block; line-height: 1.3;
+}
+.pub-item-year {
+  font-size: 9px; color: var(--ink-mid);
+  letter-spacing: 0.1em; display: block; margin-top: 3px;
+}
+.pub-item-cta {
+  font-size: 8px; color: var(--accent);
+  letter-spacing: 0.22em; text-transform: uppercase;
+  display: block; margin-top: 10px;
+}
+.pub-cover-ph {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 10px;
+  background: var(--surface);
+}
+.pub-cover-ph-num {
+  font-size: 42px; font-weight: 700;
+  color: var(--border-bright); letter-spacing: -0.04em;
+  line-height: 1;
+}
+.pub-cover-ph-label {
+  font-size: 8px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--ink-dim);
+}
+
+/* ── PUB OVERLAY ── */
+.pub-overlay {
+  display: none; position: fixed; inset: 0; z-index: 9998;
+  background: var(--bg);
+  flex-direction: column;
+}
+.pub-overlay.open { display: flex; animation: fadeIn 0.22s ease; }
+
+.pub-overlay-topbar {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px; border-bottom: 1px solid var(--border);
+  flex-shrink: 0; gap: 16px;
+}
+.pub-overlay-label {
+  font-size: 9px; letter-spacing: 0.24em;
+  color: var(--ink-dim); text-transform: uppercase;
+}
+.pub-overlay-actions { display: flex; gap: 6px; align-items: center; }
+.pub-action-btn {
+  background: transparent; border: 1px solid var(--border-bright);
+  color: var(--ink-mid); padding: 6px 16px; cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  transition: color 0.15s, border-color 0.15s;
+  text-decoration: none; display: inline-flex; align-items: center;
+}
+.pub-action-btn:hover { color: var(--accent); border-color: var(--accent); }
+.pub-action-btn.danger:hover { color: var(--accent2); border-color: var(--accent2); }
+
+/* Estado 1 */
+.pub-state-info {
+  flex: 1; display: flex; overflow: hidden;
+}
+.pub-info-cover-wrap {
+  flex: 0 0 44%; display: flex;
+  align-items: center; justify-content: center;
+  padding: 48px 32px 48px 48px;
+  border-right: 1px solid var(--border);
+}
+.pub-info-cover-inner {
+  position: relative; width: 100%; max-width: 320px;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.85), 0 0 0 1px var(--border-bright);
+}
+.pub-info-cover-img {
+  display: block; width: 100%;
+  height: auto; max-height: 62vh;
+  object-fit: contain;
+}
+.pub-info-cover-placeholder {
+  display: none; width: 100%; aspect-ratio: 3/4;
+  background: var(--surface); flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px;
+  border: 1px solid var(--border);
+}
+.pub-info-cover-placeholder.show { display: flex; }
+.pub-ph-num {
+  font-size: 56px; font-weight: 700;
+  color: var(--border-bright); letter-spacing: -0.04em;
+}
+.pub-ph-label {
+  font-size: 8px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--ink-dim);
+}
+.pub-info-panel {
+  flex: 1; padding: 48px 48px 48px 40px;
+  display: flex; flex-direction: column; overflow-y: auto;
+}
+.pub-info-num {
+  font-size: 9px; letter-spacing: 0.28em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 18px;
+}
+.pub-info-title {
+  font-size: clamp(20px, 3.5vw, 34px); font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 10px;
+}
+.pub-info-meta {
+  font-size: 10px; color: var(--ink-mid);
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.pub-info-sep {
+  height: 1px; background: var(--border);
+  margin: 28px 0;
+}
+.pub-info-desc {
+  font-size: 13px; color: var(--ink-mid);
+  font-family: 'IBM Plex Sans', sans-serif;
+  line-height: 1.7; flex: 1; margin-bottom: 36px;
+}
+.pub-info-actions { margin-top: auto; }
+.pub-read-btn {
+  background: transparent; border: 1px solid var(--accent);
+  color: var(--accent); padding: 13px 28px; cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  transition: background 0.15s, color 0.15s;
+}
+.pub-read-btn:hover { background: var(--accent); color: var(--bg); }
+
+/* Estado 2 — lector */
+.pub-state-pdf {
+  display: none; flex: 1; overflow: hidden;
+}
+.pub-state-pdf.active { display: flex; }
+.pub-pdf-sidebar {
+  flex: 0 0 200px; border-right: 1px solid var(--border);
+  padding: 24px 20px; display: flex;
+  flex-direction: column; gap: 14px; overflow-y: auto;
+}
+.pub-pdf-thumb {
+  display: block; width: 100%;
+  height: auto; object-fit: contain;
+  border: 1px solid var(--border);
+}
+.pub-pdf-thumb-ph {
+  width: 100%; aspect-ratio: 3/4;
+  background: var(--surface); border: 1px solid var(--border);
+}
+.pub-pdf-sidebar-title {
+  font-size: 11px; color: var(--ink);
+  letter-spacing: 0.03em; line-height: 1.35;
+}
+.pub-pdf-sidebar-meta {
+  font-size: 9px; color: var(--ink-dim);
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.pub-pdf-frame {
+  flex: 1; border: none;
+  background: var(--surface); min-width: 0;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
   .wrap { padding: 0 14px 60px; }
@@ -467,10 +679,67 @@ img { max-width: 100%; height: auto; display: block; }
   .lb-img { max-width: 94vw; max-height: 76vh; }
   .lb-inner { gap: 4px; }
   .lb-btn { width: 38px; height: 38px; font-size: 16px; }
+  .pub-state-info { flex-direction: column; overflow-y: auto; }
+  .pub-info-cover-wrap {
+    flex: none; border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 28px 24px;
+  }
+  .pub-info-cover-inner { max-width: 180px; }
+  .pub-info-panel { padding: 24px 24px 32px; }
+  .pub-pdf-sidebar { display: none; }
+  .pub-grid-hint { padding: 12px 20px; }
+  .pub-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
 <body>
+
+<!-- PUB OVERLAY -->
+<div class="pub-overlay" id="pub-overlay">
+  <div class="pub-overlay-topbar">
+    <span class="pub-overlay-label" id="pub-overlay-label">PUBLICACIONES</span>
+    <div class="pub-overlay-actions">
+      <button class="pub-action-btn" id="pub-back-btn" onclick="closePubPdf()" style="display:none">← volver</button>
+      <a class="pub-action-btn" id="pub-ext-link" href="#" target="_blank" rel="noopener" style="display:none">↗ abrir</a>
+      <button class="pub-action-btn danger" onclick="closePubOverlay()">✕ cerrar</button>
+    </div>
+  </div>
+
+  <!-- Estado 1: portada + información -->
+  <div class="pub-state-info" id="pub-state-info">
+    <div class="pub-info-cover-wrap">
+      <div class="pub-info-cover-inner">
+        <img class="pub-info-cover-img" id="pub-overlay-cover" src="" alt="">
+        <div class="pub-info-cover-placeholder" id="pub-overlay-cover-ph">
+          <span class="pub-ph-num" id="pub-ph-num"></span>
+          <span class="pub-ph-label">sin portada</span>
+        </div>
+      </div>
+    </div>
+    <div class="pub-info-panel">
+      <div class="pub-info-num" id="pub-overlay-num"></div>
+      <div class="pub-info-title" id="pub-overlay-title"></div>
+      <div class="pub-info-meta" id="pub-overlay-meta"></div>
+      <div class="pub-info-sep"></div>
+      <div class="pub-info-desc" id="pub-overlay-desc"></div>
+      <div class="pub-info-actions">
+        <button class="pub-read-btn" onclick="openPubPdf()">LEER DOCUMENTO →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado 2: lector PDF -->
+  <div class="pub-state-pdf" id="pub-state-pdf">
+    <div class="pub-pdf-sidebar">
+      <img class="pub-pdf-thumb" id="pub-pdf-thumb" src="" alt="">
+      <div class="pub-pdf-thumb-ph" id="pub-pdf-thumb-ph"></div>
+      <div class="pub-pdf-sidebar-title" id="pub-pdf-title"></div>
+      <div class="pub-pdf-sidebar-meta" id="pub-pdf-meta"></div>
+    </div>
+    <iframe class="pub-pdf-frame" id="pub-pdf-frame" src="" title="Documento PDF" allowfullscreen></iframe>
+  </div>
+</div>
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
@@ -518,6 +787,7 @@ img { max-width: 100%; height: auto; display: block; }
     <button class="cat-tab" onclick="switchCat('editorial', this)">03 · Editorial</button>
     <button class="cat-tab" onclick="switchCat('instalacion', this)">04 · Instalación</button>
     <button class="cat-tab" onclick="switchCat('posters', this)">05 · Posters</button>
+    <button class="cat-tab" onclick="switchCat('publicaciones', this)">06 · Publicaciones</button>
   </div>
 
   <!-- Mobile pills -->
@@ -527,6 +797,7 @@ img { max-width: 100%; height: auto; display: block; }
     <button class="nav-pill" onclick="switchCat('editorial', this)">03 · Editorial</button>
     <button class="nav-pill" onclick="switchCat('instalacion', this)">04 · Instalación</button>
     <button class="nav-pill" onclick="switchCat('posters', this)">05 · Posters</button>
+    <button class="nav-pill" onclick="switchCat('publicaciones', this)">06 · Publicaciones</button>
   </div>
 
   <!-- ════════════════════════════════════════════
@@ -1398,6 +1669,18 @@ img { max-width: 100%; height: auto; display: block; }
     </div>
   </div>
 
+  <!-- ════════════════════════════════════════════
+       06 · PUBLICACIONES
+       ════════════════════════════════════════════ -->
+  <div class="cat-section" id="cat-publicaciones">
+    <div class="sec-header">
+      <span class="sec-title">Publicaciones · Revistas & Fanzines</span>
+      <span class="sec-count" id="pub-count"></span>
+    </div>
+    <div class="pub-grid" id="pub-grid"></div>
+    <div class="pub-grid-hint">— seleccionar para ver</div>
+  </div>
+
   </main>
 
   <footer class="doc-footer reveal-block">
@@ -1677,6 +1960,169 @@ document.getElementById('back-to-top').addEventListener('click', function() {
     canvas.appendChild(el2);
   }
 })();
+
+// ── PUBLICACIONES ──
+var PUBS = [
+  {
+    num: '01',
+    title: 'La Gotera #02',
+    year: '2026',
+    type: 'Fanzine',
+    desc: 'Segundo número de la revista fanzine independiente que cofundo en Cochabamba. Escena local sin permiso, con diseño, arte, música, fotografía y literatura leídos desde el valle. 19 páginas a doble plana.',
+    cover: 'publicaciones/gotera02.jpg',
+    pdf:   'publicaciones/gotera02.pdf'
+  },
+  {
+    num: '02',
+    title: 'Boletín Electrónico PBFCC · 8va edición',
+    year: '2026',
+    type: 'Boletín',
+    desc: 'Octava edición del boletín de la Plataforma Boliviana Frente al Cambio Climático, período de mayo a agosto de 2026. Diagramación, dirección de arte y tratamiento de imagen. 10 páginas en A4.',
+    cover: 'publicaciones/boletin8.jpg',
+    pdf:   'publicaciones/boletin8.pdf'
+  }
+];
+
+var activePubIdx = 0;
+
+(function buildPubGrid() {
+  var grid  = document.getElementById('pub-grid');
+  var count = document.getElementById('pub-count');
+  if (!grid) return;
+
+  var n = PUBS.length;
+  count.textContent = n + ' documento' + (n !== 1 ? 's' : '');
+
+  PUBS.forEach(function(p, i) {
+    var item = document.createElement('div');
+    item.className = 'pub-item';
+    item.setAttribute('onclick', 'openPubOverlay(' + i + ')');
+
+    if (p.cover) {
+      var img = document.createElement('img');
+      img.src = p.cover; img.alt = p.title; img.loading = 'lazy';
+      item.appendChild(img);
+    } else {
+      var ph = document.createElement('div');
+      ph.className = 'pub-cover-ph';
+      ph.innerHTML =
+        '<span class="pub-cover-ph-num">' + p.num + '</span>' +
+        '<span class="pub-cover-ph-label">' + p.type + '</span>';
+      item.appendChild(ph);
+    }
+
+    var num = document.createElement('span');
+    num.className = 'pub-frame-num';
+    num.textContent = p.num;
+    item.appendChild(num);
+
+    var overlay = document.createElement('div');
+    overlay.className = 'pub-item-overlay';
+    overlay.innerHTML =
+      '<span class="pub-item-title">' + p.title + '</span>' +
+      '<span class="pub-item-year">' + p.year + ' · ' + p.type + '</span>' +
+      '<span class="pub-item-cta">VER →</span>';
+    item.appendChild(overlay);
+
+    grid.appendChild(item);
+  });
+})();
+
+function openPubOverlay(idx) {
+  activePubIdx = idx;
+  var p = PUBS[idx];
+
+  document.getElementById('pub-overlay-label').textContent =
+    'PUBLICACIONES · NÚM. ' + p.num;
+  document.getElementById('pub-overlay-num').textContent =
+    'NÚM. ' + p.num + ' · ' + p.type.toUpperCase();
+  document.getElementById('pub-overlay-title').textContent = p.title;
+  document.getElementById('pub-overlay-meta').textContent  =
+    p.year + ' · ' + p.type;
+  document.getElementById('pub-overlay-desc').textContent  = p.desc;
+
+  var coverImg = document.getElementById('pub-overlay-cover');
+  var coverPh  = document.getElementById('pub-overlay-cover-ph');
+  var phNum    = document.getElementById('pub-ph-num');
+
+  if (p.cover) {
+    coverImg.src = p.cover; coverImg.alt = p.title;
+    coverImg.style.display = 'block';
+    coverPh.classList.remove('show');
+  } else {
+    coverImg.style.display = 'none';
+    phNum.textContent = p.num;
+    coverPh.classList.add('show');
+  }
+
+  document.getElementById('pub-state-info').style.display = 'flex';
+  document.getElementById('pub-state-pdf').classList.remove('active');
+  document.getElementById('pub-back-btn').style.display   = 'none';
+  document.getElementById('pub-ext-link').style.display   = 'none';
+
+  document.getElementById('pub-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  var sl = document.getElementById('scan-line');
+  sl.classList.remove('scanning');
+  void sl.offsetWidth;
+  sl.classList.add('scanning');
+}
+
+function closePubOverlay() {
+  document.getElementById('pub-overlay').classList.remove('open');
+  document.getElementById('pub-pdf-frame').src = '';
+  document.body.style.overflow = '';
+}
+
+function openPubPdf() {
+  var p = PUBS[activePubIdx];
+
+  var thumb   = document.getElementById('pub-pdf-thumb');
+  var thumbPh = document.getElementById('pub-pdf-thumb-ph');
+
+  if (p.cover) {
+    thumb.src = p.cover; thumb.alt = p.title;
+    thumb.style.display   = 'block';
+    thumbPh.style.display = 'none';
+  } else {
+    thumb.style.display   = 'none';
+    thumbPh.style.display = 'block';
+  }
+
+  document.getElementById('pub-pdf-title').textContent = p.title;
+  document.getElementById('pub-pdf-meta').textContent  =
+    p.year + ' · ' + p.type;
+
+  if (p.pdf) {
+    document.getElementById('pub-pdf-frame').src = p.pdf;
+    var extLink = document.getElementById('pub-ext-link');
+    extLink.href = p.pdf;
+    extLink.style.display = '';
+  }
+
+  document.getElementById('pub-back-btn').style.display = '';
+  document.getElementById('pub-state-info').style.display = 'none';
+  document.getElementById('pub-state-pdf').classList.add('active');
+}
+
+function closePubPdf() {
+  document.getElementById('pub-state-pdf').classList.remove('active');
+  document.getElementById('pub-state-info').style.display = 'flex';
+  document.getElementById('pub-back-btn').style.display   = 'none';
+  document.getElementById('pub-ext-link').style.display   = 'none';
+  document.getElementById('pub-pdf-frame').src = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('pub-overlay').classList.contains('open')) {
+    if (document.getElementById('pub-state-pdf').classList.contains('active')) {
+      closePubPdf();
+    } else {
+      closePubOverlay();
+    }
+  }
+});
 
 // ── INIT: placeholders + lightbox bindings (only on expanded galleries) ──
 function initGallery(gallery) {
