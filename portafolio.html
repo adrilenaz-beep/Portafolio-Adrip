@@ -806,7 +806,7 @@ img { max-width: 100%; height: auto; display: block; }
   <div class="archivo-cab reveal-block">
     <span class="archivo-tit">Archivo de trabajo</span>
     <span class="archivo-rule"></span>
-    <span class="archivo-meta">10 categorías</span>
+    <span class="archivo-meta" id="archivo-meta">9 categorías</span>
   </div>
 
   <div class="grupo-label">
@@ -814,9 +814,9 @@ img { max-width: 100%; height: auto; display: block; }
     <span class="grupo-sub">trabajo de autor</span>
   </div>
 
-  <section class="cat-section open" id="cat-pasamontanas">
-    <button class="cat-head" onclick="toggleCat(this)" aria-expanded="true">
-      <span class="cat-mark">▾</span>
+  <section class="cat-section oculta" id="cat-pasamontanas">
+    <button class="cat-head" onclick="toggleCat(this)" aria-expanded="false">
+      <span class="cat-mark">▸</span>
       <span class="cat-name">Pasamontañas · Serie</span>
       <span class="cat-rule"></span>
       <span class="cat-count">5 capítulos</span>
@@ -951,9 +951,9 @@ img { max-width: 100%; height: auto; display: block; }
     </div>
   </section>
 
-  <section class="cat-section" id="cat-fotografia">
-    <button class="cat-head" onclick="toggleCat(this)" aria-expanded="false">
-      <span class="cat-mark">▸</span>
+  <section class="cat-section open" id="cat-fotografia">
+    <button class="cat-head" onclick="toggleCat(this)" aria-expanded="true">
+      <span class="cat-mark">▾</span>
       <span class="cat-name">Fotografía</span>
       <span class="cat-rule"></span>
       <span class="cat-count">4 series</span>
@@ -2491,6 +2491,7 @@ img { max-width: 100%; height: auto; display: block; }
   <footer class="doc-footer reveal-block">
     <div class="footer-sig">© 2026 ADRIANO LENAZ ZENTENO · ADRIP DISRUPTIVE MEDIA</div>
     <div class="footer-cc">DOC-PORT · COCHABAMBA, BOLIVIA</div>
+    <div class="pista" title="">1812 · 4:20 · 666</div>
   </footer>
 
 </div><!-- /wrap -->
@@ -2669,10 +2670,41 @@ function toggleCat(head) {
   }
 }
 
+// ── SECCIÓN NO LISTADA ──
+// Pasamontañas no figura en el índice. Aparece si alguien teclea el
+// número bordado en el cartel, o si entra directo con #1812.
+var CLAVE = '1812';
+var tecleado = '';
+
+function revelar(hacerFoco) {
+  var sec = document.getElementById('cat-pasamontanas');
+  if (!sec || !sec.classList.contains('oculta')) return false;
+  sec.classList.remove('oculta');
+  sec.classList.add('revelada');
+  var meta = document.getElementById('archivo-meta');
+  if (meta) meta.textContent = '10 categorías · 1 no listada';
+  if (!sec.classList.contains('open')) toggleCat(sec.querySelector('.cat-head'));
+  if (hacerFoco) setTimeout(function () {
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 120);
+  if (history.replaceState) history.replaceState(null, '', '#1812');
+  return true;
+}
+
+document.addEventListener('keydown', function (e) {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  var t = e.target.tagName;
+  if (t === 'INPUT' || t === 'TEXTAREA') return;
+  if (e.key.length !== 1) return;
+  tecleado = (tecleado + e.key).slice(-CLAVE.length);
+  if (tecleado === CLAVE) { tecleado = ''; revelar(true); }
+});
+
 // abrir una categoría desde un enlace con almohadilla, por ejemplo #cat-fotografia
 function abrirDesdeHash() {
   var id = location.hash.replace('#', '');
   if (!id) return;
+  if (id === CLAVE) { revelar(true); return; }
   var sec = document.getElementById(id);
   if (!sec || !sec.classList.contains('cat-section') || sec.classList.contains('open')) return;
   toggleCat(sec.querySelector('.cat-head'));
