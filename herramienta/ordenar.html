@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ordenar la obra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap">
+<style>
+:root{
+  --fondo:#0e0e0c; --caja:#1c1c19; --hundido:#141412;
+  --tinta:#e8e6e0; --tinta-media:#9a988f; --tinta-baja:#5d5b54;
+  --linea:#2e2e28; --linea-viva:#45443c;
+  --acento:#7fd4e8; --ok:#5cc294; --alerta:#d7a63f; --mal:#d9694f;
+  --mono:'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --sans:'IBM Plex Sans', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);font-family:var(--sans);font-size:13px}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+
+.barra{
+  position:sticky;top:0;z-index:30;background:var(--fondo);
+  border-bottom:1px solid var(--linea);padding:14px 22px;
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+}
+.barra h1{font-family:var(--mono);font-size:14px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin:0}
+.barra p{margin:0;font-size:11px;color:var(--tinta-baja);font-family:var(--mono)}
+.crece{flex:1}
+button{font-family:var(--mono);cursor:pointer}
+.btn{
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;
+  background:var(--acento);color:#0e0e0c;border:0;border-radius:2px;font-weight:600;
+}
+.btn:disabled{opacity:.4;cursor:default}
+.btn-2{background:transparent;color:var(--tinta-media);border:1px solid var(--linea-viva)}
+.btn-2:hover{color:var(--tinta);border-color:var(--tinta-baja)}
+#aviso{font-family:var(--mono);font-size:11px;padding:4px 0}
+#aviso.ok{color:var(--ok)} #aviso.mal{color:var(--mal)}
+
+main{padding:20px 22px 120px;max-width:1500px;margin:0 auto}
+.grupo{margin-bottom:8px;padding:16px 0 4px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--acento)}
+.grupo span{color:var(--tinta-baja);letter-spacing:.08em;margin-left:8px}
+
+.sec{border:1px solid var(--linea);border-radius:2px;margin-bottom:10px;background:var(--caja)}
+.sec-cab{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--linea)}
+.sec-nom{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--tinta-baja)}
+.marca{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  padding:3px 8px;border:1px solid var(--linea-viva);color:var(--tinta-baja);background:none}
+.marca.on{color:var(--alerta);border-color:var(--alerta)}
+
+.fila{display:flex;flex-wrap:wrap;gap:8px;padding:12px;min-height:92px;align-content:flex-start}
+.fila.encima{background:var(--hundido);outline:1px dashed var(--acento);outline-offset:-4px}
+
+.obra{
+  width:150px;background:var(--hundido);border:1px solid var(--linea);border-radius:2px;
+  cursor:grab;overflow:hidden;transition:border-color .15s,opacity .15s;
+}
+.obra:hover{border-color:var(--linea-viva)}
+.obra.arrastrando{opacity:.35}
+.obra .mini{width:100%;height:96px;object-fit:cover;display:block;background:var(--caja)}
+.obra .sinmini{width:100%;height:96px;display:flex;align-items:center;justify-content:center;
+  color:var(--tinta-baja);font-family:var(--mono);font-size:9px;background:var(--caja)}
+.obra .tit{font-family:var(--mono);font-size:10px;line-height:1.35;padding:7px 8px 2px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.obra .pie{font-family:var(--mono);font-size:9px;color:var(--tinta-baja);padding:0 8px 8px;
+  display:flex;justify-content:space-between}
+.vacio{font-family:var(--mono);font-size:10px;color:var(--tinta-baja);padding:26px 4px}
+
+/* panel de edición */
+.panel{position:fixed;inset:0 0 0 auto;width:min(470px,100%);background:var(--caja);
+  border-left:1px solid var(--linea-viva);z-index:40;overflow-y:auto;padding:20px 22px 40px}
+.panel[hidden]{display:none}
+.panel h2{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 4px}
+.panel .ruta{font-family:var(--mono);font-size:10px;color:var(--tinta-baja);margin-bottom:18px}
+label{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--tinta-baja);margin:14px 0 5px}
+input,textarea,select{
+  width:100%;background:var(--hundido);border:1px solid var(--linea);color:var(--tinta);
+  font-family:var(--sans);font-size:12.5px;padding:8px 10px;border-radius:2px;
+}
+textarea{min-height:96px;line-height:1.6;resize:vertical}
+select{font-family:var(--mono);font-size:11px}
+.imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px;margin-top:6px}
+.img-f{position:relative;border:1px solid var(--linea);background:var(--hundido);cursor:grab}
+.img-f img{width:100%;height:70px;object-fit:cover;display:block}
+.img-f button{position:absolute;top:2px;right:2px;background:rgba(14,14,12,.85);color:var(--mal);
+  border:0;font-size:12px;width:20px;height:20px;line-height:1;border-radius:2px}
+.panel-pie{display:flex;gap:8px;margin-top:22px}
+
+/* banco de sueltas */
+.banco{border:1px dashed var(--linea-viva);border-radius:2px;margin-top:22px;background:var(--caja)}
+.banco .sec-cab{border-bottom:1px dashed var(--linea)}
+.banco .fila{gap:6px}
+.suelta{width:98px;border:1px solid var(--linea);background:var(--hundido);cursor:grab}
+.suelta img{width:100%;height:70px;object-fit:cover;display:block}
+.suelta span{display:block;font-family:var(--mono);font-size:8px;color:var(--tinta-baja);
+  padding:4px 5px;word-break:break-all;line-height:1.3}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="barra">
+  <div>
+    <h1>Ordenar la obra</h1>
+    <p id="resumen">cargando…</p>
+  </div>
+  <div class="crece"></div>
+  <div id="aviso"></div>
+  <button class="btn btn-2" id="ver">Ver el portafolio</button>
+  <button class="btn" id="guardar" disabled>Guardar cambios</button>
+</div>
+
+<main id="lienzo"></main>
+
+<div class="panel" id="panel" hidden>
+  <h2 id="p-tit">Obra</h2>
+  <div class="ruta" id="p-sec"></div>
+
+  <label for="p-titulo">Título</label>
+  <input id="p-titulo" type="text">
+
+  <label for="p-fecha">Fecha</label>
+  <input id="p-fecha" type="text" placeholder="2024 o 2022 → 2024">
+
+  <label for="p-nota">Nota, el texto que se lee bajo el título</label>
+  <textarea id="p-nota"></textarea>
+
+  <label for="p-tags">Etiquetas, separadas por coma</label>
+  <input id="p-tags" type="text">
+
+  <label for="p-layout">Cómo se ven las imágenes</label>
+  <select id="p-layout">
+    <option value="single">Una grande</option>
+    <option value="2col">Dos columnas</option>
+    <option value="3col">Tres columnas</option>
+    <option value="4col">Cuatro columnas</option>
+    <option value="strip">Tira horizontal</option>
+  </select>
+
+  <label for="p-seccion">Sección</label>
+  <select id="p-seccion"></select>
+
+  <label>Imágenes, arrastralas para reordenar</label>
+  <div class="imgs" id="p-imgs"></div>
+
+  <div class="panel-pie">
+    <button class="btn" id="p-listo">Listo</button>
+    <button class="btn btn-2" id="p-fuera">Sacar del portafolio</button>
+  </div>
+</div>
+
+<script src="../obra.js"></script>
+<script>
+(function () {
+  'use strict';
+  var sueltas = [];
+  var sucio = false;
+  var editando = null;
+  var $ = function (id) { return document.getElementById(id); };
+
+  function marcarSucio() {
+    sucio = true;
+    $('guardar').disabled = false;
+    $('aviso').textContent = 'hay cambios sin guardar';
+    $('aviso').className = '';
+  }
+
+  function ruta(src) {
+    return /^https?:\/\//.test(src) ? src : '../' + src;
+  }
+
+  function deSeccion(id) { return OBRAS.filter(function (o) { return o.seccion === id; }); }
+  function primeraImg(o) {
+    for (var i = 0; i < o.imgs.length; i++) if (o.imgs[i].src) return o.imgs[i].src;
+    return null;
+  }
+
+  /* ── pintar ── */
+  function pintar() {
+    var c = $('lienzo');
+    c.textContent = '';
+    GRUPOS.forEach(function (g) {
+      var secs = SECCIONES.filter(function (s) { return s.grupo === g.id; });
+      if (!secs.length) return;
+      var t = document.createElement('div');
+      t.className = 'grupo';
+      t.innerHTML = g.nombre + '<span>' + g.sub + '</span>';
+      c.appendChild(t);
+      secs.forEach(function (s) { c.appendChild(pintarSeccion(s)); });
+    });
+    c.appendChild(pintarBanco());
+    $('resumen').textContent = OBRAS.length + ' obras · ' + SECCIONES.length +
+      ' secciones · ' + sueltas.length + ' imágenes sin usar';
+  }
+
+  function pintarSeccion(s) {
+    var caja = document.createElement('div');
+    caja.className = 'sec';
+    var suyas = deSeccion(s.id);
+
+    var cab = document.createElement('div');
+    cab.className = 'sec-cab';
+    cab.innerHTML = '<span class="sec-nom">' + s.titulo + '</span>' +
+                    '<span class="sec-n">' + suyas.length + (suyas.length === 1 ? ' obra' : ' obras') + '</span>';
+    var crece = document.createElement('div'); crece.className = 'crece'; cab.appendChild(crece);
+
+    if (s.aMano) {
+      var av = document.createElement('span');
+      av.className = 'sec-n';
+      av.textContent = 'esta sección se arma sola, no recibe obras';
+      cab.appendChild(av);
+    } else {
+      [['oculta', 'no listada'], ['abierta', 'abre desplegada']].forEach(function (par) {
+        var b = document.createElement('button');
+        b.className = 'marca' + (s[par[0]] ? ' on' : '');
+        b.textContent = par[1];
+        b.onclick = function () { s[par[0]] = !s[par[0]]; marcarSucio(); pintar(); };
+        cab.appendChild(b);
+      });
+    }
+    caja.appendChild(cab);
+
+    var fila = document.createElement('div');
+    fila.className = 'fila';
+    fila.dataset.seccion = s.id;
+    if (!s.aMano) {
+      fila.addEventListener('dragover', function (e) {
+        if (!arrastrada) return;
+        e.preventDefault(); fila.classList.add('encima');
+      });
+      fila.addEventListener('dragleave', function () { fila.classList.remove('encima'); });
+      fila.addEventListener('drop', function (e) {
+        e.preventDefault(); fila.classList.remove('encima');
+        if (!arrastrada) return;
+        soltar(arrastrada, s.id, e.target.closest('.obra'));
+      });
+    }
+    if (s.aMano) {
+      fila.innerHTML = '<div class="vacio">Periodismo y Publicaciones tienen su propio sistema. ' +
+        'Sus piezas no se mueven desde acá.</div>';
+    } else if (!suyas.length) {
+      fila.innerHTML = '<div class="vacio">Vacía. Arrastrá una obra hasta acá.</div>';
+    } else {
+      suyas.forEach(function (o) { fila.appendChild(pintarObra(o)); });
+    }
+    caja.appendChild(fila);
+    return caja;
+  }
+
+  var arrastrada = null;
+
+  function pintarObra(o) {
+    var d = document.createElement('div');
+    d.className = 'obra';
+    d.draggable = true;
+    d.dataset.id = o.id;
+    var src = primeraImg(o);
+    d.innerHTML =
+      (src ? '<img class="mini" src="' + ruta(src) + '" alt="" loading="lazy">'
+           : '<div class="sinmini">sin imagen</div>') +
+      '<div class="tit">' + o.titulo + '</div>' +
+      '<div class="pie"><span>' + (o.fecha || '') + '</span><span>' + o.imgs.length + ' img</span></div>';
+    d.addEventListener('dragstart', function (e) {
+      arrastrada = o; d.classList.add('arrastrando');
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', o.id); } catch (err) {}
+    });
+    d.addEventListener('dragend', function () { arrastrada = null; d.classList.remove('arrastrando'); });
+    d.addEventListener('click', function () { abrirPanel(o); });
+    return d;
+  }
+
+  function soltar(obra, seccionId, sobre) {
+    var i = OBRAS.indexOf(obra);
+    OBRAS.splice(i, 1);
+    obra.seccion = seccionId;
+    if (sobre && sobre.dataset.id !== obra.id) {
+      var destino = OBRAS.findIndex(function (x) { return x.id === sobre.dataset.id; });
+      OBRAS.splice(destino, 0, obra);
+    } else {
+      var ultima = -1;
+      OBRAS.forEach(function (x, k) { if (x.seccion === seccionId) ultima = k; });
+      OBRAS.splice(ultima + 1, 0, obra);
+    }
+    marcarSucio(); pintar();
+  }
+
+  /* ── banco de imágenes sin usar ── */
+  function pintarBanco() {
+    var caja = document.createElement('div');
+    caja.className = 'sec banco';
+    caja.innerHTML = '<div class="sec-cab"><span class="sec-nom">Sin usar</span>' +
+      '<span class="sec-n">' + sueltas.length + ' imágenes exportadas que no están en ninguna obra</span></div>';
+    var fila = document.createElement('div');
+    fila.className = 'fila';
+    if (!sueltas.length) {
+      fila.innerHTML = '<div class="vacio">Ninguna. Todo lo exportado está en uso.</div>';
+    } else {
+      sueltas.forEach(function (f) {
+        var d = document.createElement('div');
+        d.className = 'suelta';
+        d.draggable = true;
+        d.innerHTML = '<img src="../obra/' + f + '" alt="" loading="lazy"><span>' + f + '</span>';
+        d.addEventListener('dragstart', function (e) {
+          e.dataTransfer.setData('text/imagen', 'obra/' + f);
+          e.dataTransfer.effectAllowed = 'copy';
+        });
+        fila.appendChild(d);
+      });
+    }
+    caja.appendChild(fila);
+    return caja;
+  }
+
+  /* ── panel ── */
+  function abrirPanel(o) {
+    editando = o;
+    $('p-tit').textContent = o.titulo;
+    $('p-sec').textContent = 'id · ' + o.id;
+    $('p-titulo').value = o.titulo;
+    $('p-fecha').value = o.fecha;
+    $('p-nota').value = o.nota.replace(/<em>/g, '*').replace(/<\/em>/g, '*');
+    $('p-tags').value = (o.tags || []).join(', ');
+    $('p-layout').value = o.layout || '3col';
+    var sel = $('p-seccion');
+    sel.textContent = '';
+    SECCIONES.filter(function (s) { return !s.aMano; }).forEach(function (s) {
+      var op = document.createElement('option');
+      op.value = s.id; op.textContent = s.titulo;
+      if (s.id === o.seccion) op.selected = true;
+      sel.appendChild(op);
+    });
+    pintarImgs();
+    $('panel').hidden = false;
+  }
+
+  function pintarImgs() {
+    var c = $('p-imgs');
+    c.textContent = '';
+    editando.imgs.forEach(function (im, i) {
+      var d = document.createElement('div');
+      d.className = 'img-f';
+      d.draggable = true;
+      d.innerHTML = (im.src ? '<img src="' + ruta(im.src) + '" alt="">' : '<div class="sinmini">vacía</div>') +
+        '<button title="Quitar">×</button>';
+      d.querySelector('button').onclick = function (e) {
+        e.stopPropagation();
+        editando.imgs.splice(i, 1); marcarSucio(); pintarImgs(); pintar();
+      };
+      d.addEventListener('dragstart', function (e) { e.dataTransfer.setData('text/orden', String(i)); });
+      d.addEventListener('dragover', function (e) { e.preventDefault(); });
+      d.addEventListener('drop', function (e) {
+        e.preventDefault();
+        var nueva = e.dataTransfer.getData('text/imagen');
+        var desde = e.dataTransfer.getData('text/orden');
+        if (nueva) {
+          editando.imgs.splice(i, 0, { src: nueva, alt: editando.titulo });
+          sueltas = sueltas.filter(function (f) { return 'obra/' + f !== nueva; });
+        } else if (desde !== '') {
+          var m = editando.imgs.splice(Number(desde), 1)[0];
+          editando.imgs.splice(i, 0, m);
+        }
+        marcarSucio(); pintarImgs(); pintar();
+      });
+      c.appendChild(d);
+    });
+    c.addEventListener('dragover', function (e) { e.preventDefault(); });
+    c.addEventListener('drop', function (e) {
+      var nueva = e.dataTransfer.getData('text/imagen');
+      if (!nueva || e.target !== c) return;
+      e.preventDefault();
+      editando.imgs.push({ src: nueva, alt: editando.titulo });
+      sueltas = sueltas.filter(function (f) { return 'obra/' + f !== nueva; });
+      marcarSucio(); pintarImgs(); pintar();
+    });
+  }
+
+  $('p-listo').onclick = function () {
+    var o = editando;
+    o.titulo = $('p-titulo').value.trim() || o.titulo;
+    o.fecha = $('p-fecha').value.trim();
+    o.nota = $('p-nota').value.trim().replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    o.tags = $('p-tags').value.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+    o.layout = $('p-layout').value;
+    o.seccion = $('p-seccion').value;
+    $('panel').hidden = true;
+    marcarSucio(); pintar();
+  };
+
+  $('p-fuera').onclick = function () {
+    if (!confirm('Sacar «' + editando.titulo + '» del portafolio. Las imágenes vuelven al banco de sin usar.')) return;
+    editando.imgs.forEach(function (im) {
+      if (im.src && im.src.indexOf('obra/') === 0) sueltas.push(im.src.replace('obra/', ''));
+    });
+    OBRAS.splice(OBRAS.indexOf(editando), 1);
+    $('panel').hidden = true;
+    marcarSucio(); pintar();
+  };
+
+  /* ── guardar ── */
+  $('guardar').onclick = function () {
+    $('guardar').disabled = true;
+    $('aviso').textContent = 'guardando…'; $('aviso').className = '';
+    fetch('/guardar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ GRUPOS: GRUPOS, SECCIONES: SECCIONES, OBRAS: OBRAS })
+    }).then(function (r) { return r.json(); }).then(function (r) {
+      if (r.ok) {
+        sucio = false;
+        $('aviso').textContent = 'guardado, ' + r.obras + ' obras';
+        $('aviso').className = 'ok';
+      } else {
+        $('aviso').textContent = 'no se pudo guardar, ' + r.error;
+        $('aviso').className = 'mal';
+        $('guardar').disabled = false;
+      }
+    }).catch(function (e) {
+      $('aviso').textContent = 'no se pudo guardar, ' + e.message;
+      $('aviso').className = 'mal';
+      $('guardar').disabled = false;
+    });
+  };
+
+  $('ver').onclick = function () { window.open('/portafolio.html', '_blank'); };
+  window.addEventListener('beforeunload', function (e) {
+    if (sucio) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  /* ── arranque ── */
+  fetch('sueltas.json').then(function (r) { return r.json(); })
+    .then(function (l) { sueltas = l; pintar(); })
+    .catch(function () { pintar(); });
+})();
+</script>
+</body>
+</html>
