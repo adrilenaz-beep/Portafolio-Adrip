@@ -69,6 +69,15 @@ const SECCIONES = [
   "grupo": "obra"
  },
  {
+  "id": "connectas",
+  "titulo": "Periodismo de datos · CONNECTAS",
+  "cuenta": "1 investigación",
+  "oculta": false,
+  "abierta": false,
+  "aMano": false,
+  "grupo": "encargo"
+ },
+ {
   "id": "periodismo",
   "titulo": "Periodismo Gráfico · Opinión",
   "cuenta": "28+ registros",
@@ -662,6 +671,47 @@ const OBRAS = [
   ]
  },
  {
+  "id": "cuarteles-de-la-muerte",
+  "seccion": "connectas",
+  "fecha": "2024",
+  "titulo": "Cuarteles de la muerte",
+  "nota": "Reportaje de investigación sobre las muertes de jóvenes durante el servicio militar en Bolivia, desarrollado con el <em>CONNECTAS Fellowship</em> junto al periódico Opinión. Estuve a cargo de la construcción gráfica completa, la ilustración editorial y las infografías que ordenan los casos por departamento, por edad y por año. La pieza de apertura es un render del depósito, con los ataúdes alineados en estantería.",
+  "layout": "strip",
+  "tags": [
+   "Periodismo de datos",
+   "Investigación",
+   "CONNECTAS",
+   "Infografía",
+   "Ilustración editorial"
+  ],
+  "imgs": [
+   {
+    "src": "obra/connectas-01-deposito.jpg",
+    "alt": "Depósito, ilustración de apertura"
+   },
+   {
+    "src": "obra/connectas-02-parasitos.jpg",
+    "alt": "Parásitos, 60 víctimas"
+   },
+   {
+    "src": "obra/connectas-03-bang.jpg",
+    "alt": "Bang, 60 vidas de jóvenes perdidas"
+   },
+   {
+    "src": "obra/connectas-04-departamento.jpg",
+    "alt": "Soldados fallecidos por departamento"
+   },
+   {
+    "src": "obra/connectas-05-edad.jpg",
+    "alt": "Soldados fallecidos según la edad"
+   },
+   {
+    "src": "obra/connectas-06-ano.jpg",
+    "alt": "Soldados fallecidos según el año"
+   }
+  ]
+ },
+ {
   "id": "serie-de-posters-adrip",
   "seccion": "posters",
   "fecha": "2022→",
@@ -1067,4 +1117,3 @@ const OBRAS = [
   ]
  }
 ];
-
