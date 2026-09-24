@@ -189,6 +189,13 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 .lec-imgs{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:7px; margin-top:16px}
 .lec-imgs img{width:100%; aspect-ratio:4/5; object-fit:cover; display:block; cursor:zoom-in;
   background:rgba(128,128,128,.14)}
+.lec-contacto{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px}
+.lec-ficha{margin:0}
+.lec-ficha img{width:100%; aspect-ratio:3/4; object-fit:cover; display:block; cursor:zoom-in;
+  background:rgba(128,128,128,.14)}
+.lec-ficha figcaption{padding:7px 1px 0; display:flex; flex-direction:column; gap:2px}
+.lec-ficha b{font-size:11px; font-weight:500; line-height:1.4}
+.lec-ficha span{font-size:9px; letter-spacing:.14em; color:var(--tinta-baja)}
 .lec-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px}
 .lec-tag{font-size:9px; letter-spacing:.14em; text-transform:uppercase; border:1px solid var(--linea); padding:3px 8px}
 .lec-vinculo{display:inline-block; margin-top:8px; font-size:12px; border-bottom:1px solid var(--linea)}
@@ -481,6 +488,13 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
   function esc(t){ return String(t==null?'':t)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+
+  // Cloudinary sirve una versión a medida si se le pide en la ruta
+  function liviana(src, ancho) {
+    if (src.indexOf('res.cloudinary.com') === -1) return src;
+    return src.replace('/upload/', '/upload/w_' + ancho + ',q_auto,f_auto/');
+  }
+
   function obrasDe(ids, porSeccion) {
     if (!hayObras) return [];
     return porSeccion
@@ -495,12 +509,25 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
       '<span class="lec-obra-fecha">' + esc(o.fecha) + '</span></div>' +
       (o.nota ? '<p class="lec-p">' + o.nota + '</p>' : '') +
       (imgs.length ? '<div class="lec-imgs">' + imgs.map(function (im) {
-        return '<img src="' + esc(im.src) + '" alt="' + esc(im.alt) + '" loading="lazy">';
+        return '<img src="' + esc(liviana(im.src, 640)) + '" alt="' + esc(im.alt) + '" ' +
+               'data-grande="' + esc(liviana(im.src, 1600)) + '" decoding="async">';
       }).join('') + '</div>' : '') +
       ((o.tags || []).length ? '<div class="lec-tags">' +
         o.tags.map(function (t) { return '<span class="lec-tag">' + esc(t) + '</span>'; }).join('') +
         '</div>' : '') +
       '</div>';
+  }
+
+  function htmlContacto(lista) {
+    return '<div class="lec-contacto">' + lista.map(function (o) {
+      var im = (o.imgs || []).filter(function (i) { return i.src; })[0];
+      if (!im) return '';
+      return '<figure class="lec-ficha">' +
+        '<img src="' + esc(liviana(im.src, 520)) + '" alt="' + esc(im.alt) + '" ' +
+        'data-grande="' + esc(liviana(im.src, 1600)) + '" decoding="async">' +
+        '<figcaption><b>' + esc(o.titulo) + '</b><span>' + esc(o.fecha) + '</span></figcaption>' +
+        '</figure>';
+    }).join('') + '</div>';
   }
 
   function leer(destino) {
@@ -581,10 +608,16 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
     } else {
       bajada = 'Portafolio';
       var lista = obrasDe(m.ids, m.tipo === 'secciones');
-      cuerpo = lista.length
-        ? '<div class="lec-bloque">' + lista.map(htmlObra).join('') + '</div>'
-        : '<div class="lec-bloque"><p class="lec-p">Todavía no hay piezas cargadas acá. ' +
-          'El material existe pero falta prepararlo para la web.</p></div>';
+      // las que tienen una sola imagen van a hoja de contactos, el resto a bloque
+      var sueltas = lista.filter(function (o) {
+        return (o.imgs || []).filter(function (i) { return i.src; }).length === 1; });
+      var amplias = lista.filter(function (o) { return sueltas.indexOf(o) === -1; });
+      cuerpo = '';
+      if (amplias.length) cuerpo += '<div class="lec-bloque">' + amplias.map(htmlObra).join('') + '</div>';
+      if (sueltas.length) cuerpo += '<div class="lec-bloque"><h2 class="lec-h">' +
+        sueltas.length + ' registros</h2>' + htmlContacto(sueltas) + '</div>';
+      if (!lista.length) cuerpo = '<div class="lec-bloque"><p class="lec-p">Todavía no hay piezas ' +
+        'cargadas acá. El material existe pero falta prepararlo para la web.</p></div>';
     }
 
     c.innerHTML = '<h1 class="lec-tit">' + esc(m.titulo || destino) + '</h1>' +
