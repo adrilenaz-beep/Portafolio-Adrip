@@ -144,6 +144,46 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 .puerta-pie{display:flex; gap:20px; margin-top:24px; font-size:11px; letter-spacing:.16em; text-transform:uppercase}
 .puerta-error{color:#E8428E; font-size:10.5px; letter-spacing:.1em; margin-top:12px; min-height:14px}
 
+
+/* ── lector ── */
+#lector{
+  position:fixed; inset:0; z-index:70; overflow-y:auto; display:none;
+  background:var(--campo); padding:120px 28px 90px;
+}
+#lector.abierto{display:block; animation:entra .45s ease}
+@keyframes entra{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
+.lec-cerrar{
+  position:fixed; top:26px; right:28px; z-index:80; font-size:11px;
+  letter-spacing:.2em; text-transform:uppercase; border-bottom:1px solid transparent;
+}
+.lec-cerrar:hover{border-bottom-color:var(--tinta)}
+.lec-tit{font-size:clamp(26px,4vw,52px); font-weight:700; letter-spacing:-.03em; margin:0 0 6px}
+.lec-bajada{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--tinta-baja); margin:0 0 44px}
+.lec-bloque{margin-bottom:52px; max-width:1300px}
+.lec-h{
+  font-size:11px; letter-spacing:.24em; text-transform:uppercase; margin:0 0 16px;
+  display:flex; align-items:center; gap:14px;
+}
+.lec-h::after{content:''; flex:1; height:1px; background:var(--linea)}
+.lec-p{font-size:13.5px; line-height:1.85; max-width:70ch; margin:0 0 14px; font-weight:300}
+.lec-dl{display:grid; grid-template-columns:auto 1fr; gap:6px 22px; max-width:60ch; font-size:12.5px}
+.lec-dl dt{letter-spacing:.14em; text-transform:uppercase; color:var(--tinta-baja); font-size:10px; padding-top:3px}
+.lec-dl dd{margin:0}
+.lec-lista{list-style:none; padding:0; margin:10px 0 0}
+.lec-lista li{font-size:12.5px; line-height:1.75; padding-left:20px; position:relative; margin-bottom:6px; font-weight:300}
+.lec-lista li::before{content:'—'; position:absolute; left:0; color:var(--tinta-baja)}
+.lec-obra{border-top:1px dashed var(--linea); padding:22px 0 4px}
+.lec-obra-cab{display:flex; gap:16px; align-items:baseline; flex-wrap:wrap}
+.lec-obra-tit{font-size:16px; font-weight:500; letter-spacing:-.01em}
+.lec-obra-fecha{font-size:10px; letter-spacing:.16em; color:var(--tinta-baja)}
+.lec-imgs{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:7px; margin-top:16px}
+.lec-imgs img{width:100%; aspect-ratio:4/5; object-fit:cover; display:block; cursor:zoom-in;
+  background:rgba(128,128,128,.14)}
+.lec-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px}
+.lec-tag{font-size:9px; letter-spacing:.14em; text-transform:uppercase; border:1px solid var(--linea); padding:3px 8px}
+.lec-vinculo{display:inline-block; margin-top:8px; font-size:12px; border-bottom:1px solid var(--linea)}
+@media (max-width:860px){ #lector{padding:100px 22px 70px} }
+
 /* ── pie ── */
 .pie{
   position:fixed; left:28px; right:28px; bottom:12px; z-index:20;
@@ -203,6 +243,11 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
   <span>Cochabamba, Bolivia</span>
 </div>
 
+<div id="lector" aria-hidden="true">
+  <button class="lec-cerrar" id="lec-cerrar">✕ Volver</button>
+  <div id="lec-cuerpo"></div>
+</div>
+
 <div id="puerta">
   <div class="puerta-caja">
     <h2>Acceso restringido</h2>
@@ -217,6 +262,9 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
   </div>
 </div>
 
+<script src="portafolio-datos.js"></script>
+<script src="proyectos.js"></script>
+<script src="contenido.js"></script>
 <script>
 (function () {
   'use strict';
@@ -241,22 +289,31 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 
   var HOJAS = {
     corp:{ pag:'002', x:37, y:33, items:[
-      'PERIODISMO GRÁFICO','DISEÑO EDITORIAL','CARTELES / AFICHES','DISEÑO DE MARCAS'] },
+      {t:'PERIODISMO GRÁFICO', d:'periodismo-grafico'},
+      {t:'DISEÑO EDITORIAL',   d:'diseno-editorial'},
+      {t:'CARTELES / AFICHES', d:'carteles'},
+      {t:'DISEÑO DE MARCAS',   d:'marcas'}] },
     art:{ pag:'003', x:37, y:23, items:[
-      'FOTOGRAFÍA','STICKERS','EMBELLECIENDO LA CIUDAD',
-      {t:'adrip', espejo:true},
-      'PODRÍA SER TU / PODRÍA SER YO','NO PIERDAS TU HUMANIDAD','GOTA'] },
+      {t:'FOTOGRAFÍA',              d:'fotografia'},
+      {t:'STICKERS',                d:'stickers'},
+      {t:'EMBELLECIENDO LA CIUDAD', d:'embelleciendo'},
+      {t:'adrip', d:'adrip', espejo:true},
+      {t:'PODRÍA SER TU / PODRÍA SER YO', d:'podria-ser', oculto:true},
+      {t:'NO PIERDAS TU HUMANIDAD', d:'humanidad'},
+      {t:'GOTA',                    d:'gota'}] },
     aca:{ pag:'004', x:37, y:33, items:[
-      'ARTÍCULOS ACADÉMICOS','VOLUNTARIADO','DISTINCIONES'] },
-    bio:{ pag:'001', x:37, y:33, items:['ADRIANO LENAZ','LIC. DISEÑO GRÁFICO','CONTACTO'] },
-    cv:{ pag:'001', x:37, y:33, items:['DESCARGAR CV ↗'] },
-    blog:{ pag:'005', x:37, y:33, items:['EN PREPARACIÓN'] }
+      {t:'ARTÍCULOS ACADÉMICOS', d:'articulos'},
+      {t:'VOLUNTARIADO',         d:'voluntariado'},
+      {t:'DISTINCIONES',         d:'distinciones'}] },
+    bio:{ pag:'001', x:37, y:33, items:[{t:'VER BIOGRAFÍA', d:'bio'}] },
+    cv:{ pag:'001', x:37, y:33, items:[{t:'VER TRAYECTORIA', d:'cv'}] },
+    blog:{ pag:'005', x:37, y:33, items:[{t:'ENTRAR AL BLOG', d:'blog'}] }
   };
 
   var abierta = null;
 
   /* ── pintar ── */
-  var esc = $('#escritorio');
+  var mesa = $('#escritorio');
   PANELES.forEach(function (p) {
     var d = document.createElement('div');
     d.className = 'panel'; d.dataset.id = p.id;
@@ -282,7 +339,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
       t.style.cursor = 'pointer';
       t.addEventListener('click', function () { alternar(p.id, d); });
     }
-    esc.appendChild(d);
+    mesa.appendChild(d);
     arrastrable(d, t);
   });
 
@@ -298,10 +355,12 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
       b.className = 'hoja-item' + (it.espejo ? ' espejo' : '');
       b.textContent = it.t || it;
       b.style.transitionDelay = (0.28 + i * 0.055) + 's';
+      if (it.oculto) { b.dataset.oculto = '1'; b.style.display = 'none'; }
+      if (it.d) b.addEventListener('click', function () { leer(it.d); });
       l.appendChild(b);
     });
     d.appendChild(l);
-    esc.appendChild(d);
+    mesa.appendChild(d);
   });
 
   /* ── abrir una rama, y correr lo demás para hacerle lugar ── */
@@ -314,7 +373,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
     abierta = id;
 
     var campo = CAMPOS[id] || CAMPOS.negro;
-    document.body.style.background = campo;
+    document.documentElement.style.setProperty('--campo', campo);
     document.body.classList.toggle('claro', !!CLAROS[id]);
 
     var h = HOJAS[id];
@@ -346,7 +405,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
     if (hoja) hoja.classList.remove('abierta');
     abierta = null;
     if (!silencioso) {
-      document.body.style.background = CAMPOS.negro;
+      document.documentElement.style.setProperty('--campo', CAMPOS.negro);
       document.body.classList.remove('claro');
       $('#f-pag').textContent = '000';
       document.querySelector('.saludo').classList.remove('fuera');
@@ -387,6 +446,123 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
     });
   }
 
+
+  /* ── el lector, arma el contenido que ya existe ── */
+  function esc(t){ return String(t==null?'':t)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function obrasDe(ids, porSeccion) {
+    if (typeof OBRAS === 'undefined') return [];
+    return porSeccion
+      ? OBRAS.filter(function (o) { return ids.indexOf(o.seccion) > -1; })
+      : OBRAS.filter(function (o) { return ids.indexOf(o.id) > -1; });
+  }
+
+  function htmlObra(o) {
+    var imgs = (o.imgs || []).filter(function (i) { return i.src; });
+    return '<div class="lec-obra">' +
+      '<div class="lec-obra-cab"><span class="lec-obra-tit">' + esc(o.titulo) + '</span>' +
+      '<span class="lec-obra-fecha">' + esc(o.fecha) + '</span></div>' +
+      (o.nota ? '<p class="lec-p">' + o.nota + '</p>' : '') +
+      (imgs.length ? '<div class="lec-imgs">' + imgs.map(function (im) {
+        return '<img src="' + esc(im.src) + '" alt="' + esc(im.alt) + '" loading="lazy">';
+      }).join('') + '</div>' : '') +
+      ((o.tags || []).length ? '<div class="lec-tags">' +
+        o.tags.map(function (t) { return '<span class="lec-tag">' + esc(t) + '</span>'; }).join('') +
+        '</div>' : '') +
+      '</div>';
+  }
+
+  function leer(destino) {
+    var m = MAPA[destino];
+    if (!m) return;
+    var c = $('#lec-cuerpo'), cuerpo = '', bajada = '';
+
+    if (m.tipo === 'perfil' && m.que === 'bio') {
+      bajada = 'Perfil · Biografía';
+      cuerpo =
+        '<div class="lec-bloque"><h2 class="lec-h">Quién soy</h2>' +
+          '<p class="lec-p">' + PERFIL.bio + '</p></div>' +
+        '<div class="lec-bloque"><h2 class="lec-h">Filosofía</h2>' +
+          '<p class="lec-p">' + esc(PERFIL.filosofia) + '</p></div>' +
+        '<div class="lec-bloque"><h2 class="lec-h">Ficha</h2><dl class="lec-dl">' +
+          PERFIL.ficha.map(function (f) {
+            return '<dt>' + esc(f.k) + '</dt><dd>' + esc(f.v) + '</dd>'; }).join('') +
+        '</dl></div>' +
+        '<div class="lec-bloque"><h2 class="lec-h">Contacto</h2><dl class="lec-dl">' +
+          PERFIL.enlaces.map(function (e) {
+            return '<dt>' + esc(e.plataforma) + '</dt><dd><a class="lec-vinculo" href="' +
+              esc(e.url) + '" target="_blank" rel="noopener">' + esc(e.handle) + ' ↗</a></dd>'; }).join('') +
+        '</dl></div>';
+
+    } else if (m.tipo === 'perfil' && m.que === 'cv') {
+      bajada = 'Perfil · Trayectoria';
+      cuerpo = '<div class="lec-bloque"><h2 class="lec-h">Experiencia</h2>' +
+        PERFIL.experiencia.map(function (e) {
+          return '<div class="lec-obra">' +
+            '<div class="lec-obra-cab"><span class="lec-obra-tit">' + esc(e.rol) + '</span>' +
+            '<span class="lec-obra-fecha">' + esc(e.periodo) + '</span></div>' +
+            '<p class="lec-p" style="margin-bottom:6px"><strong>' + esc(e.donde) + '</strong> · ' + esc(e.tipo) + '</p>' +
+            '<p class="lec-p">' + esc(e.desc) + '</p>' +
+            (e.puntos.length ? '<ul class="lec-lista">' + e.puntos.map(function (x) {
+              return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
+            '</div>'; }).join('') +
+        '</div>' +
+        '<div class="lec-bloque"><h2 class="lec-h">Documento</h2>' +
+        '<a class="lec-vinculo" href="documentos/CV-Adriano-Lenaz-Zenteno.pdf" target="_blank" rel="noopener">Descargar el CV en PDF ↗</a></div>';
+
+    } else if (m.tipo === 'academico') {
+      bajada = 'Portafolio · Académico';
+      if (m.que === 'articulos') {
+        cuerpo = PERFIL.investigacion.map(function (i) {
+          return '<div class="lec-bloque"><h2 class="lec-h">' + esc(i.estado) + '</h2>' +
+            '<div class="lec-obra-tit" style="margin-bottom:12px">' + esc(i.titulo) + '</div>' +
+            '<p class="lec-p">' + i.cuerpo + '</p>' +
+            (i.tags.length ? '<div class="lec-tags">' + i.tags.map(function (t) {
+              return '<span class="lec-tag">' + esc(t) + '</span>'; }).join('') + '</div>' : '') +
+            '</div>'; }).join('');
+      } else {
+        var sellos = m.que === 'voluntariado'
+          ? ['Mediación','Fundador','Intercambio','Masterclass']
+          : ['Beca','Ponente','Intervención','Formación'];
+        var hay = PERFIL.extras.filter(function (e) { return sellos.indexOf(e.sello) > -1; });
+        cuerpo = '<div class="lec-bloque">' + hay.map(function (e) {
+          return '<div class="lec-obra"><div class="lec-obra-cab">' +
+            '<span class="lec-obra-tit">' + esc(e.sello) + '</span>' +
+            '<span class="lec-obra-fecha">' + esc(e.anio) + '</span></div>' +
+            '<p class="lec-p">' + esc(e.texto) + '</p></div>'; }).join('') + '</div>';
+      }
+
+    } else if (m.tipo === 'texto') {
+      bajada = 'Blog';
+      cuerpo = '<div class="lec-bloque"><p class="lec-p">' + esc(m.cuerpo) + '</p></div>';
+
+    } else {
+      bajada = 'Portafolio';
+      var lista = obrasDe(m.ids, m.tipo === 'secciones');
+      cuerpo = lista.length
+        ? '<div class="lec-bloque">' + lista.map(htmlObra).join('') + '</div>'
+        : '<div class="lec-bloque"><p class="lec-p">Todavía no hay piezas cargadas acá. ' +
+          'El material existe pero falta prepararlo para la web.</p></div>';
+      if (m.ids.indexOf('periodismo') > -1) {
+        cuerpo += '<div class="lec-bloque"><a class="lec-vinculo" href="portafolio.html#cat-periodismo">' +
+          'Ver los 28 registros de Opinión en el portafolio completo ↗</a></div>';
+      }
+    }
+
+    c.innerHTML = '<h1 class="lec-tit">' + esc(m.titulo || destino) + '</h1>' +
+                  '<p class="lec-bajada">' + bajada + '</p>' + cuerpo;
+    $('#lector').classList.add('abierto');
+    $('#lector').setAttribute('aria-hidden', 'false');
+    $('#lector').scrollTop = 0;
+  }
+
+  function cerrarLector() {
+    $('#lector').classList.remove('abierto');
+    $('#lector').setAttribute('aria-hidden', 'true');
+  }
+  $('#lec-cerrar').addEventListener('click', cerrarLector);
+
   /* ── la puerta ── */
   $('#acceso').addEventListener('click', function () {
     $('#puerta').classList.add('abierta'); $('#clave').focus();
@@ -402,6 +578,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     if ($('#puerta').classList.contains('abierta')) $('#puerta-cerrar').click();
+    else if ($('#lector').classList.contains('abierto')) cerrarLector();
     else cerrar();
   });
 
