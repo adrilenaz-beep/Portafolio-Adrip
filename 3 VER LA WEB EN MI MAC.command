@@ -5,7 +5,7 @@ PUERTO=8123
 python3 -m http.server $PUERTO >/dev/null 2>&1 &
 SRV=$!
 sleep 1
-open "http://localhost:$PUERTO/escritorio.html"
+open "http://localhost:$PUERTO/"
 echo ""
 echo "  Se abrió el diseño nuevo en el navegador."
 echo ""

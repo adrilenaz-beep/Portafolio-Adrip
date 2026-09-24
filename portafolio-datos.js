@@ -80,10 +80,10 @@ const SECCIONES = [
  {
   "id": "periodismo",
   "titulo": "Periodismo Gráfico · Opinión",
-  "cuenta": "28+ registros",
+  "cuenta": "31 registros",
   "oculta": false,
   "abierta": false,
-  "aMano": true,
+  "aMano": false,
   "grupo": "encargo"
  },
  {
@@ -708,6 +708,641 @@ const OBRAS = [
    {
     "src": "obra/connectas-06-ano.jpg",
     "alt": "Soldados fallecidos según el año"
+   }
+  ]
+ },
+ {
+  "id": "vaticano-y-p",
+  "seccion": "periodismo",
+  "fecha": "24/07/2024",
+  "titulo": "Vaticano y P++++++",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906357/Vaticano_iqc3t6.jpg",
+    "alt": "Vaticano"
+   }
+  ]
+ },
+ {
+  "id": "crisis-de-combustible-cochabamba-bloqueada",
+  "seccion": "periodismo",
+  "fecha": "31/07/2024",
+  "titulo": "Crisis de combustible, Cochabamba bloqueada",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906356/Llajta_Bloqueada_tkdgyb.jpg",
+    "alt": "Cochabamba bloqueada"
+   }
+  ]
+ },
+ {
+  "id": "estreno-alien-romulus",
+  "seccion": "periodismo",
+  "fecha": "15/08/2024",
+  "titulo": "Estreno, Alien Romulus",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774916612/Alien02_qg9yib.jpg",
+    "alt": "Alien Romulus"
+   }
+  ]
+ },
+ {
+  "id": "amor-por-internet",
+  "seccion": "periodismo",
+  "fecha": "19/08/2024",
+  "titulo": "Amor por internet",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964410/internet02_w9rkx7.jpg",
+    "alt": "Amor por internet"
+   }
+  ]
+ },
+ {
+  "id": "se-debate-el-precio-del-pasaje",
+  "seccion": "periodismo",
+  "fecha": "22/08/2024",
+  "titulo": "Se debate el precio del pasaje",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964433/ChoferesPiden01_afbxwz.jpg",
+    "alt": "Precio pasaje"
+   }
+  ]
+ },
+ {
+  "id": "diesel-de-material-reciclado",
+  "seccion": "periodismo",
+  "fecha": "30/08/2024",
+  "titulo": "¿Diesel de material reciclado?",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964926/Diesel_reciclado_bwslbv.jpg",
+    "alt": "Diesel reciclado"
+   }
+  ]
+ },
+ {
+  "id": "incendios-en-el-oriente-boliviano",
+  "seccion": "periodismo",
+  "fecha": "03/09/2024",
+  "titulo": "Incendios en el oriente boliviano",
+  "nota": "",
+  "layout": "strip",
+  "tags": [
+   "Incendios en la Amazonía",
+   "Carrusel"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964970/Incendios01_xyu7dt.jpg",
+    "alt": "Imagen 1"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964973/Incendios02_vamujz.jpg",
+    "alt": "Imagen 2"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964971/Incendios03_d61nba.jpg",
+    "alt": "Imagen 3"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964971/Incendios04_ezdfry.jpg",
+    "alt": "Imagen 4"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964970/Incendios05_q5ffkl.jpg",
+    "alt": "Imagen 5"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964969/Incendios06-2.0_h9uvm9.jpg",
+    "alt": "Imagen 6"
+   }
+  ]
+ },
+ {
+  "id": "alphaville-en-oruro",
+  "seccion": "periodismo",
+  "fecha": "05/09/2024",
+  "titulo": "¿Alphaville, en Oruro?",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774916521/Alphaville02_gcllkg.jpg",
+    "alt": "Alphaville en Oruro"
+   }
+  ]
+ },
+ {
+  "id": "bolivia-acusada-por-israel",
+  "seccion": "periodismo",
+  "fecha": "23/10/2024",
+  "titulo": "Bolivia acusada por Israel",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964996/Israelacusa01_qrpkve.jpg",
+    "alt": "Bolivia acusada"
+   }
+  ]
+ },
+ {
+  "id": "bloqueos-evistas-dia-10",
+  "seccion": "periodismo",
+  "fecha": "23/10/2024",
+  "titulo": "Bloqueos evistas, día 10",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774964995/Bloquos10dias_zcnh6k.jpg",
+    "alt": "Bloqueos día 10"
+   }
+  ]
+ },
+ {
+  "id": "exguerrillero-chileno-en-bolivia",
+  "seccion": "periodismo",
+  "fecha": "07/01/2025",
+  "titulo": "Exguerrillero chileno en Bolivia",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775010111/exguerrillero_1_eoyiw4.jpg",
+    "alt": "Exguerrillero chileno"
+   }
+  ]
+ },
+ {
+  "id": "el-pasaje-del-trufi-sube",
+  "seccion": "periodismo",
+  "fecha": "08/01/2025",
+  "titulo": "El pasaje del trufi sube",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774965035/Pasaje-_2_yzdjk0.jpg",
+    "alt": "Pasaje trufi"
+   }
+  ]
+ },
+ {
+  "id": "liberacion-de-auschwitz",
+  "seccion": "periodismo",
+  "fecha": "27/01/2025",
+  "titulo": "Liberación de Auschwitz",
+  "nota": "",
+  "layout": "strip",
+  "tags": [
+   "80+ Años",
+   "Carrusel"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774916468/Ausch01_tjkzkv.jpg",
+    "alt": "Imagen 1"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774916469/Ausch02_f8y27d.jpg",
+    "alt": "Imagen 2"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774916479/Ausch03_cg91ph.jpg",
+    "alt": "Imagen 3"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774916477/Ausch04_ib8jg4.jpg",
+    "alt": "Imagen 4"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774916474/Ausch05_awsxsh.jpg",
+    "alt": "Imagen 5"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774916472/Ausch06_ytlebt.jpg",
+    "alt": "Imagen 6"
+   }
+  ]
+ },
+ {
+  "id": "accidente-aereo-en-washington",
+  "seccion": "periodismo",
+  "fecha": "30/01/2025",
+  "titulo": "Accidente aéreo en Washington",
+  "nota": "",
+  "layout": "strip",
+  "tags": [
+   "Accidente",
+   "Carrusel"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052079/ChoqueAereo01_l30l4a.jpg",
+    "alt": "Imagen 1"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052079/ChoqueAereo02_mrcpes.jpg",
+    "alt": "Imagen 2"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052079/ChoqueAereo03_rfxbdo.jpg",
+    "alt": "Imagen 3"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052079/ChoqueAereo04_yfo9b2.jpg",
+    "alt": "Imagen 4"
+   }
+  ]
+ },
+ {
+  "id": "g-contra-el-contrabando",
+  "seccion": "periodismo",
+  "fecha": "04/02/2025",
+  "titulo": "G***** contra el contrabando",
+  "nota": "",
+  "layout": "strip",
+  "tags": [
+   "Contrabando",
+   "Carrusel"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906437/Contrabando01_b3atf3.jpg",
+    "alt": "Imagen 1"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906439/Contrabando02_qfqejb.jpg",
+    "alt": "Imagen 2"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906436/Contrabando03_01_aipinx.jpg",
+    "alt": "Imagen 3"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906435/Contrabando03_02_i4nmkx.jpg",
+    "alt": "Imagen 4"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906440/Contrabando04_ckuvr6.jpg",
+    "alt": "Imagen 5"
+   }
+  ]
+ },
+ {
+  "id": "punk-no-esta-muerto",
+  "seccion": "periodismo",
+  "fecha": "10/02/2025",
+  "titulo": "Punk, no está muerto",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775053486/Misfits01_z4uts6.jpg",
+    "alt": "Punk no está muerto"
+   }
+  ]
+ },
+ {
+  "id": "se-busca",
+  "seccion": "periodismo",
+  "fecha": "10/02/2025",
+  "titulo": "Se busca:",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775053486/Recompensa03_p2gyrp.jpg",
+    "alt": "Se busca"
+   }
+  ]
+ },
+ {
+  "id": "debate-entre-candidatos",
+  "seccion": "periodismo",
+  "fecha": "10/02/2025",
+  "titulo": "Debate entre candidatos",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775053485/DebatePres01_ggsmmz.jpg",
+    "alt": "Debate candidatos"
+   }
+  ]
+ },
+ {
+  "id": "gobierno-aguarda",
+  "seccion": "periodismo",
+  "fecha": "11/02/2025",
+  "titulo": "Gobierno aguarda",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906381/HayOrden02_rijfqw.jpg",
+    "alt": "Gobierno aguarda"
+   }
+  ]
+ },
+ {
+  "id": "incendios-en-hollywood",
+  "seccion": "periodismo",
+  "fecha": "11/02/2025",
+  "titulo": "Incendios en Hollywood",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052549/Hollywood-_2_kfdla3.jpg",
+    "alt": "Incendios Hollywood"
+   }
+  ]
+ },
+ {
+  "id": "rosalia-x-euphoria",
+  "seccion": "periodismo",
+  "fecha": "18/02/2025",
+  "titulo": "Rosalía x Euphoria",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Farandula"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775053115/Rosa01_gfw6kg.jpg",
+    "alt": "Rosalía x Euphoria"
+   }
+  ]
+ },
+ {
+  "id": "cine-por-los-gatos",
+  "seccion": "periodismo",
+  "fecha": "21/02/2025",
+  "titulo": "Cine por los gatos",
+  "nota": "",
+  "layout": "strip",
+  "tags": [
+   "Gatitos",
+   "Carrusel"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774905994/Gatos-Neko_01_x2o4z9.jpg",
+    "alt": "Imagen 1 de 3"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052990/Gatos-Neko_02_pqf4lk.jpg",
+    "alt": "Imagen 2 de 3"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052991/Gatos-Neko_03_tkqi2y.jpg",
+    "alt": "Imagen 3 de 3"
+   }
+  ]
+ },
+ {
+  "id": "caso-golpe",
+  "seccion": "periodismo",
+  "fecha": "26/03/2025",
+  "titulo": "Caso golpe",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775053230/Golpe01_y7yncp.jpg",
+    "alt": "Caso golpe"
+   }
+  ]
+ },
+ {
+  "id": "guerra-de-la-basura-cbba",
+  "seccion": "periodismo",
+  "fecha": "03/04/2025",
+  "titulo": "Guerra de la basura, Cbba",
+  "nota": "",
+  "layout": "strip",
+  "tags": [
+   "Basura",
+   "Carrusel"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774905968/Guerra-Basura_01_qsdgqo.jpg",
+    "alt": "Imagen 1 de 2"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774905967/Guerra-Basura_02_eereii.jpg",
+    "alt": "Imagen 2 de 2"
+   }
+  ]
+ },
+ {
+  "id": "laguna-alalay-fauna",
+  "seccion": "periodismo",
+  "fecha": "03/04/2025",
+  "titulo": "Laguna Alalay, fauna",
+  "nota": "",
+  "layout": "strip",
+  "tags": [
+   "Fauna",
+   "Carrusel"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052890/ALALAY-AVES_01_c53gez.jpg",
+    "alt": "Imagen 1 de 4"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052891/Alalay-Aves01_02_p7pbpi.jpg",
+    "alt": "Imagen 2 de 4"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052889/Alalay-Aves01_03_yrrydu.jpg",
+    "alt": "Imagen 3 de 4"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775052891/Alalay-Aves01_04_rncnei.jpg",
+    "alt": "Imagen 4 de 4"
+   }
+  ]
+ },
+ {
+  "id": "cbba-dia-del-peaton-cancelado",
+  "seccion": "periodismo",
+  "fecha": "04/04/2025",
+  "titulo": "Cbba, día del peatón cancelado",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906309/SuspendidoDi%CC%81aPeato%CC%81n03_m6vhou.jpg",
+    "alt": "Día del peatón cancelado"
+   }
+  ]
+ },
+ {
+  "id": "kenia-abejas-protegen-cultivos",
+  "seccion": "periodismo",
+  "fecha": "08/05/2025",
+  "titulo": "Kenia, abejas protegen cultivos",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906259/AbejasElefantes01_rdbsge.jpg",
+    "alt": "Abejas Kenya"
+   }
+  ]
+ },
+ {
+  "id": "despues-de-15-dias-dia-del-peaton",
+  "seccion": "periodismo",
+  "fecha": "14/05/2025",
+  "titulo": "Después de 15 días, día del peatón",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775056076/Di%CC%81aPeato%CC%81n18deMayo03_tia1z0.jpg",
+    "alt": "Día del peatón"
+   }
+  ]
+ },
+ {
+  "id": "marchas-en-la-paz-reclaman-combustible",
+  "seccion": "periodismo",
+  "fecha": "04/06/2025",
+  "titulo": "Marchas en La Paz, reclaman combustible",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906226/MasivaMovilizacio%CC%81n01_lhp2fg.jpg",
+    "alt": "Marchas La Paz"
+   }
+  ]
+ },
+ {
+  "id": "conflictos-cobran-vidas",
+  "seccion": "periodismo",
+  "fecha": "25/06/2025",
+  "titulo": "Conflictos cobran vidas",
+  "nota": "",
+  "layout": "single",
+  "tags": [
+   "Noticias"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774906116/PresidenteAsesinatodePolici%CC%81as02_dm8jf0.jpg",
+    "alt": "Conflictos"
+   }
+  ]
+ },
+ {
+  "id": "masacre-de-la-calle-harrington",
+  "seccion": "periodismo",
+  "fecha": "15/01/2026",
+  "titulo": "Masacre de la calle Harrington",
+  "nota": "",
+  "layout": "strip",
+  "tags": [
+   "45 Años",
+   "Carrusel"
+  ],
+  "imgs": [
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774905889/masacre-harrington_01_j7hqz5.jpg",
+    "alt": "Imagen 1 de 3"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774905887/masacre-harrington_02_kp5fp2.jpg",
+    "alt": "Imagen 2 de 3"
+   },
+   {
+    "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1774905885/masacre-harrington_03_jaovaa.jpg",
+    "alt": "Imagen 3 de 3"
    }
   ]
  },
