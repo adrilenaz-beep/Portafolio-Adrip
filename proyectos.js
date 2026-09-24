@@ -13,6 +13,7 @@ const PROYECTOS = [
   anio: '2022',
   colores: ['#3f9147', '#d63a2f', '#ece5d8'],
   efecto: 'bloom',
+  ascii: true,
   pos: { x: 21, y: 30, z: 1.18 },
   linea: 'Patrón floral sobre William Morris, llevado al muro',
   abierto: true,

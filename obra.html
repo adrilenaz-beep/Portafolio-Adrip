@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dmvmqykud/image/upload/v1775351852/1AdripSVG_oijqbk.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@200;300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&family=IBM+Plex+Sans:wght@300;400;500&display=swap">
 <style>
 :root{
   --vacio:#080809;
@@ -28,7 +28,7 @@
 html,body{height:100%}
 body{
   margin:0; background:var(--vacio); color:var(--tinta);
-  font-family:var(--sans); overflow:hidden;
+  font-family:var(--mono); overflow:hidden;
 }
 body.leyendo{overflow:auto}
 a{color:inherit;text-decoration:none}
@@ -88,10 +88,10 @@ a{color:inherit;text-decoration:none}
 }
 .proy-tit{
   position:relative; z-index:2; display:block;
-  font-size:clamp(26px, 4.4vw, 62px); font-weight:200;
-  letter-spacing:-.02em; line-height:.95; white-space:nowrap;
-  color:var(--tinta); transition:color .4s, letter-spacing .4s;
-  text-shadow:0 0 26px rgba(8,8,9,.92), 0 0 9px rgba(8,8,9,.75);
+  font-family:var(--mono);
+  font-size:clamp(26px, 4.6vw, 58px); font-weight:700;
+  letter-spacing:-.03em; line-height:.95; white-space:nowrap;
+  color:var(--tinta); transition:letter-spacing .4s;
 }
 .proy-meta{
   position:relative; z-index:2; display:block; margin-top:9px;
@@ -101,71 +101,133 @@ a{color:inherit;text-decoration:none}
 }
 .proy-linea{
   position:relative; z-index:2; display:block; margin-top:4px;
-  font-size:11.5px; font-weight:300; color:transparent;
+  font-family:var(--sans); font-size:11.5px; font-weight:300; color:transparent;
   max-width:30ch; transition:color .5s; line-height:1.5;
 }
 .proy:hover .proy-linea, .proy:focus-visible .proy-linea{color:var(--tinta-media)}
 .proy:hover .proy-tit, .proy:focus-visible .proy-tit{letter-spacing:.005em}
 .proy:hover .proy-meta{color:var(--c1)}
 
-/* la firma de color, un efecto distinto por proyecto */
+/* ── la firma vive DENTRO de la letra, no detrás ── */
 .firma{
   position:absolute; z-index:1; pointer-events:none;
-  left:50%; top:38%; transform:translate(-50%,-50%);
-  width:150%; height:280%;
-  opacity:.9; transition:opacity .5s, transform .7s cubic-bezier(.2,.8,.3,1);
+  left:50%; top:44%; transform:translate(-50%,-50%);
+  width:150%; height:260%;
+  opacity:.34; transition:opacity .5s, transform .7s cubic-bezier(.2,.8,.3,1);
 }
-.proy:hover .firma{opacity:1; transform:translate(-50%,-50%) scale(1.3)}
+.proy:hover .firma{opacity:.55; transform:translate(-50%,-50%) scale(1.14)}
 
-[data-efecto="bloom"] .firma{
-  background:radial-gradient(closest-side at 34% 44%, var(--c2) 0%, transparent 66%),
-             radial-gradient(closest-side at 72% 58%, var(--c1) 0%, transparent 62%);
-  filter:blur(30px);
+/* el patrón que se mete en las letras */
+.proy-tit{
+  background-clip:text; -webkit-background-clip:text;
+  background-repeat:no-repeat;
+  transition:letter-spacing .4s, filter .45s, background-size .6s, background-position .6s;
 }
-[data-efecto="resplandor"] .firma{
-  background:radial-gradient(closest-side, var(--c1) 0%, transparent 68%);
-  filter:blur(38px);
+
+/* ROSAS · las espinas crecen dentro de la palabra */
+[data-efecto="bloom"] .proy-tit{
+  color:transparent;
+  background-image:
+    radial-gradient(circle at 18% 68%, var(--c2) 0 5%, transparent 5.5%),
+    radial-gradient(circle at 52% 26%, var(--c2) 0 4%, transparent 4.5%),
+    radial-gradient(circle at 84% 62%, var(--c2) 0 4.5%, transparent 5%),
+    linear-gradient(104deg, var(--c1) 0%, var(--c1) 46%, var(--c3) 47%, var(--c1) 54%, var(--c1) 100%);
+  background-size:100% 100%;
+  filter:drop-shadow(0 0 22px rgba(63,145,71,.28));
 }
-[data-efecto="luces"] .firma{
-  background:linear-gradient(74deg, transparent 38%, var(--c1) 50%, transparent 62%),
-             linear-gradient(-68deg, transparent 40%, var(--c2) 51%, transparent 63%);
-  filter:blur(20px); opacity:.72;
+[data-efecto="bloom"]:hover .proy-tit{ filter:drop-shadow(0 0 30px rgba(214,58,47,.5)); }
+.ascii{
+  position:absolute; z-index:0; left:-6%; top:50%;
+  transform:translateY(-50%) scale(.72); transform-origin:left center;
+  font-family:var(--mono); font-size:9px; line-height:1.02; white-space:pre;
+  color:var(--c1); opacity:0; letter-spacing:.06em;
+  transition:opacity .75s ease, transform .95s cubic-bezier(.16,1,.3,1);
+  pointer-events:none; text-shadow:0 0 12px rgba(8,8,9,.9);
 }
-[data-efecto="trama"] .firma{
-  background:
-    radial-gradient(closest-side at 30% 42%, var(--c1) 0%, transparent 70%),
-    radial-gradient(closest-side at 70% 58%, var(--c2) 0%, transparent 70%),
-    radial-gradient(closest-side at 50% 30%, var(--c3, var(--c1)) 0%, transparent 68%);
-  filter:blur(26px); opacity:.8;
+.proy:hover .ascii{ opacity:.5; transform:translateY(-50%) scale(1); }
+
+/* PASAMONTAÑAS · la lana tejida, y la franja de los ojos */
+[data-efecto="resplandor"] .proy-tit{
+  color:transparent;
+  background-image:repeating-linear-gradient(88deg,
+    var(--c1) 0 3px, #b52d74 3px 5px, var(--c1) 5px 8px);
+  filter:drop-shadow(0 0 26px rgba(232,64,154,.42));
 }
-[data-efecto="trama"] .firma::after{
-  content:''; position:absolute; inset:0;
-  background:radial-gradient(circle, #000 0.9px, transparent 1.1px) 0 0 / 7px 7px;
-  -webkit-mask-image:radial-gradient(closest-side, #000 40%, transparent 78%);
-  mask-image:radial-gradient(closest-side, #000 40%, transparent 78%);
-  opacity:.75;
+[data-efecto="resplandor"] .proy-tit::after{
+  content:''; position:absolute; left:-2%; right:-2%; top:41%; height:15%;
+  background:var(--vacio); mix-blend-mode:normal;
+  transition:transform .5s cubic-bezier(.2,.8,.3,1);
 }
+[data-efecto="resplandor"]:hover .proy-tit::after{ transform:scaleY(.18); }
+
+/* ROOM G · un haz de luz barre las letras */
+[data-efecto="luces"] .proy-tit{
+  color:transparent;
+  background-image:linear-gradient(101deg,
+    #5d5d58 0%, #5d5d58 28%, var(--c1) 40%, #f2efe9 50%, var(--c2) 60%, #5d5d58 72%, #5d5d58 100%);
+  background-size:230% 100%; background-position:62% 0;
+  filter:drop-shadow(0 0 18px rgba(46,230,168,.22));
+}
+[data-efecto="luces"]:hover .proy-tit{ background-position:4% 0; filter:drop-shadow(0 0 26px rgba(255,59,48,.4)); }
+
+/* MARTADERO · trama de aerosol dentro del tipo */
+[data-efecto="trama"] .proy-tit{
+  color:transparent;
+  background-image:
+    radial-gradient(circle, var(--c1) .9px, transparent 1.15px),
+    radial-gradient(circle, var(--c2) .8px, transparent 1.05px),
+    radial-gradient(circle, var(--c3, var(--c1)) .7px, transparent .95px),
+    linear-gradient(97deg, var(--c1) 0%, var(--c3) 38%, var(--c2) 72%, var(--c1) 100%);
+  background-size:6px 6px, 9px 9px, 13px 13px, 100% 100%;
+  background-position:0 0, 3px 4px, 6px 2px, 0 0;
+  filter:drop-shadow(0 0 16px rgba(43,111,214,.3));
+}
+[data-efecto="trama"]:hover .proy-tit{ background-size:4px 4px, 6px 6px, 9px 9px, 100% 100%; }
+
+/* COWBOYS · el desfase de registro, el que ya le gustaba */
 [data-efecto="desfase"] .firma{ display:none }
 [data-efecto="desfase"] .proy-tit{
-  text-shadow: -.055em 0 0 var(--c1), .055em 0 0 var(--c2) !important;
+  text-shadow: -.055em 0 0 var(--c1), .055em 0 0 var(--c2);
   transition:text-shadow .45s, letter-spacing .4s;
 }
-[data-efecto="desfase"]:hover .proy-tit{ text-shadow: -.13em 0 0 var(--c1), .13em 0 0 var(--c2) !important; }
-[data-efecto="banda"] .firma{
-  top:46%; height:52%;
-  background:linear-gradient(180deg, transparent 0%, var(--c2) 34%, var(--c1) 66%, transparent 100%);
-  filter:blur(16px); opacity:.78;
+[data-efecto="desfase"]:hover .proy-tit{ text-shadow: -.13em 0 0 var(--c1), .13em 0 0 var(--c2); }
+
+/* TIWANAKU · el horizonte cruza las letras */
+[data-efecto="banda"] .proy-tit{
+  color:transparent;
+  background-image:linear-gradient(180deg,
+    var(--c2) 0%, var(--c2) 44%, #efece5 47%, #efece5 53%, var(--c1) 56%, var(--c1) 100%);
+  filter:drop-shadow(0 0 18px rgba(201,162,39,.26));
 }
-[data-efecto="gota"] .firma{
-  width:72%; height:150%; top:42%;
-  background:linear-gradient(160deg, var(--c1), var(--c2));
-  border-radius:58% 58% 52% 52% / 74% 74% 34% 34%;
-  filter:blur(24px); opacity:.62;
+[data-efecto="banda"]:hover .proy-tit{
+  background-image:linear-gradient(180deg,
+    var(--c2) 0%, var(--c2) 30%, #efece5 40%, #efece5 60%, var(--c1) 70%, var(--c1) 100%);
 }
 
-.proy.cerrado .proy-tit{color:var(--tinta-media)}
-.proy.cerrado .firma{opacity:.58}
-.proy.cerrado:hover .firma{opacity:.9}
+/* GOTAS · letrero de neón */
+[data-efecto="gota"] .proy-tit{
+  color:#f4fbfd;
+  text-shadow:
+    0 0 4px #fff,
+    0 0 11px var(--c1),
+    0 0 24px var(--c1),
+    0 0 44px var(--c2),
+    0 0 78px var(--c2);
+  animation: parpadeo 6.5s infinite steps(1);
+}
+@keyframes parpadeo{
+  0%,88%,100%{ opacity:1 }
+  89%{ opacity:.35 } 90%{ opacity:1 } 93%{ opacity:.5 } 94%{ opacity:1 }
+}
+[data-efecto="gota"]:hover .proy-tit{
+  text-shadow:
+    0 0 5px #fff, 0 0 14px var(--c1), 0 0 32px var(--c1),
+    0 0 58px var(--c2), 0 0 104px var(--c2);
+  animation:none;
+}
+
+.proy.cerrado .proy-tit{opacity:.82}
+.proy.cerrado .firma{opacity:.22}
 .proy.cerrado .proy-meta::after{content:' · pronto'; color:var(--tinta-baja)}
 
 /* ── la lectura de un proyecto ── */
@@ -195,10 +257,10 @@ a{color:inherit;text-decoration:none}
 }
 .l-cab > *{position:relative; z-index:1}
 .l-anio{font-family:var(--mono); font-size:10px; letter-spacing:.3em; color:var(--tinta-media); margin-bottom:14px}
-.l-tit{font-size:clamp(42px, 9vw, 130px); font-weight:200; letter-spacing:-.035em; line-height:.9; margin:0}
-.l-linea{font-size:clamp(14px,1.7vw,19px); font-weight:300; color:var(--tinta-media); margin:18px 0 0; max-width:44ch}
+.l-tit{font-family:var(--mono); font-size:clamp(38px, 8vw, 112px); font-weight:700; letter-spacing:-.04em; line-height:.9; margin:0}
+.l-linea{font-family:var(--sans); font-size:clamp(14px,1.7vw,19px); font-weight:300; color:var(--tinta-media); margin:18px 0 0; max-width:44ch}
 .l-texto{
-  padding:6vh 7vw 4vh; max-width:66ch;
+  padding:6vh 7vw 4vh; max-width:66ch; font-family:var(--sans);
   font-size:15px; font-weight:300; line-height:1.85; color:var(--tinta-media);
 }
 .l-paleta{display:flex; gap:0; padding:0 7vw 6vh}
@@ -275,6 +337,34 @@ a{color:inherit;text-decoration:none}
   var $ = function (s) { return document.querySelector(s); };
   var campo = $('#campo');
 
+
+  // el patrón de rosas en ascii, el mismo motivo del pliego
+  var ROSA = [
+    "  .-^-.  ",
+    " /(@@@)\ ",
+    "| (@*@) |",
+    " \'-.-'/ ",
+    "  \\|//  ",
+    "  -\|/-  ",
+    "   \|/   ",
+    "  --+--  ",
+    "   /|\   "
+  ];
+  function tejerRosas(filas, cols) {
+    var out = [];
+    for (var f = 0; f < filas; f++) {
+      for (var l = 0; l < ROSA.length; l++) {
+        var linea = '';
+        for (var c = 0; c < cols; c++) {
+          // filas impares corridas, como el patrón de medio ladrillo
+          linea += (f % 2 ? '    ' : '') + ROSA[l];
+        }
+        out.push(linea);
+      }
+    }
+    return out.join('\n');
+  }
+
   function visibles() {
     return PROYECTOS.filter(function (p) { return !p.oculto || p.revelado; });
   }
@@ -297,6 +387,7 @@ a{color:inherit;text-decoration:none}
       a.style.animationDelay = (1.2 + i * 0.11) + 's';
       a.innerHTML =
         '<span class="firma"></span>' +
+        (p.ascii ? '<pre class="ascii" aria-hidden="true">' + tejerRosas(3, 3) + '</pre>' : '') +
         '<span class="proy-tit">' + p.titulo + '</span>' +
         '<span class="proy-meta">' + p.anio + '</span>' +
         '<span class="proy-linea">' + p.linea + '</span>';
