@@ -270,6 +270,11 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
   'use strict';
   var $ = function (s) { return document.querySelector(s); };
 
+  // los datos pueden no haber llegado, el escritorio no se cae por eso
+  var hayMapa   = typeof MAPA    !== 'undefined';
+  var hayPerfil = typeof PERFIL  !== 'undefined';
+  var hayObras  = typeof OBRAS   !== 'undefined';
+
   /* ── el contenido del escritorio ── */
   var CAMPOS = { negro:'#0A0A0B', corp:'#28B8EA', art:'#E8428E', aca:'#E49F37' };
   var CLAROS = { corp:1, art:1, aca:1 };
@@ -452,7 +457,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
   function obrasDe(ids, porSeccion) {
-    if (typeof OBRAS === 'undefined') return [];
+    if (!hayObras) return [];
     return porSeccion
       ? OBRAS.filter(function (o) { return ids.indexOf(o.seccion) > -1; })
       : OBRAS.filter(function (o) { return ids.indexOf(o.id) > -1; });
@@ -474,11 +479,22 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
   }
 
   function leer(destino) {
-    var m = MAPA[destino];
-    if (!m) return;
-    var c = $('#lec-cuerpo'), cuerpo = '', bajada = '';
+    var m = hayMapa ? MAPA[destino] : null;
+    var c = $('#lec-cuerpo');
+    if (!m) {
+      c.innerHTML = '<h1 class="lec-tit">Contenido no disponible</h1>' +
+        '<p class="lec-bajada">Faltan los datos</p>' +
+        '<div class="lec-bloque"><p class="lec-p">Esta página no pudo cargar sus datos. ' +
+        'Si la estás viendo publicada, falta subir el archivo <strong>contenido.js</strong>. ' +
+        'Abrí GitHub Desktop y apretá Push origin.</p></div>';
+      $('#lector').classList.add('abierto');
+      $('#lector').setAttribute('aria-hidden', 'false');
+      $('#lector').scrollTop = 0;
+      return;
+    }
+    var cuerpo = '', bajada = '';
 
-    if (m.tipo === 'perfil' && m.que === 'bio') {
+    if (m.tipo === 'perfil' && m.que === 'bio' && hayPerfil) {
       bajada = 'Perfil · Biografía';
       cuerpo =
         '<div class="lec-bloque"><h2 class="lec-h">Quién soy</h2>' +
@@ -495,7 +511,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
               esc(e.url) + '" target="_blank" rel="noopener">' + esc(e.handle) + ' ↗</a></dd>'; }).join('') +
         '</dl></div>';
 
-    } else if (m.tipo === 'perfil' && m.que === 'cv') {
+    } else if (m.tipo === 'perfil' && m.que === 'cv' && hayPerfil) {
       bajada = 'Perfil · Trayectoria';
       cuerpo = '<div class="lec-bloque"><h2 class="lec-h">Experiencia</h2>' +
         PERFIL.experiencia.map(function (e) {
@@ -511,7 +527,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
         '<div class="lec-bloque"><h2 class="lec-h">Documento</h2>' +
         '<a class="lec-vinculo" href="documentos/CV-Adriano-Lenaz-Zenteno.pdf" target="_blank" rel="noopener">Descargar el CV en PDF ↗</a></div>';
 
-    } else if (m.tipo === 'academico') {
+    } else if (m.tipo === 'academico' && hayPerfil) {
       bajada = 'Portafolio · Académico';
       if (m.que === 'articulos') {
         cuerpo = PERFIL.investigacion.map(function (i) {
@@ -589,6 +605,10 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
   }
   $('#f-hoy').textContent = fecha(new Date());
   $('#f-act').textContent = fecha(new Date(document.lastModified));
+
+  if (!hayMapa || !hayPerfil || !hayObras) {
+    $('#pie-estado').textContent = 'Faltan datos · subí contenido.js con Push origin';
+  }
 })();
 </script>
 </body>
