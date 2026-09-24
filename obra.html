@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Obra de Adriano Lenaz Zenteno. Proyectos artísticos, intervención, serie y fotografía. ADRIP, Cochabamba, Bolivia.">
+<meta property="og:title" content="ADRIANO LENAZ — OBRA">
+<meta property="og:description" content="Proyectos artísticos. Intervención, serie y fotografía desde Cochabamba.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://adrilenaz-beep.github.io/Portafolio-Adrip/obra.html">
+<title>ADRIANO LENAZ — OBRA</title>
+<link rel="canonical" href="https://adrilenaz-beep.github.io/Portafolio-Adrip/obra.html">
+<link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dmvmqykud/image/upload/v1775351852/1AdripSVG_oijqbk.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@200;300;400;500&display=swap">
+<style>
+:root{
+  --vacio:#080809;
+  --tinta:#efece5;
+  --tinta-media:#8e8b84;
+  --tinta-baja:#54524c;
+  --linea:#22222a;
+  --mono:'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --sans:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--vacio); color:var(--tinta);
+  font-family:var(--sans); overflow:hidden;
+}
+body.leyendo{overflow:auto}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--tinta);outline-offset:4px}
+
+/* ── el velo que borra lo anterior ── */
+#velo{
+  position:fixed; inset:0; z-index:200; background:var(--tinta);
+  transform-origin:top;
+  animation: borrar 1.15s cubic-bezier(.76,0,.24,1) .15s forwards;
+}
+@keyframes borrar{
+  0%   { transform:scaleY(1); }
+  100% { transform:scaleY(0); }
+}
+#velo::after{
+  content:'OBRA';
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  font-family:var(--mono); font-size:13px; letter-spacing:.7em;
+  color:var(--vacio); animation: irse .5s ease forwards;
+}
+@keyframes irse{ to{ opacity:0 } }
+
+/* ── chrome ── */
+.tope, .pie{
+  position:fixed; left:0; right:0; z-index:60;
+  display:flex; align-items:center; gap:18px;
+  padding:20px 26px; font-family:var(--mono); font-size:10px;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--tinta-baja);
+  opacity:0; animation: aparecer .8s ease 1.15s forwards;
+}
+.tope{top:0} .pie{bottom:0}
+.tope a:hover, .pie a:hover{color:var(--tinta)}
+.crece{flex:1}
+@keyframes aparecer{ to{ opacity:1 } }
+
+/* ── el espacio ── */
+#espacio{
+  position:relative; width:100%; height:100vh;
+  perspective:900px; overflow:hidden;
+}
+#campo{
+  position:absolute; inset:0;
+  transition: transform .9s cubic-bezier(.2,.8,.3,1);
+  will-change:transform;
+}
+
+.proy{
+  position:absolute; display:block; cursor:pointer;
+  transform:translate(-50%,-50%) scale(var(--z));
+  opacity:0;
+  animation: llegar 1.5s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes llegar{
+  0%   { opacity:0; transform:translate(-50%,-50%) scale(calc(var(--z) * 2.4)); filter:blur(14px); }
+  100% { opacity:1; transform:translate(-50%,-50%) scale(var(--z)); filter:blur(0); }
+}
+.proy-tit{
+  position:relative; z-index:2; display:block;
+  font-size:clamp(26px, 4.4vw, 62px); font-weight:200;
+  letter-spacing:-.02em; line-height:.95; white-space:nowrap;
+  color:var(--tinta); transition:color .4s, letter-spacing .4s;
+  text-shadow:0 0 26px rgba(8,8,9,.92), 0 0 9px rgba(8,8,9,.75);
+}
+.proy-meta{
+  position:relative; z-index:2; display:block; margin-top:9px;
+  font-family:var(--mono); font-size:9px; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--tinta-baja); transition:color .4s;
+  text-shadow:0 0 14px rgba(8,8,9,.95);
+}
+.proy-linea{
+  position:relative; z-index:2; display:block; margin-top:4px;
+  font-size:11.5px; font-weight:300; color:transparent;
+  max-width:30ch; transition:color .5s; line-height:1.5;
+}
+.proy:hover .proy-linea, .proy:focus-visible .proy-linea{color:var(--tinta-media)}
+.proy:hover .proy-tit, .proy:focus-visible .proy-tit{letter-spacing:.005em}
+.proy:hover .proy-meta{color:var(--c1)}
+
+/* la firma de color, un efecto distinto por proyecto */
+.firma{
+  position:absolute; z-index:1; pointer-events:none;
+  left:50%; top:38%; transform:translate(-50%,-50%);
+  width:150%; height:280%;
+  opacity:.9; transition:opacity .5s, transform .7s cubic-bezier(.2,.8,.3,1);
+}
+.proy:hover .firma{opacity:1; transform:translate(-50%,-50%) scale(1.3)}
+
+[data-efecto="bloom"] .firma{
+  background:radial-gradient(closest-side at 34% 44%, var(--c2) 0%, transparent 66%),
+             radial-gradient(closest-side at 72% 58%, var(--c1) 0%, transparent 62%);
+  filter:blur(30px);
+}
+[data-efecto="resplandor"] .firma{
+  background:radial-gradient(closest-side, var(--c1) 0%, transparent 68%);
+  filter:blur(38px);
+}
+[data-efecto="luces"] .firma{
+  background:linear-gradient(74deg, transparent 38%, var(--c1) 50%, transparent 62%),
+             linear-gradient(-68deg, transparent 40%, var(--c2) 51%, transparent 63%);
+  filter:blur(20px); opacity:.72;
+}
+[data-efecto="trama"] .firma{
+  background:
+    radial-gradient(closest-side at 30% 42%, var(--c1) 0%, transparent 70%),
+    radial-gradient(closest-side at 70% 58%, var(--c2) 0%, transparent 70%),
+    radial-gradient(closest-side at 50% 30%, var(--c3, var(--c1)) 0%, transparent 68%);
+  filter:blur(26px); opacity:.8;
+}
+[data-efecto="trama"] .firma::after{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle, #000 0.9px, transparent 1.1px) 0 0 / 7px 7px;
+  -webkit-mask-image:radial-gradient(closest-side, #000 40%, transparent 78%);
+  mask-image:radial-gradient(closest-side, #000 40%, transparent 78%);
+  opacity:.75;
+}
+[data-efecto="desfase"] .firma{ display:none }
+[data-efecto="desfase"] .proy-tit{
+  text-shadow: -.055em 0 0 var(--c1), .055em 0 0 var(--c2) !important;
+  transition:text-shadow .45s, letter-spacing .4s;
+}
+[data-efecto="desfase"]:hover .proy-tit{ text-shadow: -.13em 0 0 var(--c1), .13em 0 0 var(--c2) !important; }
+[data-efecto="banda"] .firma{
+  top:46%; height:52%;
+  background:linear-gradient(180deg, transparent 0%, var(--c2) 34%, var(--c1) 66%, transparent 100%);
+  filter:blur(16px); opacity:.78;
+}
+[data-efecto="gota"] .firma{
+  width:72%; height:150%; top:42%;
+  background:linear-gradient(160deg, var(--c1), var(--c2));
+  border-radius:58% 58% 52% 52% / 74% 74% 34% 34%;
+  filter:blur(24px); opacity:.62;
+}
+
+.proy.cerrado .proy-tit{color:var(--tinta-media)}
+.proy.cerrado .firma{opacity:.58}
+.proy.cerrado:hover .firma{opacity:.9}
+.proy.cerrado .proy-meta::after{content:' · pronto'; color:var(--tinta-baja)}
+
+/* ── la lectura de un proyecto ── */
+#lectura{
+  position:fixed; inset:0; z-index:120; overflow-y:auto;
+  background:var(--vacio); opacity:0; pointer-events:none;
+  transition:opacity .5s;
+}
+#lectura.abierta{opacity:1; pointer-events:auto}
+.l-cerrar{
+  position:fixed; top:18px; right:22px; z-index:130;
+  font-family:var(--mono); font-size:10px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--tinta-media);
+  background:var(--vacio); border:1px solid var(--linea);
+  padding:9px 15px; cursor:pointer;
+}
+.l-cerrar:hover{color:var(--tinta)}
+.l-cab{
+  min-height:62vh; display:flex; flex-direction:column; justify-content:flex-end;
+  padding:0 7vw 5vh; position:relative; overflow:hidden;
+}
+.l-cab::before{
+  content:''; position:absolute; inset:0; z-index:0;
+  background:radial-gradient(60% 70% at 26% 40%, var(--c1) 0%, transparent 70%),
+             radial-gradient(48% 58% at 74% 62%, var(--c2) 0%, transparent 70%);
+  opacity:.34; filter:blur(58px);
+}
+.l-cab > *{position:relative; z-index:1}
+.l-anio{font-family:var(--mono); font-size:10px; letter-spacing:.3em; color:var(--tinta-media); margin-bottom:14px}
+.l-tit{font-size:clamp(42px, 9vw, 130px); font-weight:200; letter-spacing:-.035em; line-height:.9; margin:0}
+.l-linea{font-size:clamp(14px,1.7vw,19px); font-weight:300; color:var(--tinta-media); margin:18px 0 0; max-width:44ch}
+.l-texto{
+  padding:6vh 7vw 4vh; max-width:66ch;
+  font-size:15px; font-weight:300; line-height:1.85; color:var(--tinta-media);
+}
+.l-paleta{display:flex; gap:0; padding:0 7vw 6vh}
+.l-paleta i{width:56px; height:56px; display:block}
+
+.l-etapa{padding:0 7vw 7vh}
+.l-etapa h2{
+  font-family:var(--mono); font-size:10px; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--tinta-media); margin:0 0 18px; display:flex; align-items:center; gap:14px;
+}
+.l-etapa h2::after{content:''; flex:1; height:1px; background:var(--linea)}
+.l-imgs{columns:2; column-gap:10px}
+.l-imgs img{width:100%; height:auto; display:block; background:#111; cursor:zoom-in;
+  margin:0 0 10px; break-inside:avoid}
+@media (min-width:1400px){ .l-imgs{columns:3} }
+.l-pie{padding:0 7vw 12vh; font-family:var(--mono); font-size:10px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--tinta-baja)}
+
+/* ── visor de imagen ── */
+#visor{position:fixed; inset:0; z-index:180; background:rgba(4,4,5,.95);
+  display:none; align-items:center; justify-content:center; padding:4vh 4vw}
+#visor.abierto{display:flex}
+#visor img{max-width:100%; max-height:92vh; object-fit:contain}
+
+@media (prefers-reduced-motion: reduce){
+  #velo{display:none}
+  .proy, .tope, .pie{animation:none !important; opacity:1}
+  *{transition:none !important}
+}
+@media (max-width: 760px){
+  body{overflow:auto}
+  #espacio{height:auto; min-height:100vh; padding:88px 20px 96px; perspective:none}
+  #campo{position:static; transform:none !important}
+  .proy{position:static; transform:none !important; margin:0 0 42px; animation:none; opacity:1}
+  .proy-tit{white-space:normal; font-size:34px}
+  .proy-linea{color:var(--tinta-media)}
+  .firma{width:60%; height:120%; top:50%; left:22%}
+  .l-imgs{columns:1}
+}
+</style>
+</head>
+<body>
+
+<div id="velo"></div>
+
+<div class="tope">
+  <span>Adriano Lenaz Zenteno</span>
+  <span class="crece"></span>
+  <span id="cuenta"></span>
+</div>
+
+<div id="espacio">
+  <div id="campo"></div>
+</div>
+
+<div class="pie">
+  <a href="index.html">← Ficha</a>
+  <a href="portafolio.html">Portafolio</a>
+  <span class="crece"></span>
+  <span>Obra · Cochabamba</span>
+</div>
+
+<div id="lectura" aria-hidden="true">
+  <button class="l-cerrar" id="l-cerrar">✕ Volver</button>
+  <div id="l-cuerpo"></div>
+</div>
+
+<div id="visor"><img id="visor-img" alt=""></div>
+
+<script src="proyectos.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var campo = $('#campo');
+
+  function visibles() {
+    return PROYECTOS.filter(function (p) { return !p.oculto || p.revelado; });
+  }
+
+  function pintarCampo() {
+    campo.textContent = '';
+    var lista = visibles();
+    lista.forEach(function (p, i) {
+      var a = document.createElement('a');
+      a.className = 'proy' + (p.abierto ? '' : ' cerrado');
+      a.href = p.abierto ? '#' + p.id : '#';
+      a.dataset.efecto = p.efecto;
+      a.dataset.id = p.id;
+      a.style.left = p.pos.x + '%';
+      a.style.top = p.pos.y + '%';
+      a.style.setProperty('--z', p.pos.z);
+      a.style.setProperty('--c1', p.colores[0]);
+      a.style.setProperty('--c2', p.colores[1] || p.colores[0]);
+      if (p.colores[2]) a.style.setProperty('--c3', p.colores[2]);
+      a.style.animationDelay = (1.2 + i * 0.11) + 's';
+      a.innerHTML =
+        '<span class="firma"></span>' +
+        '<span class="proy-tit">' + p.titulo + '</span>' +
+        '<span class="proy-meta">' + p.anio + '</span>' +
+        '<span class="proy-linea">' + p.linea + '</span>';
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (p.abierto) abrir(p);
+      });
+      campo.appendChild(a);
+    });
+    $('#cuenta').textContent = lista.length + ' proyectos';
+  }
+
+  /* ── el espacio se mueve con el puntero ── */
+  var objetivo = { x: 0, y: 0 }, actual = { x: 0, y: 0 };
+  if (window.matchMedia('(min-width: 761px)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.addEventListener('pointermove', function (e) {
+      objetivo.x = (e.clientX / window.innerWidth - 0.5) * -34;
+      objetivo.y = (e.clientY / window.innerHeight - 0.5) * -22;
+    });
+    (function seguir() {
+      actual.x += (objetivo.x - actual.x) * 0.045;
+      actual.y += (objetivo.y - actual.y) * 0.045;
+      campo.style.transform = 'translate3d(' + actual.x + 'px,' + actual.y + 'px,0)';
+      requestAnimationFrame(seguir);
+    })();
+  }
+
+  /* ── leer un proyecto ── */
+  function abrir(p) {
+    var c = $('#l-cuerpo');
+    var etapas = (p.etapas || []).map(function (e) {
+      return '<section class="l-etapa"><h2>' + e.nombre + '</h2><div class="l-imgs">' +
+        e.imgs.map(function (f) {
+          return '<img src="obra/' + p.id + '/' + f + '" alt="' + p.titulo + '" loading="lazy">';
+        }).join('') + '</div></section>';
+    }).join('');
+    c.innerHTML =
+      '<header class="l-cab">' +
+        '<span class="l-anio">' + p.anio + '</span>' +
+        '<h1 class="l-tit">' + p.titulo + '</h1>' +
+        '<p class="l-linea">' + p.linea + '</p>' +
+      '</header>' +
+      '<div class="l-paleta">' + p.colores.map(function (col) {
+        return '<i style="background:' + col + '"></i>';
+      }).join('') + '</div>' +
+      (p.texto ? '<div class="l-texto">' + p.texto + '</div>' : '') +
+      etapas +
+      '<div class="l-pie">Adriano Lenaz Zenteno · ADRIP · Cochabamba</div>';
+    c.style.setProperty('--c1', p.colores[0]);
+    c.style.setProperty('--c2', p.colores[1] || p.colores[0]);
+    var l = $('#lectura');
+    l.classList.add('abierta');
+    l.setAttribute('aria-hidden', 'false');
+    l.scrollTop = 0;
+    document.body.classList.add('leyendo');
+    if (history.replaceState) history.replaceState(null, '', '#' + p.id);
+    c.querySelectorAll('.l-imgs img').forEach(function (im) {
+      im.addEventListener('click', function () {
+        $('#visor-img').src = im.src;
+        $('#visor').classList.add('abierto');
+      });
+    });
+  }
+
+  function cerrar() {
+    $('#lectura').classList.remove('abierta');
+    $('#lectura').setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('leyendo');
+    if (history.replaceState) history.replaceState(null, '', location.pathname);
+  }
+  $('#l-cerrar').addEventListener('click', cerrar);
+  $('#visor').addEventListener('click', function () { $('#visor').classList.remove('abierto'); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if ($('#visor').classList.contains('abierto')) $('#visor').classList.remove('abierto');
+    else if ($('#lectura').classList.contains('abierta')) cerrar();
+  });
+
+  /* ── lo que no figura ── */
+  var CLAVE = '1312', tecleado = '';
+  function revelar() {
+    var p = PROYECTOS.find(function (x) { return x.oculto && !x.revelado; });
+    if (!p) return;
+    p.revelado = true;
+    pintarCampo();
+    var el = campo.querySelector('[data-id="' + p.id + '"]');
+    if (el) { el.style.animationDelay = '0s'; }
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.key.length !== 1) return;
+    tecleado = (tecleado + e.key).slice(-CLAVE.length);
+    if (tecleado === CLAVE) { tecleado = ''; revelar(); }
+  });
+
+  /* ── arranque ── */
+  pintarCampo();
+  var hash = location.hash.replace('#', '');
+  if (hash === CLAVE) revelar();
+  else if (hash) {
+    var p = PROYECTOS.find(function (x) { return x.id === hash && x.abierto; });
+    if (p) setTimeout(function () { abrir(p); }, 1300);
+  }
+})();
+</script>
+</body>
+</html>

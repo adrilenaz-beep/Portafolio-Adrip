@@ -342,7 +342,7 @@ body::after {
   display: flex; align-items: center; gap: 12px;
 }
 .access-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-.access-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.access-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .access-card {
   display: block; border: 1px solid var(--border); padding: 32px 28px;
   text-decoration: none; color: var(--ink);
@@ -1026,6 +1026,12 @@ body::after {
         <div class="access-card-title">Portafolio</div>
         <div class="access-card-sub">Ver proyectos y trabajo visual</div>
         <div class="access-card-ref">DOC-PORT · ADRIP</div>
+      </a>
+      <a href="obra.html" class="access-card">
+        <div class="access-icon">◆</div>
+        <div class="access-card-title">Obra</div>
+        <div class="access-card-sub">Proyectos artísticos, intervención y serie</div>
+        <div class="access-card-ref">DOC-OBRA · ADRIP</div>
       </a>
     </div>
   </div>

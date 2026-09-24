@@ -11,7 +11,7 @@ Se abre un tablero en el navegador donde podés:
 - **marcar una sección** como no listada, o como la que abre desplegada
 - **sacar una obra** del portafolio, sus imágenes vuelven al banco
 
-Cuando apretás **Guardar cambios** se reescribe `obra.js`, que es de donde el
+Cuando apretás **Guardar cambios** se reescribe `portafolio-datos.js`, que es de donde el
 portafolio se arma solo. Antes de cada guardado se deja una copia en
 `herramienta/copias/`, por si hay que volver atrás.
 

@@ -9,7 +9,7 @@ import http.server, socketserver, json, os, io, shutil, datetime, webbrowser, th
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUERTO = 8899
-DATOS = os.path.join(RAIZ, 'obra.js')
+DATOS = os.path.join(RAIZ, 'portafolio-datos.js')
 COPIAS = os.path.join(RAIZ, 'herramienta', 'copias')
 
 CABECERA = """// ─────────────────────────────────────────────────────────────
@@ -48,7 +48,7 @@ class Manejador(http.server.SimpleHTTPRequestHandler):
             os.makedirs(COPIAS, exist_ok=True)
             if os.path.exists(DATOS):
                 sello = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-                shutil.copy(DATOS, os.path.join(COPIAS, f'obra_{sello}.js'))
+                shutil.copy(DATOS, os.path.join(COPIAS, f'portafolio-datos_{sello}.js'))
 
             cuerpo = CABECERA
             for clave in ('GRUPOS', 'SECCIONES', 'OBRAS'):
