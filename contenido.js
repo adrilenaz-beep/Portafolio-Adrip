@@ -271,7 +271,6 @@ const MAPA = {
   "tipo": "secciones",
   "ids": [
    "editorial",
-   "portadas",
    "publicaciones"
   ],
   "titulo": "Diseño editorial"
@@ -315,7 +314,7 @@ const MAPA = {
   "tipo": "obras",
   "ids": [
    "martadero-y-ayacucho",
-   "quemalo-todo",
+   "qu-malo-todo",
    "centu-y-pico"
   ],
   "titulo": "adrip",

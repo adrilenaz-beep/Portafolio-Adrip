@@ -80,7 +80,7 @@ const SECCIONES = [
  {
   "id": "periodismo",
   "titulo": "Periodismo Gráfico · Opinión",
-  "cuenta": "31 registros",
+  "cuenta": "32 registros",
   "oculta": false,
   "abierta": false,
   "aMano": false,
@@ -89,7 +89,7 @@ const SECCIONES = [
  {
   "id": "posters",
   "titulo": "Cartel",
-  "cuenta": "6 proyectos",
+  "cuenta": "7 proyectos",
   "oculta": false,
   "abierta": false,
   "aMano": false,
@@ -108,15 +108,6 @@ const SECCIONES = [
   "id": "editorial",
   "titulo": "Editorial · Publicación",
   "cuenta": "6 proyectos",
-  "oculta": false,
-  "abierta": false,
-  "aMano": false,
-  "grupo": "encargo"
- },
- {
-  "id": "portadas",
-  "titulo": "Portadas · Suplemento",
-  "cuenta": "1 proyecto",
   "oculta": false,
   "abierta": false,
   "aMano": false,
@@ -1464,41 +1455,6 @@ const OBRAS = [
   ]
  },
  {
-  "id": "la-ramona",
-  "seccion": "portadas",
-  "fecha": "2024",
-  "titulo": "La Ramona",
-  "nota": "Portadas para el suplemento La Ramona de Opinión. Manos, stickers y ciudad, con la cabecera como parte del dibujo.",
-  "layout": "3col",
-  "tags": [
-   "Portada",
-   "Editorial",
-   "Opinión"
-  ],
-  "imgs": [
-   {
-    "src": "obra/la-ramona-alasitas.jpg",
-    "alt": "Alasitas"
-   },
-   {
-    "src": "obra/la-ramona-monky.jpg",
-    "alt": "Monky"
-   },
-   {
-    "src": "obra/poster-a1-adriano.jpg",
-    "alt": "Poster A1"
-   },
-   {
-    "src": "obra/adrip-face-book-composicion-cultural.jpg",
-    "alt": "Composición cultural"
-   }
-  ],
-  "enlace": {
-   "destino": "arte:la-ramona",
-   "texto": "Ver el proyecto completo en Obra"
-  }
- },
- {
   "id": "coordinadora-de-la-mujer",
   "seccion": "posters",
   "fecha": "2025",
@@ -1921,6 +1877,48 @@ const OBRAS = [
    {
     "src": "obra/pbfcc/analisis-medios-04.jpg",
     "alt": "Interior"
+   }
+  ]
+ },
+ {
+  "id": "composicion-cultural",
+  "seccion": "periodismo",
+  "fecha": "2024",
+  "titulo": "Composición cultural",
+  "nota": "Composición para una página del periódico impreso de Opinión. Signos de la ciudad, música y juego armados como un solo plano de color.",
+  "layout": "1col",
+  "tags": [
+   "Opinión",
+   "Ilustración",
+   "Impreso"
+  ],
+  "enlace": {
+   "destino": "arte:la-ramona",
+   "texto": "Del mismo tiempo en Opinión, ver La Ramona"
+  },
+  "imgs": [
+   {
+    "src": "obra/adrip-face-book-composicion-cultural.jpg",
+    "alt": "Composición cultural"
+   }
+  ]
+ },
+ {
+  "id": "poster-a1-adrip",
+  "seccion": "posters",
+  "fecha": "2023",
+  "titulo": "Manos",
+  "nota": "Cartel A1. Manos sosteniendo stickers y objetos, en semitono.",
+  "layout": "1col",
+  "tags": [
+   "Cartel",
+   "Semitono",
+   "A1"
+  ],
+  "imgs": [
+   {
+    "src": "obra/poster-a1-adriano.jpg",
+    "alt": "Cartel A1, manos"
    }
   ]
  }

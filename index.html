@@ -791,8 +791,10 @@ body.claro .marca-caja .marca-pos{opacity:1}
     } else {
       bajada = 'Portafolio';
       var lista = obrasDe(m.ids, m.tipo === 'secciones');
-      // las que tienen una sola imagen van a hoja de contactos, el resto a bloque
+      // las que tienen una sola imagen van a hoja de contactos, el resto a bloque.
+      // Las que llevan puente o documento se muestran enteras, tienen algo que decir.
       var sueltas = lista.filter(function (o) {
+        if ((o.enlace && o.enlace.destino) || (o.doc && o.doc.src)) return false;
         return (o.imgs || []).filter(function (i) { return i.src; }).length === 1; });
       var amplias = lista.filter(function (o) { return sueltas.indexOf(o) === -1; });
       cuerpo = '';

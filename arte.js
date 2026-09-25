@@ -241,7 +241,7 @@ const ARTE = [
   "oculto": false,
   "capitulos": [
    {
-    "nombre": "",
+    "nombre": "Diseño de portadas",
     "piezas": [
      {
       "tipo": "imagen",
@@ -268,8 +268,8 @@ const ARTE = [
    }
   ],
   "enlace": {
-   "destino": "diseno-editorial",
-   "texto": "Ver las portadas en Diseño editorial"
+   "destino": "periodismo-grafico",
+   "texto": "Del mismo tiempo en Opinión, ver Periodismo gráfico"
   }
  },
  {
