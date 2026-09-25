@@ -335,20 +335,18 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
       {t:'DISEÑO EDITORIAL',   d:'diseno-editorial'},
       {t:'CARTELES / AFICHES', d:'carteles'},
       {t:'DISEÑO DE MARCAS',   d:'marcas'}] },
-    art:{ pag:'003', x:37, y:17, items:[
-      {t:'FOTOGRAFÍA', d:'arte:fotografia'},
-      {t:'STICKERS', d:'arte:stickers'},
-      {t:'EMBELLECIENDO LA CIUDAD', d:'arte:embelleciendo'},
-      {t:'PODRÍA SER TU / PODRÍA SER YO', d:'arte:podria-ser', oculto:true},
-      {t:'NO PIERDAS TU HUMANIDAD', d:'arte:humanidad', oculto:true},
-      {t:'LA HISTORIA DEL PASAMONTAÑAS', d:'arte:historia-pasamontanas', oculto:true},
-      {t:'GOTA', d:'arte:gota', espejo:true},
-      {t:'CANSADO', d:'arte:cansado'},
-      {t:'LA RAMONA', d:'arte:la-ramona'},
-      {t:'EVP', d:'arte:evp'},
+    art:{ pag:'003', x:37, y:22, items:[
       {t:'ANARKY JAKET', d:'arte:anarky-jaket'},
+      {t:'CANSADO', d:'arte:cansado'},
+      {t:'EVP', d:'arte:evp'},
       {t:'FANZINE 01', d:'arte:fanzine-01'},
-      {t:'FANZINE QIRBA', d:'arte:fanzine-qirba'}] },
+      {t:'FOTOS PALOMA', d:'arte:fotos-paloma'},
+      {t:'FOTOS VIAJE, AUTO', d:'arte:fotos-viaje-auto'},
+      {t:'FANZINE HISTORIA DEL PASAMONTAÑAS', d:'arte:fanzine-historia-del-pasamontanas'},
+      {t:'LA RAMONA', d:'arte:la-ramona'},
+      {t:'PASAMONTAÑAS (HISTORIA)', d:'arte:pasamontanas-historia', oculto:true},
+      {t:'ROSA : EMBELLECIENDO', d:'arte:rosa-embelleciendo'},
+      {t:'STICKERS', d:'arte:stickers'}] },
     aca:{ pag:'004', x:37, y:33, items:[
       {t:'ARTÍCULOS ACADÉMICOS', d:'articulos'},
       {t:'VOLUNTARIADO',         d:'voluntariado'},
@@ -579,11 +577,16 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
   function leerArte(id) {
     var a = (typeof ARTE !== 'undefined' ? ARTE : []).find(function (x) { return x.id === id; });
     if (!a) return null;
+    var caps = (a.capitulos || []).map(function (c) {
+      return '<div class="lec-bloque">' +
+        (c.nombre ? '<h2 class="lec-h">' + esc(c.nombre) + '</h2>' : '') +
+        '<div class="lec-piezas">' + c.piezas.map(htmlPieza).join('') + '</div></div>';
+    }).join('');
+    var n = (a.capitulos || []).reduce(function (t, c) { return t + c.piezas.length; }, 0);
     return '<h1 class="lec-tit">' + esc(a.titulo) + '</h1>' +
-      '<p class="lec-bajada">Obra · ' + esc(a.anio) + '</p>' +
-      '<div class="lec-bloque"><p class="lec-p">' + esc(a.nota) + '</p></div>' +
-      '<div class="lec-bloque"><div class="lec-piezas">' +
-      a.piezas.map(htmlPieza).join('') + '</div></div>';
+      '<p class="lec-bajada">Obra · ' + esc(a.anio) + ' · ' + n + ' piezas</p>' +
+      (a.nota ? '<div class="lec-bloque"><p class="lec-p">' + esc(a.nota) + '</p></div>' : '') +
+      caps;
   }
 
   function leer(destino) {
