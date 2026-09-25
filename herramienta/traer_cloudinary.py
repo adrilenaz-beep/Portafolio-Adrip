@@ -11,11 +11,17 @@ NUBE = 'dmvmqykud'
 SALIDA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cloudinary.json')
 
 
-def pedir(texto, oculto=False):
-    v = (getpass.getpass(texto) if oculto else input(texto)).strip()
-    if not v:
-        print('  No escribiste nada. Salgo sin hacer nada.')
+def pedir(texto, oculto=False, porDefecto=None):
+    try:
+        v = (getpass.getpass(texto) if oculto else input(texto)).strip()
+    except (EOFError, KeyboardInterrupt):
+        print('\n  Cancelado.')
         sys.exit(1)
+    if not v:
+        if porDefecto is not None:
+            return porDefecto
+        print('  Eso no puede quedar vacío. Probá de nuevo.')
+        return pedir(texto, oculto, porDefecto)
     return v
 
 
@@ -43,7 +49,7 @@ def main():
     print('  Se usa para una sola consulta de lectura y se descarta.')
     print()
 
-    etiqueta = pedir('  Etiqueta que les pusiste [obra]: ') or 'obra'
+    etiqueta = pedir('  Etiqueta que les pusiste [obra]: ', porDefecto='obra')
     clave = pedir('  API Key: ')
     secreto = pedir('  API Secret (no se va a ver mientras escribís): ', oculto=True)
 
