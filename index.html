@@ -196,7 +196,9 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .lec-lista li{font-size:12.5px; line-height:1.75; padding-left:20px; position:relative; margin-bottom:6px; font-weight:300}
 .lec-lista li::before{content:'—'; position:absolute; left:0; color:var(--tinta-baja)}
 .lec-obra{border-top:1px dashed var(--linea); padding:22px 0 4px}
-.lec-docline{margin:13px 0 2px}
+.lec-docline{margin:13px 0 2px; display:flex; gap:12px; align-items:baseline; flex-wrap:wrap}
+.lec-cerrado{font-size:9px; letter-spacing:.17em; text-transform:uppercase; color:var(--tinta-baja);
+  border:1px solid var(--linea); padding:3px 8px}
 .lec-refs{margin:9px 0 0; font-size:10px; letter-spacing:.06em; color:var(--tinta-baja)}
 .lec-comp{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:26px}
 .lec-comp-t{margin:0 0 9px; font-size:10px; letter-spacing:.17em; text-transform:uppercase; font-weight:500}
@@ -566,7 +568,8 @@ body.claro .marca-caja .marca-pos{opacity:1}
       }).join('') + '</div>' : '') +
       (o.doc && o.doc.src ? '<p class="lec-docline"><a class="lec-vinculo" href="' + esc(o.doc.src) +
         '" target="_blank" rel="noopener">Leer el documento' +
-        (o.doc.paginas ? ', ' + o.doc.paginas + ' páginas' : '') + ' &#8599;</a></p>' : '') +
+        (o.doc.paginas ? ', ' + o.doc.paginas + ' páginas' : '') + ' &#8599;</a>' +
+        (o.doc.clave ? '<span class="lec-cerrado">Pide clave</span>' : '') + '</p>' : '') +
       ((o.tags || []).length ? '<div class="lec-tags">' +
         o.tags.map(function (t) { return '<span class="lec-tag">' + esc(t) + '</span>'; }).join('') +
         '</div>' : '') +

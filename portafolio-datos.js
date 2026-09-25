@@ -53,7 +53,7 @@ const SECCIONES = [
  {
   "id": "ilustracion",
   "titulo": "Ilustración",
-  "cuenta": "5 series",
+  "cuenta": "4 series",
   "oculta": false,
   "abierta": false,
   "aMano": false,
@@ -583,24 +583,6 @@ const OBRAS = [
    {
     "src": "obra/img-2586.jpg",
     "alt": "Dibujo"
-   }
-  ]
- },
- {
-  "id": "qu-malo-todo",
-  "seccion": "ilustracion",
-  "fecha": "2024",
-  "titulo": "Quémalo todo",
-  "nota": "Cartel ilustrado. De las cenizas renace, dicho con un esqueleto y dos tintas.",
-  "layout": "single",
-  "tags": [
-   "Ilustración",
-   "Cartel"
-  ],
-  "imgs": [
-   {
-    "src": "obra/quemalo-gato.jpg",
-    "alt": "Quémalo todo"
    }
   ]
  },
@@ -1714,8 +1696,9 @@ const OBRAS = [
    "PBFCC"
   ],
   "doc": {
-   "src": "obra/pbfcc/boletin-07.pdf",
-   "paginas": 14
+   "src": "obra/pbfcc/boletin-07-protegido.pdf",
+   "paginas": 14,
+   "clave": true
   },
   "imgs": [
    {
@@ -1749,8 +1732,9 @@ const OBRAS = [
    "PBFCC"
   ],
   "doc": {
-   "src": "obra/pbfcc/boletin-08.pdf",
-   "paginas": 10
+   "src": "obra/pbfcc/boletin-08-protegido.pdf",
+   "paginas": 10,
+   "clave": true
   },
   "imgs": [
    {
@@ -1784,8 +1768,9 @@ const OBRAS = [
    "PBFCC"
   ],
   "doc": {
-   "src": "obra/pbfcc/biocombustibles.pdf",
-   "paginas": 104
+   "src": "obra/pbfcc/biocombustibles-protegido.pdf",
+   "paginas": 104,
+   "clave": true
   },
   "imgs": [
    {
@@ -1823,8 +1808,9 @@ const OBRAS = [
    "PBFCC"
   ],
   "doc": {
-   "src": "obra/pbfcc/compromisos.pdf",
-   "paginas": 15
+   "src": "obra/pbfcc/compromisos-protegido.pdf",
+   "paginas": 15,
+   "clave": true
   },
   "imgs": [
    {
@@ -1858,8 +1844,9 @@ const OBRAS = [
    "PBFCC"
   ],
   "doc": {
-   "src": "obra/pbfcc/analisis-medios.pdf",
-   "paginas": 9
+   "src": "obra/pbfcc/analisis-medios-protegido.pdf",
+   "paginas": 9,
+   "clave": true
   },
   "imgs": [
    {

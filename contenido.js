@@ -314,7 +314,6 @@ const MAPA = {
   "tipo": "obras",
   "ids": [
    "martadero-y-ayacucho",
-   "qu-malo-todo",
    "centu-y-pico"
   ],
   "titulo": "adrip",

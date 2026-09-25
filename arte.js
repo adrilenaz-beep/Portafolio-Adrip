@@ -25,11 +25,11 @@ const ARTE = [
   "id": "cansado",
   "titulo": "CANSADO",
   "anio": "2025",
-  "nota": "Intervención gráfica sobre gato y texto corrido. El animal grita y el cuerpo de texto no lo deja.",
+  "nota": "Intervención gráfica sobre gato y texto corrido. El animal grita y el cuerpo de texto no lo deja. La propuesta para la intervención siguiente sale de ahí, el final puede ser el inicio de algo diferente.",
   "oculto": false,
   "capitulos": [
    {
-    "nombre": "",
+    "nombre": "La intervención",
     "piezas": [
      {
       "tipo": "imagen",
@@ -50,6 +50,15 @@ const ARTE = [
      {
       "tipo": "imagen",
       "src": "obra/arte/cansado-can04.jpg"
+     }
+    ]
+   },
+   {
+    "nombre": "Lo que viene después",
+    "piezas": [
+     {
+      "tipo": "imagen",
+      "src": "obra/quemalo-gato.jpg"
      }
     ]
    }

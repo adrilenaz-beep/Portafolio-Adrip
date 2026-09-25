@@ -2,3 +2,8 @@ herramienta/copias/
 herramienta/sueltas.json
 .DS_Store
 herramienta/cloudinary.json
+
+# Los PDF de la PBFCC sin clave se quedan en esta máquina.
+# Lo que se publica es la copia protegida que hace 4 PROTEGER LOS PDF.command
+obra/pbfcc/*.pdf
+!obra/pbfcc/*-protegido.pdf
