@@ -98,7 +98,7 @@ const SECCIONES = [
  {
   "id": "branding",
   "titulo": "Identidad · Branding",
-  "cuenta": "6 proyectos",
+  "cuenta": "7 proyectos",
   "oculta": false,
   "abierta": false,
   "aMano": false,
@@ -107,7 +107,7 @@ const SECCIONES = [
  {
   "id": "editorial",
   "titulo": "Editorial · Publicación",
-  "cuenta": "6 proyectos",
+  "cuenta": "5 proyectos",
   "oculta": false,
   "abierta": false,
   "aMano": false,
@@ -1384,8 +1384,8 @@ const OBRAS = [
   "seccion": "posters",
   "fecha": "2024",
   "titulo": "Le fond de l’air est rouge",
-  "nota": "Cartel para la proyección de Chris Marker en la UPB. Rojo plano, collage y una bolsa que sostiene la imagen entera.",
-  "layout": "single",
+  "nota": "Diseñado para el conversatorio de Cine Francés en la Alianza Francesa de Cochabamba.",
+  "layout": "grande",
   "tags": [
    "Cartel",
    "Cine",
@@ -1402,8 +1402,8 @@ const OBRAS = [
   "id": "ciclo-de-cine-wild-edge",
   "seccion": "posters",
   "fecha": "2025",
-  "titulo": "Ciclo de cine · Wild Edge",
-  "nota": "Cartelería para el ciclo. Tres películas de boxeo leídas como una sola imagen de manos abiertas.",
+  "titulo": "Ciclo de cine · La Escuela de Imagen",
+  "nota": "Cartel para el ciclo presentado por La Escuela de Imagen en El Santo Lector, los tres martes de octubre. 8½, F for Fake y The Belly of an Architect, armadas en un solo plano de semitono.",
   "layout": "single",
   "tags": [
    "Cartel",
@@ -1434,7 +1434,11 @@ const OBRAS = [
     "src": "obra/gato-cansadooo.jpg",
     "alt": "CANSADO"
    }
-  ]
+  ],
+  "enlace": {
+   "destino": "arte:cansado",
+   "texto": "Ver el proyecto completo en Obra"
+  }
  },
  {
   "id": "coordinadora-de-la-mujer",
@@ -1797,7 +1801,7 @@ const OBRAS = [
  },
  {
   "id": "pbfcc-compromisos",
-  "seccion": "editorial",
+  "seccion": "branding",
   "fecha": "2026",
   "titulo": "Compromisos por el Clima · Manual de uso",
   "nota": "Manual de uso gráfico y key visual de la campaña. Construcción de la marca, área de seguridad, variantes y aplicaciones.",
@@ -1894,20 +1898,24 @@ const OBRAS = [
   "id": "poster-a1-adrip",
   "seccion": "posters",
   "fecha": "2023",
-  "titulo": "Manos",
-  "nota": "Cartel A1. Manos sosteniendo stickers y objetos, en semitono.",
+  "titulo": "Alasitas",
+  "nota": "Diseñado para el formato impreso, pensado para la nota Geografía inconclusa del periódico Opinión. Manos sosteniendo la feria entera en miniatura.",
   "layout": "1col",
   "tags": [
    "Cartel",
-   "Semitono",
-   "A1"
+   "Opinión",
+   "Impreso"
   ],
   "imgs": [
    {
     "src": "obra/poster-a1-adriano.jpg",
     "alt": "Cartel A1, manos"
    }
-  ]
+  ],
+  "enlace": {
+   "destino": "periodismo-grafico",
+   "texto": "Del mismo tiempo en Opinión, ver Periodismo gráfico"
+  }
  }
 ];
 

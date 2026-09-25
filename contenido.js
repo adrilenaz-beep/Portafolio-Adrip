@@ -1,10 +1,14 @@
-// Un fragmento entre dobles corchetes sale tapado en la web hasta que
-// se escribe la clave. Sirve para cualquier texto de este archivo.
-//   "bio": "Nací en [[el lugar que no digo]] y ..."
-// Ojo, el texto igual viaja dentro de este archivo, así que es un gesto
-// y no una caja fuerte. Lo que de verdad no puede verse va en
-// reservado.enc, que se genera con 5 GUARDAR LO RESERVADO.command
-// Contenido del perfil, extraído del sitio anterior.
+// Dos marcadores, y la diferencia importa.
+//
+//   [[texto]]    el texto sigue viajando dentro de este archivo y solo se tapa
+//                a la vista. Sirve para el gesto de lo tachado. Quien mire el
+//                código fuente lo encuentra igual.
+//
+//   {{clave}}    el dato NO está acá ni en ninguna parte de la página. Vive
+//                cifrado dentro de reservado.enc y aparece recién cuando
+//                alguien escribe la clave correcta. Esto sí lo esconde.
+//
+// Los valores de {{clave}} se cargan con 5 GUARDAR LO RESERVADO.command
 
 const PERFIL = {
  "bio": "Soy <strong>Adriano Lenaz Zenteno</strong>, diseñador gráfico e investigador radicado en Cochabamba, Bolivia. Trabajo bajo la marca <strong>ADRIP</strong> — un proyecto de diseño disruptivo que cuestiona lo convencional y propone soluciones visuales desde una perspectiva crítica, experimental y decolonial.<br><br> Me especializo en <strong>identidad visual, periodismo gráfico, diseño editorial</strong> y narrativa visual.",
@@ -16,7 +20,7 @@ const PERFIL = {
   },
   {
    "k": "email",
-   "v": "[[adrip.disruptivemedia@gmail.com]]"
+   "v": "{{correo}}"
   },
   {
    "k": "rol",
@@ -47,9 +51,9 @@ const PERFIL = {
    "handle": "Adriano Lenaz Zenteno"
   },
   {
-   "url": "mailto:adrip.disruptivemedia@gmail.com",
+   "url": "mailto:{{correo}}",
    "plataforma": "Email",
-   "handle": "[[adrip.disruptivemedia@gmail.com]]"
+   "handle": "{{correo}}"
   }
  ],
  "experiencia": [

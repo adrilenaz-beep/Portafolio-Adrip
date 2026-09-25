@@ -198,6 +198,8 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .lec-lista li::before{content:'—'; position:absolute; left:0; color:var(--tinta-baja)}
 .lec-obra{border-top:1px dashed var(--linea); padding:22px 0 4px}
 .lec-docline{margin:13px 0 2px; display:flex; gap:12px; align-items:baseline; flex-wrap:wrap}
+.lec-grande{margin:6px 0 2px; max-width:860px}
+.lec-grande img{width:100%; height:auto; display:block; cursor:zoom-in}
 .lec-hojas{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin-bottom:4px}
 .lec-hoja{margin:0}
 .lec-hoja img{width:100%; height:auto; display:block; cursor:zoom-in; border:1px solid var(--linea)}
@@ -587,8 +589,10 @@ body.claro .marca-caja .marca-pos{opacity:1}
       '<div class="lec-obra-cab"><span class="lec-obra-tit">' + esc(o.titulo) + '</span>' +
       '<span class="lec-obra-fecha">' + esc(o.fecha) + '</span></div>' +
       (o.nota ? '<p class="lec-p">' + o.nota + '</p>' : '') +
-      (imgs.length ? '<div class="lec-imgs">' + imgs.map(function (im) {
-        return '<img ' + attrImg(im.src) + ' alt="' + esc(im.alt) + '" ' +
+      (imgs.length ? '<div class="' + (o.layout === 'grande' ? 'lec-grande' : 'lec-imgs') + '">' +
+        imgs.map(function (im) {
+        return '<img ' + (o.layout === 'grande' ? attrAncho(im.src) : attrImg(im.src)) +
+               ' alt="' + esc(im.alt) + '" ' +
                'data-grande="' + esc(liviana(im.src, 1600)) + '" decoding="async">';
       }).join('') + '</div>' : '') +
       (o.doc && o.doc.src ? '<p class="lec-docline"><a class="lec-vinculo" href="' + esc(o.doc.src) +
@@ -642,6 +646,12 @@ body.claro .marca-caja .marca-pos{opacity:1}
     var base = src.replace(/\.[A-Za-z]+$/, '');
     return { src: base + '-' + d[d.length - 1] + '.jpg',
              set: d.map(function (w) { return base + '-' + w + '.jpg ' + w + 'w'; }).join(', ') };
+  }
+  // para lo que se muestra a plena caja hace falta pedir la grande
+  function attrAncho(src) {
+    var j = juego(src);
+    return 'data-src="' + esc(liviana(src, 1600)) + '"' +
+           (j.set ? ' data-set="' + esc(j.set) + '" sizes="(max-width:900px) 92vw, 860px"' : '');
   }
   function attrImg(src) {
     var j = juego(src);
@@ -739,8 +749,12 @@ body.claro .marca-caja .marca-pos{opacity:1}
         '</dl></div>' +
         '<div class="lec-bloque"><h2 class="lec-h">Contacto</h2><dl class="lec-dl">' +
           PERFIL.enlaces.map(function (e) {
+            var url = resolver(e.url);
+            if (sinResolver(url)) {
+              return '<dt>' + esc(e.plataforma) + '</dt><dd>' + velar(esc(e.handle)) + '</dd>';
+            }
             return '<dt>' + esc(e.plataforma) + '</dt><dd><a class="lec-vinculo" href="' +
-              esc(e.url) + '" target="_blank" rel="noopener">' + velar(esc(e.handle)) + ' ↗</a></dd>'; }).join('') +
+              esc(url) + '" target="_blank" rel="noopener">' + velar(esc(e.handle)) + ' ↗</a></dd>'; }).join('') +
         '</dl></div>';
 
     } else if (m.tipo === 'perfil' && m.que === 'cv' && hayPerfil) {
@@ -830,6 +844,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
       // Las que llevan puente o documento se muestran enteras, tienen algo que decir.
       var sueltas = lista.filter(function (o) {
         if ((o.enlace && o.enlace.destino) || (o.doc && o.doc.src)) return false;
+        if (o.layout === 'grande') return false;
         return (o.imgs || []).filter(function (i) { return i.src; }).length === 1; });
       var amplias = lista.filter(function (o) { return sueltas.indexOf(o) === -1; });
       cuerpo = '';
@@ -918,7 +933,17 @@ body.claro .marca-caja .marca-pos{opacity:1}
       base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
   }
 
-  // Un fragmento entre [[ ]] sale tapado hasta que se abre su cerrojo.
+  // Hay dos marcadores y la diferencia importa.
+  //
+  //   [[texto]]   el texto viaja dentro de contenido.js y solo se tapa a la
+  //               vista. Sirve para el gesto de lo tachado. Quien mire el
+  //               código lo encuentra.
+  //
+  //   {{clave}}   el dato NO está en ninguna parte de la página. Vive dentro
+  //               de reservado.enc, cifrado, y aparece recién cuando la clave
+  //               correcta lo descifra. Esto sí lo esconde de verdad.
+  //
+  var RESERVADO = null;
   var GLIFOS = '#%&@$?/\\|=+*<>0123456789ABCDEF';
   function ruido(n) {
     var t = '';
@@ -926,10 +951,24 @@ body.claro .marca-caja .marca-pos{opacity:1}
     return t;
   }
   function velar(html) {
-    return String(html).replace(/\[\[([\s\S]+?)\]\]/g, function (_, t) {
-      if (abiertos.velado) return '<span class="revelado-txt">' + t + '</span>';
-      return '<span class="velado" data-n="' + t.length + '" ' +
-             'title="Hay algo acá. Hace falta la clave.">' + ruido(t.length) + '</span>';
+    return String(html)
+      .replace(/\{\{([A-Za-z0-9_]+)\}\}/g, function (_, k) {
+        var v = RESERVADO && RESERVADO.datos ? RESERVADO.datos[k] : null;
+        if (v) return '<span class="revelado-txt">' + esc(v) + '</span>';
+        return '<span class="velado" data-n="16" ' +
+               'title="Este dato no está publicado. Hace falta la clave.">' + ruido(16) + '</span>';
+      })
+      .replace(/\[\[([\s\S]+?)\]\]/g, function (_, t) {
+        if (abiertos.velado) return '<span class="revelado-txt">' + t + '</span>';
+        return '<span class="velado" data-n="' + t.length + '" ' +
+               'title="Hay algo acá. Hace falta la clave.">' + ruido(t.length) + '</span>';
+      });
+  }
+  // una dirección con un dato sin resolver no puede ser un enlace
+  function sinResolver(t) { return /\{\{[A-Za-z0-9_]+\}\}/.test(String(t)); }
+  function resolver(t) {
+    return String(t).replace(/\{\{([A-Za-z0-9_]+)\}\}/g, function (m, k) {
+      return (RESERVADO && RESERVADO.datos && RESERVADO.datos[k]) || m;
     });
   }
   // mientras esté tapado, el ruido se mueve
@@ -1003,7 +1042,9 @@ body.claro .marca-caja .marca-pos{opacity:1}
       $('#clave').value = '';
       $('#puerta').classList.remove('abierta');
       $('#puerta-error').textContent = '';
-      mostrarReservado(d);
+      RESERVADO = d;
+      if (d.bloques && d.bloques.length) mostrarReservado(d);
+      else if ($('#lector').classList.contains('abierto')) leer('bio');
       probando = false;
       return;
     }

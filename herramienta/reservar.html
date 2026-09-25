@@ -39,6 +39,15 @@ code{background:rgba(242,240,234,.1); padding:1px 5px}
      El archivo que sale es ilegible sin la clave. Lo subís al repositorio y solo quien
      tenga la clave puede leerlo. Ni la clave ni el texto salen de esta página.</p>
 
+  <h2>Los datos sueltos</h2>
+  <p>Acá van los datos que en la página aparecen como <code>{{nombre}}</code>. El valor real
+     no queda en ningún archivo legible, solo dentro de este cifrado. Una línea por dato,
+     con un signo igual en el medio.</p>
+  <textarea id="datos" spellcheck="false" style="min-height:120px" placeholder="correo = tucorreo@ejemplo.com
+telefono = +591 ...
+ciudad = Cochabamba, Bolivia"></textarea>
+  <p class="pista" id="cuentaDatos">0 datos</p>
+
   <h2>El texto</h2>
   <p>Una línea que empiece con <code>## </code> abre una sección nueva. El resto es cuerpo.
      Los párrafos se separan con una línea en blanco.</p>
@@ -75,6 +84,17 @@ Escritura como salga."></textarea>
 var $ = function (s) { return document.querySelector(s); };
 var ultimo = null;
 
+function porDatos(t) {
+  var d = {};
+  t.split(/\r?\n/).forEach(function (l) {
+    var i = l.indexOf('=');
+    if (i < 1) return;
+    var k = l.slice(0, i).trim(), v = l.slice(i + 1).trim();
+    if (/^[A-Za-z0-9_]+$/.test(k) && v) d[k] = v;
+  });
+  return d;
+}
+
 function porBloques(t) {
   var bloques = [], actual = null;
   t.split(/\r?\n/).forEach(function (l) {
@@ -100,6 +120,10 @@ function fuerza(c) {
 }
 
 function repintar() {
+  var d = porDatos($('#datos').value);
+  var nd = Object.keys(d);
+  $('#cuentaDatos').textContent = nd.length + (nd.length === 1 ? ' dato' : ' datos') +
+    (nd.length ? ' · ' + nd.map(function (k) { return '{{' + k + '}}'; }).join('  ') : '');
   var b = porBloques($('#texto').value);
   $('#cuenta').textContent = b.length + ' ' + (b.length === 1 ? 'sección' : 'secciones') +
     ' · ' + $('#texto').value.length + ' caracteres';
@@ -109,7 +133,7 @@ function repintar() {
     $('#fuerza').textContent = 'Fuerza, ' + f[0] + '. ' + f[1] +
       (c2 && c1 !== c2 ? '  Las dos no coinciden todavía.' : '');
   } else { $('#fuerza').textContent = ''; }
-  $('#cifrar').disabled = !(b.length && c1 && c1 === c2);
+  $('#cifrar').disabled = !((b.length || nd.length) && c1 && c1 === c2);
 }
 
 function bytes(b64) {
@@ -135,7 +159,8 @@ async function llave(clave, sal) {
 $('#cifrar').addEventListener('click', async function () {
   $('#estado').innerHTML = '<div class="aviso">Cifrando, esperá un momento.</div>';
   try {
-    var datos = { v: 1, hecho: new Date().toISOString().slice(0, 10),
+    var datos = { v: 2, hecho: new Date().toISOString().slice(0, 10),
+                  datos: porDatos($('#datos').value),
                   bloques: porBloques($('#texto').value) };
     var sal = crypto.getRandomValues(new Uint8Array(16));
     var iv  = crypto.getRandomValues(new Uint8Array(12));
@@ -152,7 +177,8 @@ $('#cifrar').addEventListener('click', async function () {
     URL.revokeObjectURL(a.href);
     $('#probar').disabled = false;
     $('#estado').innerHTML = '<div class="aviso ok">Listo. Se descargó <strong>reservado.enc</strong>, ' +
-      (sobre.length / 1024).toFixed(1) + ' KB, con ' + datos.bloques.length +
+      (sobre.length / 1024).toFixed(1) + ' KB, con ' + Object.keys(datos.datos).length +
+      ' datos y ' + datos.bloques.length +
       ' secciones adentro. Ponelo en la raíz del repositorio y subilo.</div>';
   } catch (e) {
     $('#estado').innerHTML = '<div class="aviso mal">No se pudo cifrar. ' + e.message + '</div>';
@@ -169,8 +195,7 @@ $('#probar').addEventListener('click', async function () {
     var claro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes(s.iv) }, k, bytes(s.datos));
     var d = JSON.parse(new TextDecoder().decode(claro));
     $('#estado').innerHTML = '<div class="aviso ok">La clave abre el archivo. Adentro hay ' +
-      d.bloques.length + ' secciones, la primera se llama «' +
-      (d.bloques[0].titulo || 'sin título') + '».</div>';
+      Object.keys(d.datos || {}).length + ' datos y ' + d.bloques.length + ' secciones.</div>';
   } catch (e) {
     $('#estado').innerHTML = '<div class="aviso mal">Esa clave no abre el archivo. ' +
       'Si te equivocaste al escribirla ahora, todo bien. Si creés que era la correcta, ' +
@@ -178,7 +203,7 @@ $('#probar').addEventListener('click', async function () {
   }
 });
 
-['#texto', '#c1', '#c2'].forEach(function (s) {
+['#datos', '#texto', '#c1', '#c2'].forEach(function (s) {
   $(s).addEventListener('input', repintar);
 });
 repintar();
