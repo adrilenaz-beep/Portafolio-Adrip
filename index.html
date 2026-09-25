@@ -198,9 +198,11 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .lec-lista li::before{content:'—'; position:absolute; left:0; color:var(--tinta-baja)}
 .lec-obra{border-top:1px dashed var(--linea); padding:22px 0 4px}
 .lec-docline{margin:13px 0 2px; display:flex; gap:12px; align-items:baseline; flex-wrap:wrap}
-.lec-grande{margin:6px 0 2px; max-width:860px}
-.lec-grande img{width:100%; height:auto; display:block; cursor:zoom-in}
-.lec-hojas{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin-bottom:4px}
+.lec-grande{margin:6px 0 2px}
+.lec-grande img{display:block; cursor:zoom-in; margin:0;
+  max-width:min(560px,100%); max-height:74vh; width:auto; height:auto}
+.lec-hojas{display:grid; align-items:start; justify-content:start;
+  grid-template-columns:repeat(auto-fit,minmax(215px,300px)); gap:14px; margin-bottom:4px}
 .lec-hoja{margin:0}
 .lec-hoja img{width:100%; height:auto; display:block; cursor:zoom-in; border:1px solid var(--linea)}
 .lec-hoja figcaption{padding:6px 1px 0; font-size:9px; letter-spacing:.16em; color:var(--tinta-baja)}
@@ -225,22 +227,25 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .lec-obra-cab{display:flex; gap:16px; align-items:baseline; flex-wrap:wrap}
 .lec-obra-tit{font-size:16px; font-weight:500; letter-spacing:-.01em}
 .lec-obra-fecha{font-size:10px; letter-spacing:.16em; color:var(--tinta-baja)}
-.lec-imgs{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+.lec-imgs{display:grid; align-items:start; justify-content:start;
+  grid-template-columns:repeat(auto-fit,minmax(230px,340px));
   gap:8px; margin-top:16px; max-width:1180px}
-.lec-imgs img{width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; display:block; cursor:zoom-in;
+.lec-imgs img{width:100%; height:auto; display:block; cursor:zoom-in;
   background:rgba(128,128,128,.18)}
-.lec-piezas{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+.lec-piezas{display:grid; align-items:start; justify-content:start;
+  grid-template-columns:repeat(auto-fit,minmax(250px,380px));
   gap:10px; max-width:1240px; align-items:start}
 .lec-pieza{margin:0}
-.lec-pieza img{width:100%; height:auto; min-height:120px; display:block; cursor:zoom-in;
+.lec-pieza img{width:100%; height:auto; display:block; cursor:zoom-in;
   background:rgba(128,128,128,.18)}
 .lec-video{grid-column:span 1}
 .lec-video video{width:100%; height:auto; display:block; background:#000}
 .lec-doc img{border:1px solid var(--linea)}
 .lec-doc figcaption{padding-top:9px}
-.lec-contacto{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:11px}
+.lec-contacto{display:grid; align-items:start; justify-content:start;
+  grid-template-columns:repeat(auto-fill,minmax(215px,300px)); gap:11px}
 .lec-ficha{margin:0}
-.lec-ficha img{width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; display:block; cursor:zoom-in;
+.lec-ficha img{width:100%; height:auto; display:block; cursor:zoom-in;
   background:rgba(128,128,128,.14)}
 .lec-ficha figcaption{padding:7px 1px 0; display:flex; flex-direction:column; gap:2px}
 .lec-ficha b{font-size:11px; font-weight:500; line-height:1.4}
@@ -632,31 +637,43 @@ body.claro .marca-caja .marca-pos{opacity:1}
 
   // Devuelve el juego de versiones de una imagen para que el navegador
   // elija según el ancho de la ranura y la densidad de la pantalla.
-  var MEDIDAS = '(max-width:600px) 92vw, (max-width:1000px) 46vw, 300px';
+  var MEDIDAS = '(max-width:600px) 92vw, 340px';
   function juego(src) {
     if (src.indexOf('res.cloudinary.com') !== -1) {
       var t = function (w) {
         return src.replace('/upload/', '/upload/w_' + w + ',q_auto,f_auto/');
       };
+      void 0;
       return { src: t(640),
                set: t(320) + ' 320w, ' + t(640) + ' 640w, ' + t(960) + ' 960w' };
     }
     var d = (typeof DERIVADAS !== 'undefined') ? DERIVADAS[src] : null;
-    if (!d || !d.length) return { src: src, set: '' };
+    var a = d && d.a;
+    if (!a || !a.length) return { src: src, set: '' };
     var base = src.replace(/\.[A-Za-z]+$/, '');
-    return { src: base + '-' + d[d.length - 1] + '.jpg',
-             set: d.map(function (w) { return base + '-' + w + '.jpg ' + w + 'w'; }).join(', ') };
+    return { src: base + '-' + a[a.length - 1] + '.jpg',
+             set: a.map(function (w) { return base + '-' + w + '.jpg ' + w + 'w'; }).join(', ') };
+  }
+
+  // El hueco se reserva con la proporción real de cada imagen, así nada
+  // se recorta y la página tampoco salta mientras carga.
+  function proporcion(src) {
+    var d = (typeof DERIVADAS !== 'undefined') ? DERIVADAS[src] : null;
+    if (!d || !d.m) return '';
+    return ' style="aspect-ratio:' + d.m[0] + '/' + d.m[1] + '"';
   }
   // para lo que se muestra a plena caja hace falta pedir la grande
   function attrAncho(src) {
     var j = juego(src);
     return 'data-src="' + esc(liviana(src, 1600)) + '"' +
-           (j.set ? ' data-set="' + esc(j.set) + '" sizes="(max-width:900px) 92vw, 860px"' : '');
+           (j.set ? ' data-set="' + esc(j.set) + '" sizes="(max-width:760px) 88vw, 560px"' : '') +
+           proporcion(src);
   }
   function attrImg(src) {
     var j = juego(src);
     return 'data-src="' + esc(j.src) + '"' +
-           (j.set ? ' data-set="' + esc(j.set) + '" sizes="' + MEDIDAS + '"' : '');
+           (j.set ? ' data-set="' + esc(j.set) + '" sizes="' + MEDIDAS + '"' : '') +
+           proporcion(src);
   }
 
   var vigia = null;
