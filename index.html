@@ -198,12 +198,12 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 .lec-obra-fecha{font-size:10px; letter-spacing:.16em; color:var(--tinta-baja)}
 .lec-imgs{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
   gap:8px; margin-top:16px; max-width:1180px}
-.lec-imgs img{width:100%; aspect-ratio:4/5; object-fit:cover; display:block; cursor:zoom-in;
+.lec-imgs img{width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; display:block; cursor:zoom-in;
   background:rgba(128,128,128,.18)}
 .lec-piezas{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
   gap:10px; max-width:1240px; align-items:start}
 .lec-pieza{margin:0}
-.lec-pieza img{width:100%; height:auto; display:block; cursor:zoom-in;
+.lec-pieza img{width:100%; height:auto; min-height:120px; display:block; cursor:zoom-in;
   background:rgba(128,128,128,.18)}
 .lec-video{grid-column:span 1}
 .lec-video video{width:100%; height:auto; display:block; background:#000}
@@ -230,7 +230,10 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 .pie .crece{flex:1}
 .pie a:hover{color:var(--tinta)}
 
-@media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; animation:none !important}
+  #lector.abierto{opacity:1; transform:none}
+}
 @media (max-width: 860px){
   body{overflow:auto}
   .marco{display:none}
@@ -301,6 +304,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 <script src="portafolio-datos.js"></script>
 <script src="proyectos.js"></script>
 <script src="contenido.js"></script>
+<script src="derivadas.js"></script>
 <script src="arte.js"></script>
 <script>
 (function () {
@@ -534,8 +538,8 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
       '<span class="lec-obra-fecha">' + esc(o.fecha) + '</span></div>' +
       (o.nota ? '<p class="lec-p">' + o.nota + '</p>' : '') +
       (imgs.length ? '<div class="lec-imgs">' + imgs.map(function (im) {
-        return '<img src="' + esc(liviana(im.src, 640)) + '" alt="' + esc(im.alt) + '" ' +
-               'data-grande="' + esc(liviana(im.src, 1600)) + '" decoding="async">';
+        return '<img ' + attrImg(im.src) + ' alt="' + esc(im.alt) + '" ' +
+               'width="4" height="5" data-grande="' + esc(liviana(im.src, 1600)) + '" decoding="async">';
       }).join('') + '</div>' : '') +
       ((o.tags || []).length ? '<div class="lec-tags">' +
         o.tags.map(function (t) { return '<span class="lec-tag">' + esc(t) + '</span>'; }).join('') +
@@ -548,11 +552,54 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
       var im = (o.imgs || []).filter(function (i) { return i.src; })[0];
       if (!im) return '';
       return '<figure class="lec-ficha">' +
-        '<img src="' + esc(liviana(im.src, 520)) + '" alt="' + esc(im.alt) + '" ' +
-        'data-grande="' + esc(liviana(im.src, 1600)) + '" decoding="async">' +
+        '<img ' + attrImg(im.src) + ' alt="' + esc(im.alt) + '" ' +
+        'width="3" height="4" data-grande="' + esc(liviana(im.src, 1600)) + '" decoding="async">' +
         '<figcaption><b>' + esc(o.titulo) + '</b><span>' + esc(o.fecha) + '</span></figcaption>' +
         '</figure>';
     }).join('') + '</div>';
+  }
+
+
+  // Carga diferida propia. La nativa falla si las imágenes se insertan
+  // mientras el contenedor está oculto, así que el observador se arma
+  // recién cuando el lector ya es visible.
+
+  // Devuelve el juego de versiones de una imagen para que el navegador
+  // elija según el ancho de la ranura y la densidad de la pantalla.
+  var MEDIDAS = '(max-width:600px) 92vw, (max-width:1000px) 46vw, 300px';
+  function juego(src) {
+    if (src.indexOf('res.cloudinary.com') !== -1) {
+      var t = function (w) {
+        return src.replace('/upload/', '/upload/w_' + w + ',q_auto,f_auto/');
+      };
+      return { src: t(640),
+               set: t(320) + ' 320w, ' + t(640) + ' 640w, ' + t(960) + ' 960w' };
+    }
+    var d = (typeof DERIVADAS !== 'undefined') ? DERIVADAS[src] : null;
+    if (!d || !d.length) return { src: src, set: '' };
+    var base = src.replace(/\.[A-Za-z]+$/, '');
+    return { src: base + '-' + d[d.length - 1] + '.jpg',
+             set: d.map(function (w) { return base + '-' + w + '.jpg ' + w + 'w'; }).join(', ') };
+  }
+  function attrImg(src) {
+    var j = juego(src);
+    return 'data-src="' + esc(j.src) + '"' +
+           (j.set ? ' data-set="' + esc(j.set) + '" sizes="' + MEDIDAS + '"' : '');
+  }
+
+  var vigia = null;
+  function armarVigia() {
+    if (vigia) vigia.disconnect();
+    vigia = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var im = e.target;
+        if (im.dataset.set) { im.srcset = im.dataset.set; delete im.dataset.set; }
+        if (im.dataset.src) { im.src = im.dataset.src; delete im.dataset.src; }
+        vigia.unobserve(im);
+      });
+    }, { root: $('#lector'), rootMargin: '900px 0px', threshold: 0 });
+    $('#lector').querySelectorAll('img[data-src]').forEach(function (im) { vigia.observe(im); });
   }
 
   function htmlPieza(z) {
@@ -565,12 +612,12 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
     }
     if (z.tipo === 'documento') {
       return '<figure class="lec-pieza lec-doc">' +
-        (z.portada ? '<img src="' + esc(z.portada) + '" alt="" decoding="async">' : '') +
+        (z.portada ? '<img ' + attrImg(z.portada) + ' alt="" decoding="async">' : '') +
         '<figcaption><a class="lec-vinculo" href="' + esc(z.src) + '" target="_blank" rel="noopener">' +
         'Leer el documento' + (z.paginas ? ', ' + z.paginas + ' páginas' : '') + ' ↗</a></figcaption>' +
         '</figure>';
     }
-    return '<figure class="lec-pieza"><img src="' + esc(z.src) + '" alt="" ' +
+    return '<figure class="lec-pieza"><img ' + attrImg(z.src) + ' alt="" ' +
            'data-grande="' + esc(z.src) + '" decoding="async"></figure>';
   }
 
@@ -597,6 +644,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
         $('#lector').classList.add('abierto');
         $('#lector').setAttribute('aria-hidden', 'false');
         $('#lector').scrollTop = 0;
+        armarVigia();
         return;
       }
     }
@@ -708,6 +756,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
     $('#lector').classList.add('abierto');
     $('#lector').setAttribute('aria-hidden', 'false');
     $('#lector').scrollTop = 0;
+    armarVigia();
   }
 
   function cerrarLector() {
