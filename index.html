@@ -42,8 +42,8 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 .marca-caja{display:block; position:relative; width:clamp(118px,11vw,152px)}
 .marca-caja img{display:block; width:100%; height:auto; transition:opacity .5s ease}
 .marca-caja .marca-pos{position:absolute; inset:0; opacity:0}
-body.campo-color .marca-caja .marca-neg{opacity:0}
-body.campo-color .marca-caja .marca-pos{opacity:1}
+body.claro .marca-caja .marca-neg{opacity:0}
+body.claro .marca-caja .marca-pos{opacity:1}
 .marca-est{display:block; margin-top:9px; font-size:9px; letter-spacing:.22em; color:var(--tinta-baja)}
 
 /* ── ficha técnica ── */
@@ -355,14 +355,12 @@ body.campo-color .marca-caja .marca-pos{opacity:1}
     var h = new Date().getHours();
     return (h >= 7 && h < 19) ? 'papel' : 'negro';
   })();
-  // COLOR marca los campos de color saturado. Sobre ellos la marca va en
-  // positivo, la caja blanca. Sobre el casi negro y el casi blanco va en
-  // negativo, la caja negra con su filete, que es la que se ve en los dos.
-  var COLOR = { corp:1, art:1, aca:1 };
+  // La marca va en negativo, caja negra con filete blanco, solo sobre el
+  // campo oscuro. Sobre cualquier campo claro va en positivo, caja blanca
+  // con filete negro. Es la misma distinción que hace la tinta.
   function ponerCampo(id) {
     document.documentElement.style.setProperty('--campo', CAMPOS[id]);
     document.body.classList.toggle('claro', !!CLAROS[id]);
-    document.body.classList.toggle('campo-color', !!COLOR[id]);
   }
   function alBase() { ponerCampo(BASE); }
   alBase();
