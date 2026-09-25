@@ -42,8 +42,8 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 .marca-caja{display:block; position:relative; width:clamp(118px,11vw,152px)}
 .marca-caja img{display:block; width:100%; height:auto; transition:opacity .5s ease}
 .marca-caja .marca-pos{position:absolute; inset:0; opacity:0}
-body.claro .marca-caja .marca-neg{opacity:0}
-body.claro .marca-caja .marca-pos{opacity:1}
+body.campo-color .marca-caja .marca-neg{opacity:0}
+body.campo-color .marca-caja .marca-pos{opacity:1}
 .marca-est{display:block; margin-top:9px; font-size:9px; letter-spacing:.22em; color:var(--tinta-baja)}
 
 /* ── ficha técnica ── */
@@ -204,6 +204,10 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .lec-hoja figcaption{padding:6px 1px 0; font-size:9px; letter-spacing:.16em; color:var(--tinta-baja)}
 .rama.revelado, button.revelado{animation:asoma .5s ease both}
 @keyframes asoma{from{opacity:0; transform:translateX(-9px)} to{opacity:1; transform:none}}
+.velado{background:var(--tinta); color:var(--tinta); padding:0 4px; cursor:help;
+  border-radius:1px; user-select:none; font-variant-ligatures:none}
+.revelado-txt{background:linear-gradient(transparent 62%, rgba(232,66,142,.35) 62%);
+  animation:asoma .45s ease both}
 .lec-cerrado{font-size:9px; letter-spacing:.17em; text-transform:uppercase; color:var(--tinta-baja);
   border:1px solid var(--linea); padding:3px 8px}
 .lec-refs{margin:9px 0 0; font-size:10px; letter-spacing:.06em; color:var(--tinta-baja)}
@@ -351,10 +355,16 @@ body.claro .marca-caja .marca-pos{opacity:1}
     var h = new Date().getHours();
     return (h >= 7 && h < 19) ? 'papel' : 'negro';
   })();
-  function alBase() {
-    document.documentElement.style.setProperty('--campo', CAMPOS[BASE]);
-    document.body.classList.toggle('claro', !!CLAROS[BASE]);
+  // COLOR marca los campos de color saturado. Sobre ellos la marca va en
+  // positivo, la caja blanca. Sobre el casi negro y el casi blanco va en
+  // negativo, la caja negra con su filete, que es la que se ve en los dos.
+  var COLOR = { corp:1, art:1, aca:1 };
+  function ponerCampo(id) {
+    document.documentElement.style.setProperty('--campo', CAMPOS[id]);
+    document.body.classList.toggle('claro', !!CLAROS[id]);
+    document.body.classList.toggle('campo-color', !!COLOR[id]);
   }
+  function alBase() { ponerCampo(BASE); }
   alBase();
 
   var PANELES = [
@@ -481,9 +491,9 @@ body.claro .marca-caja .marca-pos{opacity:1}
     });
     abierta = id;
 
-    var campo = CAMPOS[id] || CAMPOS[BASE];
-    document.documentElement.style.setProperty('--campo', campo);
-    document.body.classList.toggle('claro', !!CLAROS[id]);
+    // El campo y la tinta salen del mismo id, si no la rama hereda el
+    // fondo del día pero no su tinta, y el texto queda del color del fondo.
+    ponerCampo(CAMPOS[id] ? id : BASE);
 
     var h = HOJAS[id];
     $('#f-pag').textContent = h.pag;
@@ -722,17 +732,17 @@ body.claro .marca-caja .marca-pos{opacity:1}
       bajada = 'Perfil · Biografía';
       cuerpo =
         '<div class="lec-bloque"><h2 class="lec-h">Quién soy</h2>' +
-          '<p class="lec-p">' + PERFIL.bio + '</p></div>' +
+          '<p class="lec-p">' + velar(PERFIL.bio) + '</p></div>' +
         '<div class="lec-bloque"><h2 class="lec-h">Filosofía</h2>' +
           '<p class="lec-p">' + esc(PERFIL.filosofia) + '</p></div>' +
         '<div class="lec-bloque"><h2 class="lec-h">Ficha</h2><dl class="lec-dl">' +
           PERFIL.ficha.map(function (f) {
-            return '<dt>' + esc(f.k) + '</dt><dd>' + esc(f.v) + '</dd>'; }).join('') +
+            return '<dt>' + esc(f.k) + '</dt><dd>' + velar(esc(f.v)) + '</dd>'; }).join('') +
         '</dl></div>' +
         '<div class="lec-bloque"><h2 class="lec-h">Contacto</h2><dl class="lec-dl">' +
           PERFIL.enlaces.map(function (e) {
             return '<dt>' + esc(e.plataforma) + '</dt><dd><a class="lec-vinculo" href="' +
-              esc(e.url) + '" target="_blank" rel="noopener">' + esc(e.handle) + ' ↗</a></dd>'; }).join('') +
+              esc(e.url) + '" target="_blank" rel="noopener">' + velar(esc(e.handle)) + ' ↗</a></dd>'; }).join('') +
         '</dl></div>';
 
     } else if (m.tipo === 'perfil' && m.que === 'cv' && hayPerfil) {
@@ -838,6 +848,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
     $('#lector').setAttribute('aria-hidden', 'false');
     $('#lector').scrollTop = 0;
     armarVigia();
+    latido();
   }
 
   function cerrarLector() {
@@ -875,7 +886,21 @@ body.claro .marca-caja .marca-pos{opacity:1}
   // ahí que te importe de verdad, para eso está lo reservado.
 
   var VUELTAS = 310000;
-  var SECRETO = '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230';
+
+  // Cada cerrojo se abre con su propia clave, así una puede destapar una cosa
+  // y otra clave otra distinta. Hoy las tres son la misma, cambiar una es
+  // cambiar su huella acá. Se calcula con
+  //   echo -n "la clave" | shasum -a 256
+  //
+  // Ojo con lo que se guarda detrás de un cerrojo. Lo velado y el secreto solo
+  // tapan cosas que ya viajan dentro de la página, así que son un gesto, no
+  // una caja fuerte. Lo que de verdad no puede verse va en reservado.enc, que
+  // está cifrado y no se abre sin la clave.
+  var CERROJOS = {
+    velado:  '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230',
+    secreto: '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230'
+  };
+  var abiertos = {};
 
   function deBase64(t) {
     var b = atob(t), a = new Uint8Array(b.length);
@@ -893,6 +918,34 @@ body.claro .marca-caja .marca-pos{opacity:1}
     return crypto.subtle.deriveKey(
       { name: 'PBKDF2', salt: sal, iterations: vueltas || VUELTAS, hash: 'SHA-256' },
       base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  }
+
+  // Un fragmento entre [[ ]] sale tapado hasta que se abre su cerrojo.
+  var GLIFOS = '#%&@$?/\\|=+*<>0123456789ABCDEF';
+  function ruido(n) {
+    var t = '';
+    for (var i = 0; i < n; i++) t += GLIFOS[Math.floor(Math.random() * GLIFOS.length)];
+    return t;
+  }
+  function velar(html) {
+    return String(html).replace(/\[\[([\s\S]+?)\]\]/g, function (_, t) {
+      if (abiertos.velado) return '<span class="revelado-txt">' + t + '</span>';
+      return '<span class="velado" data-n="' + t.length + '" ' +
+             'title="Hay algo acá. Hace falta la clave.">' + ruido(t.length) + '</span>';
+    });
+  }
+  // mientras esté tapado, el ruido se mueve
+  var tic = null;
+  function latido() {
+    if (tic) clearInterval(tic);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    tic = setInterval(function () {
+      var v = document.querySelectorAll('#lector .velado');
+      if (!v.length) { clearInterval(tic); tic = null; return; }
+      v.forEach(function (e) {
+        if (Math.random() < .45) e.textContent = ruido(+e.dataset.n || e.textContent.length);
+      });
+    }, 220);
   }
 
   var sobreGuardado = null;
@@ -957,16 +1010,23 @@ body.claro .marca-caja .marca-pos{opacity:1}
       return;
     }
 
-    if (await huella(clave.normalize('NFC')) === SECRETO) {
+    var h = await huella(clave.normalize('NFC'));
+    var abrio = [];
+    Object.keys(CERROJOS).forEach(function (k) {
+      if (CERROJOS[k] === h && !abiertos[k]) { abiertos[k] = true; abrio.push(k); }
+    });
+    if (abrio.length) {
       $('#clave').value = '';
       $('#puerta').classList.remove('abierta');
       $('#puerta-error').textContent = '';
-      destapar();
+      if (abiertos.secreto) destapar();
+      if (abiertos.velado && $('#lector').classList.contains('abierto')) leer('bio');
       probando = false;
       return;
     }
 
-    $('#puerta-error').textContent = 'Esa clave no abre nada.';
+    $('#puerta-error').textContent = Object.keys(abiertos).length
+      ? 'Esa clave no abre nada más.' : 'Esa clave no abre nada.';
     probando = false;
   }
   document.addEventListener('keydown', function (e) {

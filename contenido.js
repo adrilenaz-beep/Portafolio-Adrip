@@ -1,3 +1,9 @@
+// Un fragmento entre dobles corchetes sale tapado en la web hasta que
+// se escribe la clave. Sirve para cualquier texto de este archivo.
+//   "bio": "Nací en [[el lugar que no digo]] y ..."
+// Ojo, el texto igual viaja dentro de este archivo, así que es un gesto
+// y no una caja fuerte. Lo que de verdad no puede verse va en
+// reservado.enc, que se genera con 5 GUARDAR LO RESERVADO.command
 // Contenido del perfil, extraído del sitio anterior.
 
 const PERFIL = {
@@ -10,7 +16,7 @@ const PERFIL = {
   },
   {
    "k": "email",
-   "v": "adrip.disruptivemedia@gmail.com"
+   "v": "[[adrip.disruptivemedia@gmail.com]]"
   },
   {
    "k": "rol",
@@ -43,7 +49,7 @@ const PERFIL = {
   {
    "url": "mailto:adrip.disruptivemedia@gmail.com",
    "plataforma": "Email",
-   "handle": "adrip.disruptivemedia@gmail.com"
+   "handle": "[[adrip.disruptivemedia@gmail.com]]"
   }
  ],
  "experiencia": [
