@@ -398,6 +398,18 @@ const DERIVADAS = {
 320,
 640
 ],
+"obra/cv/cv-01.jpg": [
+320,
+640
+],
+"obra/cv/cv-02.jpg": [
+320,
+640
+],
+"obra/cv/cv-03.jpg": [
+320,
+640
+],
 "obra/etiqueta-evp.png": [
 320,
 640
@@ -447,14 +459,6 @@ const DERIVADAS = {
 640
 ],
 "obra/jeeps.jpg": [
-320,
-640
-],
-"obra/la-ramona-alasitas.jpg": [
-320,
-640
-],
-"obra/la-ramona-monky.jpg": [
 320,
 640
 ],

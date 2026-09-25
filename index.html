@@ -112,7 +112,8 @@ body.claro .marca-caja .marca-pos{opacity:1}
   transform:translateY(-5px); transition:border-color .85s;
 }
 .rama.viva{opacity:1}
-.rama.viva::after{content:''; width:7px; height:7px; background:var(--tinta); border-radius:50%}
+.rama.viva::after{content:'_'; font-weight:700; line-height:.7; animation:latir 1.05s steps(1) infinite}
+@keyframes latir{0%,55%{opacity:1} 56%,100%{opacity:0}}
 
 .panel.encabeza{
   left:28px !important; top:132px !important;
@@ -197,6 +198,12 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .lec-lista li::before{content:'—'; position:absolute; left:0; color:var(--tinta-baja)}
 .lec-obra{border-top:1px dashed var(--linea); padding:22px 0 4px}
 .lec-docline{margin:13px 0 2px; display:flex; gap:12px; align-items:baseline; flex-wrap:wrap}
+.lec-hojas{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin-bottom:4px}
+.lec-hoja{margin:0}
+.lec-hoja img{width:100%; height:auto; display:block; cursor:zoom-in; border:1px solid var(--linea)}
+.lec-hoja figcaption{padding:6px 1px 0; font-size:9px; letter-spacing:.16em; color:var(--tinta-baja)}
+.rama.revelado, button.revelado{animation:asoma .5s ease both}
+@keyframes asoma{from{opacity:0; transform:translateX(-9px)} to{opacity:1; transform:none}}
 .lec-cerrado{font-size:9px; letter-spacing:.17em; text-transform:uppercase; color:var(--tinta-baja);
   border:1px solid var(--linea); padding:3px 8px}
 .lec-refs{margin:9px 0 0; font-size:10px; letter-spacing:.06em; color:var(--tinta-baja)}
@@ -295,9 +302,8 @@ body.claro .marca-caja .marca-pos{opacity:1}
 <div id="escritorio"></div>
 
 <div class="pie">
-  <span id="pie-estado">Escritorio · arrastrá los títulos</span>
+  <span id="pie-estado">Escritorio</span>
   <span class="crece"></span>
-  <a href="obra.html">Obra, espacio flotante ↗</a>
   <span>Cochabamba, Bolivia</span>
 </div>
 
@@ -336,8 +342,20 @@ body.claro .marca-caja .marca-pos{opacity:1}
   var hayObras  = typeof OBRAS   !== 'undefined';
 
   /* ── el contenido del escritorio ── */
-  var CAMPOS = { negro:'#0A0A0B', corp:'#28B8EA', art:'#E8428E', aca:'#E49F37' };
-  var CLAROS = { corp:1, art:1, aca:1 };
+  var CAMPOS = { negro:'#0A0A0B', papel:'#F2F0EA', corp:'#28B8EA', art:'#E8428E', aca:'#E49F37' };
+  var CLAROS = { papel:1, corp:1, art:1, aca:1 };
+
+  // El escritorio tiene dos estados según la hora en que se abre.
+  // De día es papel, de noche es tinta. Entre las 7 y las 19.
+  var BASE = (function () {
+    var h = new Date().getHours();
+    return (h >= 7 && h < 19) ? 'papel' : 'negro';
+  })();
+  function alBase() {
+    document.documentElement.style.setProperty('--campo', CAMPOS[BASE]);
+    document.body.classList.toggle('claro', !!CLAROS[BASE]);
+  }
+  alBase();
 
   var PANELES = [
     { id:'perfil', titulo:'PERFIL', x:19, y:56, ramas:[
@@ -463,7 +481,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
     });
     abierta = id;
 
-    var campo = CAMPOS[id] || CAMPOS.negro;
+    var campo = CAMPOS[id] || CAMPOS[BASE];
     document.documentElement.style.setProperty('--campo', campo);
     document.body.classList.toggle('claro', !!CLAROS[id]);
 
@@ -496,11 +514,10 @@ body.claro .marca-caja .marca-pos{opacity:1}
     if (hoja) hoja.classList.remove('abierta');
     abierta = null;
     if (!silencioso) {
-      document.documentElement.style.setProperty('--campo', CAMPOS.negro);
-      document.body.classList.remove('claro');
+      alBase();
       $('#f-pag').textContent = '000';
       document.querySelector('.saludo').classList.remove('fuera');
-      $('#pie-estado').textContent = 'Escritorio · arrastrá los títulos';
+      $('#pie-estado').textContent = 'Escritorio';
       document.querySelectorAll('.panel').forEach(function (p) {
         p.classList.remove('encabeza', 'retirado');
       });
@@ -748,8 +765,15 @@ body.claro .marca-caja .marca-pos{opacity:1}
               '<ul class="lec-lista">' + c.items.map(function (x) {
                 return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>'; }).join('') +
           '</div></div>' : '') +
-        '<div class="lec-bloque"><h2 class="lec-h">Documento</h2>' +
-        '<a class="lec-vinculo" href="documentos/CV-Adriano-Lenaz-Zenteno.pdf" target="_blank" rel="noopener">Descargar el CV en PDF ↗</a></div>';
+        '<div class="lec-bloque"><h2 class="lec-h">El documento</h2>' +
+        '<div class="lec-hojas">' +
+        ['obra/cv/cv-01.jpg', 'obra/cv/cv-02.jpg', 'obra/cv/cv-03.jpg'].map(function (h, n) {
+          return '<figure class="lec-hoja"><img ' + attrImg(h) + ' alt="CV, página ' + (n + 1) + '" ' +
+                 'data-grande="' + esc(h) + '" decoding="async">' +
+                 '<figcaption>' + (n + 1) + ' de 3</figcaption></figure>'; }).join('') +
+        '</div>' +
+        '<p class="lec-docline"><a class="lec-vinculo" href="documentos/CV-Adriano-Lenaz-Zenteno.pdf" ' +
+        'target="_blank" rel="noopener">Descargar el CV en PDF &#8599;</a></p></div>';
 
     } else if (m.tipo === 'academico' && hayPerfil) {
       bajada = 'Portafolio · Académico';
@@ -837,8 +861,113 @@ body.claro .marca-caja .marca-pos{opacity:1}
   });
   $('#puerta-entrar').addEventListener('click', probar);
   $('#clave').addEventListener('keydown', function (e) { if (e.key === 'Enter') probar(); });
-  function probar() {
-    $('#puerta-error').textContent = 'El material reservado todavía no está cargado.';
+  // ── lo que abre la clave ──
+  //
+  // Hay dos cosas distintas detrás de este campo y conviene no confundirlas.
+  //
+  // Lo RESERVADO está cifrado de verdad, en reservado.enc, con AES de 256 bits
+  // y la llave derivada de la clave. El archivo es público pero ilegible, así
+  // que da lo mismo que alguien lo baje. Si la clave es incorrecta el descifrado
+  // falla solo, no hay comparación que se pueda saltear.
+  //
+  // El SECRETO, en cambio, es un juego. Solo destapa cosas que ya están en la
+  // página, así que cualquiera que mire el código lo encuentra. No guardes nada
+  // ahí que te importe de verdad, para eso está lo reservado.
+
+  var VUELTAS = 310000;
+  var SECRETO = '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230';
+
+  function deBase64(t) {
+    var b = atob(t), a = new Uint8Array(b.length);
+    for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i);
+    return a;
+  }
+  async function huella(t) {
+    var h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+    return Array.from(new Uint8Array(h)).map(function (x) {
+      return x.toString(16).padStart(2, '0'); }).join('');
+  }
+  async function laLlave(clave, sal, vueltas) {
+    var base = await crypto.subtle.importKey('raw',
+      new TextEncoder().encode(clave.normalize('NFC')), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: sal, iterations: vueltas || VUELTAS, hash: 'SHA-256' },
+      base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  }
+
+  var sobreGuardado = null;
+  async function abrirReservado(clave) {
+    try {
+      if (!sobreGuardado) {
+        var r = await fetch('reservado.enc', { cache: 'no-store' });
+        if (!r.ok) return null;            // todavía no hay nada reservado
+        sobreGuardado = await r.json();
+      }
+      var k = await laLlave(clave, deBase64(sobreGuardado.sal), sobreGuardado.vueltas);
+      var claro = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: deBase64(sobreGuardado.iv) }, k, deBase64(sobreGuardado.datos));
+      return JSON.parse(new TextDecoder().decode(claro));
+    } catch (e) {
+      return null;                          // clave equivocada, o no hay archivo
+    }
+  }
+
+  function mostrarReservado(d) {
+    $('#lec-cuerpo').innerHTML =
+      '<h1 class="lec-tit">Reservado</h1>' +
+      '<p class="lec-bajada">Perfil · material no publicado</p>' +
+      (d.hecho ? '<div class="lec-bloque"><p class="lec-p" style="font-size:10px;' +
+        'letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-baja)">' +
+        'Guardado el ' + esc(d.hecho) + '</p></div>' : '') +
+      (d.bloques || []).map(function (b) {
+        return '<div class="lec-bloque">' +
+          (b.titulo ? '<h2 class="lec-h">' + esc(b.titulo) + '</h2>' : '') +
+          (b.parrafos || []).map(function (t) {
+            return '<p class="lec-p">' + esc(t).replace(/\n/g, '<br>') + '</p>';
+          }).join('') + '</div>';
+      }).join('');
+    $('#lector').classList.add('abierto');
+    $('#lector').setAttribute('aria-hidden', 'false');
+    $('#lector').scrollTop = 0;
+    armarVigia();
+  }
+
+  function destapar() {
+    document.querySelectorAll('[data-oculto]').forEach(function (b) {
+      b.style.display = '';
+      b.classList.add('revelado');
+    });
+  }
+
+  var probando = false;
+  async function probar() {
+    if (probando) return;
+    var clave = $('#clave').value;
+    if (!clave) { $('#puerta-error').textContent = 'Escribí la clave.'; return; }
+    probando = true;
+    $('#puerta-error').textContent = 'Probando…';
+
+    var d = await abrirReservado(clave);
+    if (d) {
+      $('#clave').value = '';
+      $('#puerta').classList.remove('abierta');
+      $('#puerta-error').textContent = '';
+      mostrarReservado(d);
+      probando = false;
+      return;
+    }
+
+    if (await huella(clave.normalize('NFC')) === SECRETO) {
+      $('#clave').value = '';
+      $('#puerta').classList.remove('abierta');
+      $('#puerta-error').textContent = '';
+      destapar();
+      probando = false;
+      return;
+    }
+
+    $('#puerta-error').textContent = 'Esa clave no abre nada.';
+    probando = false;
   }
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;

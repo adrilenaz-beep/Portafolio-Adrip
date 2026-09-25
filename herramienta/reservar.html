@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guardar lo reservado · ADRIP</title>
+<style>
+:root{--campo:#0A0A0B; --tinta:#F2F0EA; --tinta-baja:rgba(242,240,234,.55);
+      --linea:rgba(242,240,234,.3); --alarma:#E8428E; --bien:#4ec3e0}
+*{box-sizing:border-box}
+body{margin:0; background:var(--campo); color:var(--tinta); padding:40px 28px 70px;
+  font:400 13px/1.6 'IBM Plex Mono',ui-monospace,Menlo,monospace}
+.caja{max-width:860px; margin:0 auto}
+h1{font-size:26px; font-weight:700; letter-spacing:-.02em; margin:0 0 6px}
+.sub{font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--tinta-baja); margin:0 0 30px}
+h2{font-size:10px; letter-spacing:.18em; text-transform:uppercase; font-weight:500;
+  margin:30px 0 10px; display:flex; align-items:center; gap:13px}
+h2::after{content:''; flex:1; height:1px; background:var(--linea)}
+p{margin:0 0 12px; max-width:66ch; color:var(--tinta-baja)}
+textarea,input{width:100%; background:transparent; color:var(--tinta); font:inherit;
+  border:1px solid var(--linea); padding:11px 13px}
+textarea{min-height:230px; resize:vertical; line-height:1.65}
+input{margin-bottom:9px}
+:focus-visible{outline:1px solid var(--tinta); outline-offset:2px}
+button{font:inherit; font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+  padding:11px 20px; background:var(--tinta); color:var(--campo); border:0; cursor:pointer}
+button:disabled{opacity:.35; cursor:not-allowed}
+.aviso{border:1px solid var(--linea); padding:13px 15px; margin:16px 0; font-size:12px}
+.aviso.mal{border-color:var(--alarma); color:var(--alarma)}
+.aviso.ok{border-color:var(--bien); color:var(--bien)}
+.pista{font-size:11px; color:var(--tinta-baja); margin:6px 0 0}
+code{background:rgba(242,240,234,.1); padding:1px 5px}
+.fila{display:flex; gap:11px; align-items:center; flex-wrap:wrap; margin-top:18px}
+</style>
+</head><body>
+<div class="caja">
+  <h1>Guardar lo reservado</h1>
+  <p class="sub">Herramienta local · no sube nada a ningún lado</p>
+
+  <p>Lo que escribas acá se cifra en este navegador, en tu máquina, con AES de 256 bits.
+     El archivo que sale es ilegible sin la clave. Lo subís al repositorio y solo quien
+     tenga la clave puede leerlo. Ni la clave ni el texto salen de esta página.</p>
+
+  <h2>El texto</h2>
+  <p>Una línea que empiece con <code>## </code> abre una sección nueva. El resto es cuerpo.
+     Los párrafos se separan con una línea en blanco.</p>
+  <textarea id="texto" spellcheck="false" placeholder="## Contacto directo
+Teléfono, dirección, lo que no dejo suelto.
+
+## En proceso
+Lo que todavía no está para mostrar.
+
+## Sin filtro
+Escritura como salga."></textarea>
+  <p class="pista" id="cuenta">0 secciones · 0 caracteres</p>
+
+  <h2>La clave</h2>
+  <p>Elegila larga. El archivo cifrado es público, así que una clave corta se puede
+     probar entera sin que nadie se entere. Doce caracteres o más.</p>
+  <input type="password" id="c1" placeholder="CLAVE" autocomplete="new-password" spellcheck="false">
+  <input type="password" id="c2" placeholder="REPETILA" autocomplete="new-password" spellcheck="false">
+  <p class="pista" id="fuerza"></p>
+
+  <div id="estado"></div>
+  <div class="fila">
+    <button id="cifrar" disabled>Cifrar y descargar</button>
+    <button id="probar" disabled style="background:transparent;color:var(--tinta);border:1px solid var(--linea)">Probar el resultado</button>
+  </div>
+
+  <h2>Después</h2>
+  <p>Poné el archivo <code>reservado.enc</code> en la raíz del repositorio, al lado de
+     <code>index.html</code>, y subilo con GitHub Desktop. Para cambiar el contenido más
+     adelante volvé acá, escribilo de nuevo y generá otro archivo.</p>
+</div>
+
+<script>
+var $ = function (s) { return document.querySelector(s); };
+var ultimo = null;
+
+function porBloques(t) {
+  var bloques = [], actual = null;
+  t.split(/\r?\n/).forEach(function (l) {
+    var m = l.match(/^##\s+(.*)$/);
+    if (m) { actual = { titulo: m[1].trim(), cuerpo: [] }; bloques.push(actual); return; }
+    if (!actual) { actual = { titulo: '', cuerpo: [] }; bloques.push(actual); }
+    actual.cuerpo.push(l);
+  });
+  return bloques.map(function (b) {
+    return { titulo: b.titulo,
+             parrafos: b.cuerpo.join('\n').split(/\n\s*\n/)
+                        .map(function (x) { return x.trim(); })
+                        .filter(Boolean) };
+  }).filter(function (b) { return b.titulo || b.parrafos.length; });
+}
+
+function fuerza(c) {
+  var clases = [/[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/]
+    .filter(function (r) { return r.test(c); }).length;
+  if (c.length < 8 || clases < 2) return ['débil', 'Con el archivo en la mano se prueba entera en poco tiempo.'];
+  if (c.length < 12 || clases < 3) return ['aceptable', 'Sirve, pero doce o más sería bastante mejor.'];
+  return ['buena', ''];
+}
+
+function repintar() {
+  var b = porBloques($('#texto').value);
+  $('#cuenta').textContent = b.length + ' ' + (b.length === 1 ? 'sección' : 'secciones') +
+    ' · ' + $('#texto').value.length + ' caracteres';
+  var c1 = $('#c1').value, c2 = $('#c2').value;
+  if (c1) {
+    var f = fuerza(c1);
+    $('#fuerza').textContent = 'Fuerza, ' + f[0] + '. ' + f[1] +
+      (c2 && c1 !== c2 ? '  Las dos no coinciden todavía.' : '');
+  } else { $('#fuerza').textContent = ''; }
+  $('#cifrar').disabled = !(b.length && c1 && c1 === c2);
+}
+
+function bytes(b64) {
+  var s = atob(b64), a = new Uint8Array(s.length);
+  for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i);
+  return a;
+}
+function b64(buf) {
+  var a = new Uint8Array(buf), s = '';
+  for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]);
+  return btoa(s);
+}
+
+var VUELTAS = 310000;
+async function llave(clave, sal) {
+  var base = await crypto.subtle.importKey('raw', new TextEncoder().encode(clave.normalize('NFC')),
+                                           'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: sal, iterations: VUELTAS, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+
+$('#cifrar').addEventListener('click', async function () {
+  $('#estado').innerHTML = '<div class="aviso">Cifrando, esperá un momento.</div>';
+  try {
+    var datos = { v: 1, hecho: new Date().toISOString().slice(0, 10),
+                  bloques: porBloques($('#texto').value) };
+    var sal = crypto.getRandomValues(new Uint8Array(16));
+    var iv  = crypto.getRandomValues(new Uint8Array(12));
+    var k   = await llave($('#c1').value, sal);
+    var cif = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, k,
+                                          new TextEncoder().encode(JSON.stringify(datos)));
+    var sobre = JSON.stringify({ v: 1, kdf: 'PBKDF2-SHA256', vueltas: VUELTAS,
+                                 sal: b64(sal), iv: b64(iv), datos: b64(cif) });
+    ultimo = sobre;
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([sobre], { type: 'application/json' }));
+    a.download = 'reservado.enc';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    $('#probar').disabled = false;
+    $('#estado').innerHTML = '<div class="aviso ok">Listo. Se descargó <strong>reservado.enc</strong>, ' +
+      (sobre.length / 1024).toFixed(1) + ' KB, con ' + datos.bloques.length +
+      ' secciones adentro. Ponelo en la raíz del repositorio y subilo.</div>';
+  } catch (e) {
+    $('#estado').innerHTML = '<div class="aviso mal">No se pudo cifrar. ' + e.message + '</div>';
+  }
+});
+
+$('#probar').addEventListener('click', async function () {
+  if (!ultimo) return;
+  var c = prompt('Escribí la clave para comprobar que el archivo abre.');
+  if (c === null) return;
+  try {
+    var s = JSON.parse(ultimo);
+    var k = await llave(c, bytes(s.sal));
+    var claro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes(s.iv) }, k, bytes(s.datos));
+    var d = JSON.parse(new TextDecoder().decode(claro));
+    $('#estado').innerHTML = '<div class="aviso ok">La clave abre el archivo. Adentro hay ' +
+      d.bloques.length + ' secciones, la primera se llama «' +
+      (d.bloques[0].titulo || 'sin título') + '».</div>';
+  } catch (e) {
+    $('#estado').innerHTML = '<div class="aviso mal">Esa clave no abre el archivo. ' +
+      'Si te equivocaste al escribirla ahora, todo bien. Si creés que era la correcta, ' +
+      'generá el archivo de nuevo.</div>';
+  }
+});
+
+['#texto', '#c1', '#c2'].forEach(function (s) {
+  $(s).addEventListener('input', repintar);
+});
+repintar();
+</script>
+</body></html>
