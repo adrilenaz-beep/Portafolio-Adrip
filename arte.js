@@ -266,7 +266,11 @@ const ARTE = [
      }
     ]
    }
-  ]
+  ],
+  "enlace": {
+   "destino": "diseno-editorial",
+   "texto": "Ver las portadas en Diseño editorial"
+  }
  },
  {
   "id": "pasamontanas-historia",

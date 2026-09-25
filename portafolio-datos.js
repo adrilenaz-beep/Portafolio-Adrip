@@ -89,7 +89,7 @@ const SECCIONES = [
  {
   "id": "posters",
   "titulo": "Cartel",
-  "cuenta": "8 proyectos",
+  "cuenta": "6 proyectos",
   "oculta": false,
   "abierta": false,
   "aMano": false,
@@ -107,6 +107,15 @@ const SECCIONES = [
  {
   "id": "editorial",
   "titulo": "Editorial · Publicación",
+  "cuenta": "1 proyecto",
+  "oculta": false,
+  "abierta": false,
+  "aMano": false,
+  "grupo": "encargo"
+ },
+ {
+  "id": "portadas",
+  "titulo": "Portadas · Suplemento",
   "cuenta": "1 proyecto",
   "oculta": false,
   "abierta": false,
@@ -709,7 +718,11 @@ const OBRAS = [
     "src": "obra/connectas-06-ano.jpg",
     "alt": "Soldados fallecidos según el año"
    }
-  ]
+  ],
+  "enlace": {
+   "destino": "distinciones",
+   "texto": "Ver la beca CONNECTAS en Distinciones"
+  }
  },
  {
   "id": "vaticano-y-p",
@@ -1451,37 +1464,14 @@ const OBRAS = [
   ]
  },
  {
-  "id": "am-still-holding-on",
-  "seccion": "posters",
-  "fecha": "2025",
-  "titulo": "Am still holding on",
-  "nota": "Puño y rosa con espinas. Dos carteles hermanos, uno gráfico y otro tipográfico, sobre aguantar.",
-  "layout": "2col",
-  "tags": [
-   "Cartel",
-   "Tipografía",
-   "Ilustración"
-  ],
-  "imgs": [
-   {
-    "src": "obra/rosa-mano-01.jpg",
-    "alt": "Am still holding on"
-   },
-   {
-    "src": "obra/rosa-mano-02.jpg",
-    "alt": "To the blooming of hope"
-   }
-  ]
- },
- {
   "id": "la-ramona",
-  "seccion": "posters",
+  "seccion": "portadas",
   "fecha": "2024",
   "titulo": "La Ramona",
   "nota": "Portadas para el suplemento La Ramona de Opinión. Manos, stickers y ciudad, con la cabecera como parte del dibujo.",
   "layout": "3col",
   "tags": [
-   "Cartel",
+   "Portada",
    "Editorial",
    "Opinión"
   ],
@@ -1502,7 +1492,11 @@ const OBRAS = [
     "src": "obra/adrip-face-book-composicion-cultural.jpg",
     "alt": "Composición cultural"
    }
-  ]
+  ],
+  "enlace": {
+   "destino": "arte:la-ramona",
+   "texto": "Ver el proyecto completo en Obra"
+  }
  },
  {
   "id": "coordinadora-de-la-mujer",
@@ -1752,3 +1746,4 @@ const OBRAS = [
   ]
  }
 ];
+

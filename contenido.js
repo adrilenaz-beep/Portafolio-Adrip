@@ -226,6 +226,7 @@ const MAPA = {
   "tipo": "secciones",
   "ids": [
    "editorial",
+   "portadas",
    "publicaciones"
   ],
   "titulo": "Diseño editorial"
