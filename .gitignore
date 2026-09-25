@@ -7,3 +7,9 @@ herramienta/cloudinary.json
 # Lo que se publica es la copia protegida que hace 4 PROTEGER LOS PDF.command
 obra/pbfcc/*.pdf
 !obra/pbfcc/*-protegido.pdf
+
+# Los PDF de la PBFCC tampoco vuelven por acá
+publicaciones/biocombustibles.pdf
+publicaciones/boletin7.pdf
+publicaciones/boletin8.pdf
+publicaciones/sistema_redes.pdf
