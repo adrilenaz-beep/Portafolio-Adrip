@@ -525,6 +525,90 @@ const DERIVADAS = {
 320,
 640
 ],
+"obra/pbfcc/analisis-medios-01.jpg": [
+320,
+640
+],
+"obra/pbfcc/analisis-medios-02.jpg": [
+320,
+640
+],
+"obra/pbfcc/analisis-medios-03.jpg": [
+320,
+640
+],
+"obra/pbfcc/analisis-medios-04.jpg": [
+320,
+640
+],
+"obra/pbfcc/biocombustibles-01.jpg": [
+320,
+640
+],
+"obra/pbfcc/biocombustibles-02.jpg": [
+320,
+640
+],
+"obra/pbfcc/biocombustibles-03.jpg": [
+320,
+640
+],
+"obra/pbfcc/biocombustibles-04.jpg": [
+320,
+640
+],
+"obra/pbfcc/biocombustibles-05.jpg": [
+320,
+640
+],
+"obra/pbfcc/boletin-07-01.jpg": [
+320,
+640
+],
+"obra/pbfcc/boletin-07-02.jpg": [
+320,
+640
+],
+"obra/pbfcc/boletin-07-03.jpg": [
+320,
+640
+],
+"obra/pbfcc/boletin-07-04.jpg": [
+320,
+640
+],
+"obra/pbfcc/boletin-08-01.jpg": [
+320,
+640
+],
+"obra/pbfcc/boletin-08-02.jpg": [
+320,
+640
+],
+"obra/pbfcc/boletin-08-03.jpg": [
+320,
+640
+],
+"obra/pbfcc/boletin-08-04.jpg": [
+320,
+640
+],
+"obra/pbfcc/compromisos-01.jpg": [
+320,
+640
+],
+"obra/pbfcc/compromisos-02.jpg": [
+320,
+640
+],
+"obra/pbfcc/compromisos-03.jpg": [
+320,
+640
+],
+"obra/pbfcc/compromisos-04.jpg": [
+320,
+640
+],
 "obra/poster-a1-adriano.jpg": [
 320,
 640
@@ -554,14 +638,6 @@ const DERIVADAS = {
 640
 ],
 "obra/rojo-still.jpg": [
-320,
-640
-],
-"obra/rosa-mano-01.jpg": [
-320,
-640
-],
-"obra/rosa-mano-02.jpg": [
 320,
 640
 ],

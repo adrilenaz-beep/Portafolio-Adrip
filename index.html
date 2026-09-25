@@ -39,11 +39,11 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 
 /* ── marca ── */
 .marca{position:fixed; top:26px; left:28px; z-index:20}
-.marca-caja{
-  display:inline-block; border:2.5px solid var(--tinta);
-  padding:6px 16px 8px; font-size:34px; font-weight:700; letter-spacing:-.03em; line-height:1;
-  transition:border-color .85s, color .85s;
-}
+.marca-caja{display:block; position:relative; width:clamp(118px,11vw,152px)}
+.marca-caja img{display:block; width:100%; height:auto; transition:opacity .5s ease}
+.marca-caja .marca-pos{position:absolute; inset:0; opacity:0}
+body.claro .marca-caja .marca-neg{opacity:0}
+body.claro .marca-caja .marca-pos{opacity:1}
 .marca-est{display:block; margin-top:9px; font-size:9px; letter-spacing:.22em; color:var(--tinta-baja)}
 
 /* ── ficha técnica ── */
@@ -196,6 +196,11 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 .lec-lista li{font-size:12.5px; line-height:1.75; padding-left:20px; position:relative; margin-bottom:6px; font-weight:300}
 .lec-lista li::before{content:'—'; position:absolute; left:0; color:var(--tinta-baja)}
 .lec-obra{border-top:1px dashed var(--linea); padding:22px 0 4px}
+.lec-docline{margin:13px 0 2px}
+.lec-refs{margin:9px 0 0; font-size:10px; letter-spacing:.06em; color:var(--tinta-baja)}
+.lec-comp{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:26px}
+.lec-comp-t{margin:0 0 9px; font-size:10px; letter-spacing:.17em; text-transform:uppercase; font-weight:500}
+.lec-comp .lec-lista{margin:0}
 .lec-enlace{display:inline-flex; align-items:center; gap:7px; margin:14px 0 4px; padding:7px 13px;
   font:inherit; font-size:10px; letter-spacing:.14em; text-transform:uppercase; cursor:pointer;
   color:var(--tinta); background:none; border:1px solid var(--linea); border-radius:0;
@@ -253,7 +258,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
   .panel-tit{cursor:default}
   .hoja{position:static; opacity:1; pointer-events:auto; transform:none; margin-top:20px; display:none}
   .hoja.abierta{display:block}
-  .marca-caja{font-size:26px}
+  .marca-caja{width:104px}
   .ficha{top:auto; bottom:14px; right:22px}
   .pie{position:static; margin-top:40px; padding:0 22px 30px}
 }
@@ -262,7 +267,10 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 <body>
 
 <div class="marca">
-  <span class="marca-caja">adrip</span>
+  <span class="marca-caja">
+    <img class="marca-neg" src="marca/marca-negativo.png" alt="ADRIP" width="760" height="353">
+    <img class="marca-pos" src="marca/marca-positivo.png" alt="" aria-hidden="true" width="760" height="370">
+  </span>
   <span class="marca-est">EST. 2022</span>
 </div>
 
@@ -556,6 +564,9 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
         return '<img ' + attrImg(im.src) + ' alt="' + esc(im.alt) + '" ' +
                'data-grande="' + esc(liviana(im.src, 1600)) + '" decoding="async">';
       }).join('') + '</div>' : '') +
+      (o.doc && o.doc.src ? '<p class="lec-docline"><a class="lec-vinculo" href="' + esc(o.doc.src) +
+        '" target="_blank" rel="noopener">Leer el documento' +
+        (o.doc.paginas ? ', ' + o.doc.paginas + ' páginas' : '') + ' &#8599;</a></p>' : '') +
       ((o.tags || []).length ? '<div class="lec-tags">' +
         o.tags.map(function (t) { return '<span class="lec-tag">' + esc(t) + '</span>'; }).join('') +
         '</div>' : '') +
@@ -717,6 +728,23 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
               return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
             '</div>'; }).join('') +
         '</div>' +
+        ((PERFIL.formacion || []).length ?
+          '<div class="lec-bloque"><h2 class="lec-h">Formación</h2>' +
+          PERFIL.formacion.map(function (f) {
+            return '<div class="lec-obra">' +
+              '<div class="lec-obra-cab"><span class="lec-obra-tit">' + esc(f.titulo) + '</span>' +
+              '<span class="lec-obra-fecha">' + esc(f.periodo) + '</span></div>' +
+              '<p class="lec-p" style="margin-bottom:6px"><strong>' + esc(f.donde) + '</strong></p>' +
+              '<p class="lec-p">' + esc(f.desc) + '</p>' +
+              (f.refs ? '<p class="lec-refs">' + esc(f.refs) + '</p>' : '') +
+              '</div>'; }).join('') + '</div>' : '') +
+        ((PERFIL.competencias || []).length ?
+          '<div class="lec-bloque"><h2 class="lec-h">Competencias</h2>' +
+          '<div class="lec-comp">' + PERFIL.competencias.map(function (c) {
+            return '<div><h3 class="lec-comp-t">' + esc(c.grupo) + '</h3>' +
+              '<ul class="lec-lista">' + c.items.map(function (x) {
+                return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>'; }).join('') +
+          '</div></div>' : '') +
         '<div class="lec-bloque"><h2 class="lec-h">Documento</h2>' +
         '<a class="lec-vinculo" href="documentos/CV-Adriano-Lenaz-Zenteno.pdf" target="_blank" rel="noopener">Descargar el CV en PDF ↗</a></div>';
 

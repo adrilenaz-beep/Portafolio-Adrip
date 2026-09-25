@@ -107,7 +107,7 @@ const SECCIONES = [
  {
   "id": "editorial",
   "titulo": "Editorial · Publicación",
-  "cuenta": "1 proyecto",
+  "cuenta": "6 proyectos",
   "oculta": false,
   "abierta": false,
   "aMano": false,
@@ -1742,6 +1742,185 @@ const OBRAS = [
    {
     "src": "",
     "alt": "Calendario - detalle"
+   }
+  ]
+ },
+ {
+  "id": "pbfcc-boletin-07",
+  "seccion": "editorial",
+  "fecha": "2026",
+  "titulo": "Boletín PBFCC · 7ma edición",
+  "nota": "Boletín electrónico de la Plataforma Boliviana Frente al Cambio Climático, edición de febrero a abril. Diagramación completa, jerarquía de notas, tratamiento de fotografía documental y sistema de enlaces dentro del PDF.",
+  "layout": "2col",
+  "tags": [
+   "Editorial",
+   "Boletín",
+   "PBFCC"
+  ],
+  "doc": {
+   "src": "obra/pbfcc/boletin-07.pdf",
+   "paginas": 14
+  },
+  "imgs": [
+   {
+    "src": "obra/pbfcc/boletin-07-01.jpg",
+    "alt": "Portada, 7ma edición"
+   },
+   {
+    "src": "obra/pbfcc/boletin-07-02.jpg",
+    "alt": "Incidencia política y pública"
+   },
+   {
+    "src": "obra/pbfcc/boletin-07-03.jpg",
+    "alt": "Interior"
+   },
+   {
+    "src": "obra/pbfcc/boletin-07-04.jpg",
+    "alt": "Interior"
+   }
+  ]
+ },
+ {
+  "id": "pbfcc-boletin-08",
+  "seccion": "editorial",
+  "fecha": "2026",
+  "titulo": "Boletín PBFCC · 8va edición",
+  "nota": "Octava edición, de mayo a agosto. Reconstruida fuera de Affinity para poder corregirla hasta el cierre. Portada con el mapa de la región y cuerpo a dos columnas.",
+  "layout": "2col",
+  "tags": [
+   "Editorial",
+   "Boletín",
+   "PBFCC"
+  ],
+  "doc": {
+   "src": "obra/pbfcc/boletin-08.pdf",
+   "paginas": 10
+  },
+  "imgs": [
+   {
+    "src": "obra/pbfcc/boletin-08-01.jpg",
+    "alt": "Portada, 8va edición"
+   },
+   {
+    "src": "obra/pbfcc/boletin-08-02.jpg",
+    "alt": "Acción global"
+   },
+   {
+    "src": "obra/pbfcc/boletin-08-03.jpg",
+    "alt": "Interior"
+   },
+   {
+    "src": "obra/pbfcc/boletin-08-04.jpg",
+    "alt": "Interior"
+   }
+  ]
+ },
+ {
+  "id": "pbfcc-biocombustibles",
+  "seccion": "editorial",
+  "fecha": "2026",
+  "titulo": "Impactos de los biocombustibles en Bolivia",
+  "nota": "Investigación de Marielle Cauthin y Karen Mercado para la PBFCC, llevada a publicación A5 de 104 páginas. Diagramación, portadas de capítulo e infografía de apoyo.",
+  "layout": "2col",
+  "tags": [
+   "Editorial",
+   "Investigación",
+   "PBFCC"
+  ],
+  "doc": {
+   "src": "obra/pbfcc/biocombustibles.pdf",
+   "paginas": 104
+  },
+  "imgs": [
+   {
+    "src": "obra/pbfcc/biocombustibles-01.jpg",
+    "alt": "Portada"
+   },
+   {
+    "src": "obra/pbfcc/biocombustibles-02.jpg",
+    "alt": "Interior"
+   },
+   {
+    "src": "obra/pbfcc/biocombustibles-03.jpg",
+    "alt": "Portada de capítulo"
+   },
+   {
+    "src": "obra/pbfcc/biocombustibles-04.jpg",
+    "alt": "Interior"
+   },
+   {
+    "src": "obra/pbfcc/biocombustibles-05.jpg",
+    "alt": "Interior"
+   }
+  ]
+ },
+ {
+  "id": "pbfcc-compromisos",
+  "seccion": "editorial",
+  "fecha": "2026",
+  "titulo": "Compromisos por el Clima · Manual de uso",
+  "nota": "Manual de uso gráfico y key visual de la campaña. Construcción de la marca, área de seguridad, variantes y aplicaciones.",
+  "layout": "2col",
+  "tags": [
+   "Manual",
+   "Identidad",
+   "PBFCC"
+  ],
+  "doc": {
+   "src": "obra/pbfcc/compromisos.pdf",
+   "paginas": 15
+  },
+  "imgs": [
+   {
+    "src": "obra/pbfcc/compromisos-01.jpg",
+    "alt": "Key visual"
+   },
+   {
+    "src": "obra/pbfcc/compromisos-02.jpg",
+    "alt": "Construcción y área de seguridad"
+   },
+   {
+    "src": "obra/pbfcc/compromisos-03.jpg",
+    "alt": "Variantes"
+   },
+   {
+    "src": "obra/pbfcc/compromisos-04.jpg",
+    "alt": "Aplicaciones"
+   }
+  ]
+ },
+ {
+  "id": "pbfcc-analisis-medios",
+  "seccion": "editorial",
+  "fecha": "2026",
+  "titulo": "Análisis de medios desde el diseño gráfico",
+  "nota": "Diagnóstico de la comunicación visual de la PBFCC en redes sociales. Informe propio, de la investigación a la diagramación, con auditoría de piezas y recomendaciones de sistema.",
+  "layout": "2col",
+  "tags": [
+   "Informe",
+   "Investigación",
+   "PBFCC"
+  ],
+  "doc": {
+   "src": "obra/pbfcc/analisis-medios.pdf",
+   "paginas": 9
+  },
+  "imgs": [
+   {
+    "src": "obra/pbfcc/analisis-medios-01.jpg",
+    "alt": "Portada"
+   },
+   {
+    "src": "obra/pbfcc/analisis-medios-02.jpg",
+    "alt": "Interior"
+   },
+   {
+    "src": "obra/pbfcc/analisis-medios-03.jpg",
+    "alt": "Lo que ya funciona"
+   },
+   {
+    "src": "obra/pbfcc/analisis-medios-04.jpg",
+    "alt": "Interior"
    }
   ]
  }

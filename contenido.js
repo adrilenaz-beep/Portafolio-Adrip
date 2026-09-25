@@ -200,6 +200,51 @@ const PERFIL = {
    "texto": "Curso de 21 horas académicas en Formación Continua de la Universidad Privada Boliviana, del 3 al 7 de agosto, en torno a los proyectos de triple impacto, económico, social y ambiental. La participación derivó en la vinculación con la Plataforma Boliviana Frente al Cambio Climático.",
    "sello": "Formación"
   }
+ ],
+ "formacion": [
+  {
+   "titulo": "Licenciatura en Diseño Gráfico",
+   "donde": "Universidad Privada Boliviana · Cochabamba, Bolivia",
+   "periodo": "2020 → 2026",
+   "desc": "Trabajo de Grado, «La cultura como ch'ixi. Vanguardia por medio de la interpretación y la descolonización de signos gráficos en obras coloniales del Virreinato del Perú». Investigación orientada al análisis crítico de los símbolos gráficos presentes en obras coloniales mediante herramientas de la semiótica y los estudios decoloniales. Propone nuevas interpretaciones sobre la construcción visual de la identidad latinoamericana y plantea cómo aplicar esos enfoques dentro del diseño gráfico contemporáneo.",
+   "refs": "Gisbert & Mesa · Alcalá & Brown · Rivera · Zavaleta · Mignolo · Barthes · Peirce · Eco"
+  },
+  {
+   "titulo": "Triple Impact in Action",
+   "donde": "Formación Continua · Universidad Privada Boliviana · Cochabamba, Bolivia",
+   "periodo": "Agosto 2026",
+   "desc": "Curso de 21 horas académicas, del 3 al 7 de agosto, en torno a los proyectos de triple impacto, económico, social y ambiental. La participación derivó en la vinculación con la Plataforma Boliviana Frente al Cambio Climático.",
+   "refs": ""
+  }
+ ],
+ "competencias": [
+  {
+   "grupo": "Investigación",
+   "items": [
+    "Investigación en diseño",
+    "Investigación cualitativa",
+    "Análisis semiótico",
+    "Interpretación iconográfica",
+    "Análisis de cultura visual"
+   ]
+  },
+  {
+   "grupo": "Diseño",
+   "items": [
+    "Diseño editorial",
+    "Comunicación visual",
+    "Dirección de arte",
+    "Identidad visual",
+    "Producción multimedia"
+   ]
+  },
+  {
+   "grupo": "Herramientas",
+   "items": [
+    "Adobe Suite",
+    "Affinity"
+   ]
+  }
  ]
 };
 
