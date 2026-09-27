@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Escribir en el blog · ADRIP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400&display=swap">
+<style>
+:root{
+  --fondo:#0e0e0c; --caja:#1c1c19; --hundido:#141412;
+  --tinta:#e8e6e0; --tinta-media:#9a988f; --tinta-baja:#5d5b54;
+  --linea:#2e2e28; --linea-viva:#45443c;
+  --acento:#7fd4e8; --ok:#5cc294; --alerta:#d7a63f; --mal:#d9694f;
+  --mono:'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --sans:'IBM Plex Sans', system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--fondo); color:var(--tinta); font:400 13px/1.55 var(--mono)}
+:focus-visible{outline:1px solid var(--acento); outline-offset:2px}
+
+.barra{position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:16px;
+  padding:14px 22px; background:var(--fondo); border-bottom:1px solid var(--linea); flex-wrap:wrap}
+.barra h1{margin:0; font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase}
+.barra .sep{flex:1}
+#aviso{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--tinta-baja)}
+#aviso.ok{color:var(--ok)} #aviso.mal{color:var(--mal)} #aviso.cambio{color:var(--alerta)}
+.btn{font:inherit; font-size:10px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer;
+  padding:9px 16px; background:var(--tinta); color:var(--fondo); border:0}
+.btn:disabled{opacity:.3; cursor:not-allowed}
+.btn.flojo{background:none; color:var(--tinta-media); border:1px solid var(--linea)}
+.btn.flojo:hover{color:var(--tinta); border-color:var(--linea-viva)}
+
+.mesa{display:grid; grid-template-columns:minmax(230px,290px) minmax(0,1fr); gap:22px;
+  padding:22px; align-items:start}
+@media (max-width:820px){ .mesa{grid-template-columns:1fr} }
+
+.lista{border:1px solid var(--linea); background:var(--caja)}
+.lista h2, .ficha h2{margin:0; padding:11px 14px; font-size:9px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--tinta-baja); border-bottom:1px solid var(--linea)}
+.fila{display:grid; grid-template-columns:1fr auto; gap:4px 8px; align-items:center;
+  padding:10px 14px; border-bottom:1px solid var(--linea); cursor:pointer}
+.fila:last-child{border-bottom:0}
+.fila:hover{background:var(--hundido)}
+.fila.viva{background:var(--hundido); box-shadow:inset 2px 0 0 var(--acento)}
+.fila b{font-weight:500; font-size:12.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.fila small{grid-column:1/-1; font-size:9.5px; letter-spacing:.1em; color:var(--tinta-baja)}
+.fila .mover{display:flex; gap:3px}
+.fila .mover button{font:inherit; font-size:10px; width:20px; height:20px; cursor:pointer;
+  background:none; color:var(--tinta-baja); border:1px solid var(--linea)}
+.fila .mover button:hover{color:var(--tinta)}
+.candado{font-size:9px; letter-spacing:.12em; color:var(--alerta)}
+
+.ficha{border:1px solid var(--linea); background:var(--caja)}
+.cuerpo{padding:16px 18px 20px}
+.par{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:12px}
+label{display:block; font-size:9px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--tinta-baja); margin-bottom:5px}
+input,select,textarea{width:100%; font:inherit; background:var(--hundido); color:var(--tinta);
+  border:1px solid var(--linea); padding:9px 11px}
+textarea{font-family:var(--mono); min-height:340px; resize:vertical; line-height:1.7}
+.marca{display:inline-flex; align-items:center; gap:8px; font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--tinta-baja); cursor:pointer; user-select:none}
+.marca input{width:auto}
+
+.ayuda{margin:12px 0 0; padding:12px 14px; background:var(--hundido); border:1px solid var(--linea);
+  font-size:11px; line-height:1.75; color:var(--tinta-media)}
+.ayuda code{color:var(--acento)}
+.medios{display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 0}
+.vacio{padding:40px 18px; text-align:center; color:var(--tinta-baja); font-size:12px}
+.aviso-clave{margin:12px 0 0; padding:12px 14px; border:1px solid var(--alerta);
+  color:var(--alerta); font-size:11px; line-height:1.7}
+</style>
+</head><body>
+
+<div class="barra">
+  <h1>Escribir en el blog</h1>
+  <button class="btn flojo" id="nueva">+ Nueva entrada</button>
+  <span class="sep"></span>
+  <span id="aviso">sin cambios</span>
+  <button class="btn" id="guardar" disabled>Guardar</button>
+</div>
+
+<div class="mesa">
+  <div class="lista">
+    <h2>Entradas</h2>
+    <div id="filas"></div>
+  </div>
+  <div class="ficha">
+    <h2 id="ficha-tit">Ninguna entrada elegida</h2>
+    <div class="cuerpo" id="ficha"></div>
+  </div>
+</div>
+
+<script src="../blog.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var lista = (typeof BLOG !== 'undefined') ? BLOG.slice() : [];
+  var viva = lista.length ? 0 : -1;
+  var sucio = false;
+  var CLASES = { lectura: 'Lectura', idea: 'Idea en proceso', experimento: 'Experimento' };
+
+  function marcarSucio() {
+    sucio = true;
+    $('guardar').disabled = false;
+    $('aviso').className = 'cambio';
+    $('aviso').textContent = 'hay cambios sin guardar';
+  }
+  window.addEventListener('beforeunload', function (e) {
+    if (sucio) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  function esc(t) {
+    return String(t == null ? '' : t)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function slug(t) {
+    return String(t).normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48) || 'entrada';
+  }
+  function hoy() { return new Date().toISOString().slice(0, 10); }
+
+  /* ── el texto llano y las piezas, en los dos sentidos ── */
+
+  function aPiezas(t) {
+    var piezas = [], parrafo = [], lista_ = null;
+    function cerrarParrafo() {
+      var s = parrafo.join('\n').trim();
+      if (s) piezas.push({ tipo: 'parrafo', texto: s });
+      parrafo = [];
+    }
+    function cerrarLista() {
+      if (lista_ && lista_.length) piezas.push({ tipo: 'lista', items: lista_ });
+      lista_ = null;
+    }
+    String(t).split(/\r?\n/).forEach(function (l) {
+      var m;
+      if ((m = l.match(/^##\s+(.*)$/))) {
+        cerrarParrafo(); cerrarLista();
+        piezas.push({ tipo: 'titulo', texto: m[1].trim() }); return;
+      }
+      if ((m = l.match(/^>\s+(.*)$/))) {
+        cerrarParrafo(); cerrarLista();
+        var p = m[1].split('|');
+        piezas.push({ tipo: 'cita', texto: p[0].trim(),
+                      quien: (p[1] || '').trim() }); return;
+      }
+      if ((m = l.match(/^-\s+(.*)$/))) {
+        cerrarParrafo();
+        if (!lista_) lista_ = [];
+        lista_.push(m[1].trim()); return;
+      }
+      if ((m = l.match(/^!\[([^\]]*)\]\(([^)]+)\)$/))) {
+        cerrarParrafo(); cerrarLista();
+        piezas.push({ tipo: 'imagen', src: m[2].trim(), pie: m[1].trim() }); return;
+      }
+      if ((m = l.match(/^@audio\s+(.*)$/))) {
+        cerrarParrafo(); cerrarLista();
+        var a = m[1].split('|');
+        piezas.push({ tipo: 'audio', src: a[0].trim(), titulo: (a[1] || '').trim() }); return;
+      }
+      if ((m = l.match(/^@video\s+(.*)$/))) {
+        cerrarParrafo(); cerrarLista();
+        var v = m[1].split('|');
+        piezas.push({ tipo: 'video', src: v[0].trim(), portada: (v[1] || '').trim() }); return;
+      }
+      if (!l.trim()) { cerrarParrafo(); cerrarLista(); return; }
+      cerrarLista();
+      parrafo.push(l);
+    });
+    cerrarParrafo(); cerrarLista();
+    return piezas;
+  }
+
+  function aTexto(piezas) {
+    return (piezas || []).map(function (z) {
+      if (z.tipo === 'titulo') return '## ' + z.texto;
+      if (z.tipo === 'cita')   return '> ' + z.texto + (z.quien ? ' | ' + z.quien : '');
+      if (z.tipo === 'lista')  return (z.items || []).map(function (x) { return '- ' + x; }).join('\n');
+      if (z.tipo === 'imagen') return '![' + (z.pie || '') + '](' + z.src + ')';
+      if (z.tipo === 'audio')  return '@audio ' + z.src + (z.titulo ? ' | ' + z.titulo : '');
+      if (z.tipo === 'video')  return '@video ' + z.src + (z.portada ? ' | ' + z.portada : '');
+      return z.texto || '';
+    }).join('\n\n');
+  }
+
+  /* ── pintado ── */
+
+  function pintarFilas() {
+    $('filas').innerHTML = '';
+    if (!lista.length) {
+      $('filas').innerHTML = '<div class="vacio">Todavía no hay entradas.<br>Empezá con + Nueva entrada.</div>';
+      return;
+    }
+    lista.forEach(function (e, i) {
+      var d = document.createElement('div');
+      d.className = 'fila' + (i === viva ? ' viva' : '');
+      d.innerHTML =
+        '<b>' + esc(e.titulo || '(sin título)') + '</b>' +
+        '<span class="mover"><button data-sube="' + i + '" title="Subir">&#8593;</button>' +
+        '<button data-baja="' + i + '" title="Bajar">&#8595;</button></span>' +
+        '<small>' + esc(e.fecha) + ' · ' + esc(CLASES[e.clase] || e.clase || '') +
+        (e.clave ? ' · <span class="candado">CON CLAVE</span>' : '') + '</small>';
+      d.addEventListener('click', function (ev) {
+        if (ev.target.dataset.sube !== undefined || ev.target.dataset.baja !== undefined) return;
+        guardarFicha(); viva = i; pintar();
+      });
+      $('filas').appendChild(d);
+    });
+    $('filas').querySelectorAll('[data-sube]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = +b.dataset.sube; if (i < 1) return;
+        guardarFicha();
+        lista.splice(i - 1, 0, lista.splice(i, 1)[0]);
+        if (viva === i) viva = i - 1; else if (viva === i - 1) viva = i;
+        marcarSucio(); pintar();
+      });
+    });
+    $('filas').querySelectorAll('[data-baja]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = +b.dataset.baja; if (i >= lista.length - 1) return;
+        guardarFicha();
+        lista.splice(i + 1, 0, lista.splice(i, 1)[0]);
+        if (viva === i) viva = i + 1; else if (viva === i + 1) viva = i;
+        marcarSucio(); pintar();
+      });
+    });
+  }
+
+  function pintarFicha() {
+    var e = lista[viva];
+    if (!e) {
+      $('ficha-tit').textContent = 'Ninguna entrada elegida';
+      $('ficha').innerHTML = '<div class="vacio">Elegí una entrada de la izquierda, o creá una nueva.</div>';
+      return;
+    }
+    $('ficha-tit').textContent = e.titulo || '(sin título)';
+    $('ficha').innerHTML =
+      '<div class="par">' +
+        '<div><label for="f-fecha">Fecha</label><input id="f-fecha" type="date" value="' + esc(e.fecha) + '"></div>' +
+        '<div><label for="f-clase">Clase</label><select id="f-clase">' +
+          Object.keys(CLASES).map(function (k) {
+            return '<option value="' + k + '"' + (e.clase === k ? ' selected' : '') + '>' +
+                   esc(CLASES[k]) + '</option>'; }).join('') +
+        '</select></div>' +
+      '</div>' +
+      '<div style="margin-bottom:12px"><label for="f-titulo">Título</label>' +
+        '<input id="f-titulo" value="' + esc(e.titulo) + '"></div>' +
+      '<div style="margin-bottom:12px"><label for="f-bajada">Bajada, una línea para el índice</label>' +
+        '<input id="f-bajada" value="' + esc(e.bajada) + '"></div>' +
+      '<div style="margin-bottom:12px"><label class="marca">' +
+        '<input type="checkbox" id="f-clave"' + (e.clave ? ' checked' : '') + '> ' +
+        'Esta entrada va con clave</label></div>' +
+      (e.clave ? '<div class="aviso-clave">El cuerpo de esta entrada no se guarda en blog.js. ' +
+        'Se cifra en este navegador y va a reservado.enc. Al guardar se te va a pedir la clave.</div>' : '') +
+      '<div style="margin-top:12px"><label for="f-cuerpo">El texto</label>' +
+        '<textarea id="f-cuerpo" spellcheck="true">' + esc(aTexto(e.piezas)) + '</textarea></div>' +
+      '<div class="medios">' +
+        '<button class="btn flojo" data-sube-medio="imagen">+ Imagen</button>' +
+        '<button class="btn flojo" data-sube-medio="audio">+ Audio</button>' +
+        '<button class="btn flojo" data-sube-medio="video">+ Video</button>' +
+        '<span class="sep"></span>' +
+        '<button class="btn flojo" id="borrar" style="margin-left:auto">Borrar la entrada</button>' +
+      '</div>' +
+      '<p class="ayuda">' +
+        '<code>## </code> abre un subtítulo &nbsp;·&nbsp; ' +
+        '<code>&gt; </code> una cita, y con <code>|</code> de quién es &nbsp;·&nbsp; ' +
+        '<code>- </code> un punto de lista<br>' +
+        'Una línea en blanco separa párrafos. Los botones de arriba suben el archivo ' +
+        'y te dejan la línea puesta donde tengas el cursor.' +
+      '</p>';
+
+    ['f-fecha', 'f-clase', 'f-titulo', 'f-bajada', 'f-cuerpo'].forEach(function (id) {
+      $(id).addEventListener('input', marcarSucio);
+    });
+    $('f-clave').addEventListener('change', function () {
+      guardarFicha(); marcarSucio(); pintar();
+    });
+    $('borrar').addEventListener('click', function () {
+      if (!confirm('¿Seguro que querés borrar «' + (e.titulo || 'sin título') + '»?')) return;
+      lista.splice(viva, 1);
+      viva = Math.min(viva, lista.length - 1);
+      marcarSucio(); pintar();
+    });
+    $('ficha').querySelectorAll('[data-sube-medio]').forEach(function (b) {
+      b.addEventListener('click', function () { subirMedio(b.dataset.subeMedio); });
+    });
+  }
+
+  function pintar() { pintarFilas(); pintarFicha(); }
+
+  function guardarFicha() {
+    var e = lista[viva];
+    if (!e || !$('f-titulo')) return;
+    e.fecha  = $('f-fecha').value || hoy();
+    e.clase  = $('f-clase').value;
+    e.titulo = $('f-titulo').value.trim();
+    e.bajada = $('f-bajada').value.trim();
+    e.clave  = $('f-clave').checked;
+    e.piezas = aPiezas($('f-cuerpo').value);
+    if (!e.id) e.id = slug(e.titulo || e.fecha);
+  }
+
+  /* ── subir una imagen, un audio o un video ── */
+
+  function subirMedio(clase) {
+    var tipos = { imagen: 'image/jpeg,image/png', audio: 'audio/*', video: 'video/mp4' };
+    var inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = tipos[clase];
+    inp.addEventListener('change', function () {
+      var f = inp.files[0]; if (!f) return;
+      $('aviso').className = ''; $('aviso').textContent = 'subiendo ' + f.name + '…';
+      fetch('/subir', { method: 'POST', headers: { 'X-Nombre': f.name }, body: f })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (!j.ok) throw new Error(j.error);
+          var linea = clase === 'imagen' ? '![pie de la imagen](' + j.src + ')'
+                    : clase === 'audio'  ? '@audio ' + j.src + ' | título'
+                                         : '@video ' + j.src;
+          var t = $('f-cuerpo'), i = t.selectionStart;
+          t.value = t.value.slice(0, i) + '\n\n' + linea + '\n\n' + t.value.slice(i);
+          marcarSucio();
+          $('aviso').className = 'ok'; $('aviso').textContent = 'subido, ' + j.src;
+        })
+        .catch(function (err) {
+          $('aviso').className = 'mal'; $('aviso').textContent = 'no se pudo subir, ' + err.message;
+        });
+    });
+    inp.click();
+  }
+
+  /* ── cifrado, igual que en la herramienta de reservar ── */
+
+  var VUELTAS = 310000;
+  function b64(buf) {
+    var a = new Uint8Array(buf), s = '';
+    for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]);
+    return btoa(s);
+  }
+  function llave(clave, sal) {
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(clave.normalize('NFC')),
+                                   'PBKDF2', false, ['deriveKey'])
+      .then(function (base) {
+        return crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: sal, iterations: VUELTAS, hash: 'SHA-256' },
+          base, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+      });
+  }
+
+  /* ── guardar ── */
+
+  $('nueva').addEventListener('click', function () {
+    guardarFicha();
+    lista.unshift({ id: '', fecha: hoy(), titulo: '', clase: 'idea',
+                    bajada: '', clave: false, piezas: [] });
+    viva = 0; marcarSucio(); pintar();
+    setTimeout(function () { if ($('f-titulo')) $('f-titulo').focus(); }, 0);
+  });
+
+  $('guardar').addEventListener('click', async function () {
+    guardarFicha();
+
+    for (var i = 0; i < lista.length; i++) {
+      var e = lista[i];
+      if (!e.titulo) { $('aviso').className = 'mal';
+        $('aviso').textContent = 'una entrada quedó sin título'; viva = i; pintar(); return; }
+      if (!e.id) e.id = slug(e.titulo);
+      if (!e.piezas || !e.piezas.length) { $('aviso').className = 'mal';
+        $('aviso').textContent = '«' + e.titulo + '» quedó sin texto'; viva = i; pintar(); return; }
+    }
+
+    var conClave = lista.filter(function (e) { return e.clave; });
+    var sobre = null;
+
+    if (conClave.length) {
+      var clave = prompt('Hay ' + conClave.length + ' entrada' + (conClave.length > 1 ? 's' : '') +
+        ' con clave. Escribí la clave para cifrarlas.\n\nTiene que ser la misma de siempre, ' +
+        'si ponés otra las anteriores dejan de abrirse.');
+      if (clave === null) return;
+      if (!clave.trim()) { $('aviso').className = 'mal';
+        $('aviso').textContent = 'clave vacía, no guardé nada'; return; }
+
+      $('aviso').className = ''; $('aviso').textContent = 'cifrando…';
+      try {
+        var entradas = {};
+        conClave.forEach(function (e) {
+          entradas[e.id] = { titulo: e.titulo, bajada: e.bajada, piezas: e.piezas };
+        });
+        var claro = { v: 3, hecho: hoy(), datos: {}, bloques: [], entradas: entradas };
+        var sal = crypto.getRandomValues(new Uint8Array(16));
+        var iv  = crypto.getRandomValues(new Uint8Array(12));
+        var k   = await llave(clave, sal);
+        var cif = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, k,
+                                              new TextEncoder().encode(JSON.stringify(claro)));
+        sobre = JSON.stringify({ v: 1, kdf: 'PBKDF2-SHA256', vueltas: VUELTAS,
+                                 sal: b64(sal), iv: b64(iv), datos: b64(cif) });
+      } catch (err) {
+        $('aviso').className = 'mal'; $('aviso').textContent = 'no se pudo cifrar, ' + err.message;
+        return;
+      }
+    }
+
+    // en blog.js, la entrada con clave va sin su cuerpo
+    var paraArchivo = lista.map(function (e) {
+      if (!e.clave) return { id: e.id, fecha: e.fecha, titulo: e.titulo, clase: e.clase,
+                             bajada: e.bajada, clave: false, piezas: e.piezas };
+      return { id: e.id, fecha: e.fecha, titulo: '', clase: e.clase, bajada: '', clave: true };
+    });
+
+    $('aviso').className = ''; $('aviso').textContent = 'guardando…';
+    try {
+      var r = await fetch('/blog', { method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ BLOG: paraArchivo }) });
+      var j = await r.json();
+      if (!j.ok) throw new Error(j.error);
+
+      if (sobre) {
+        var r2 = await fetch('/reservado', { method: 'POST',
+          headers: { 'Content-Type': 'application/json' }, body: sobre });
+        var j2 = await r2.json();
+        if (!j2.ok) throw new Error(j2.error);
+      }
+
+      sucio = false;
+      $('guardar').disabled = true;
+      $('aviso').className = 'ok';
+      $('aviso').textContent = 'guardado, ' + j.entradas + ' entradas' +
+        (sobre ? ' · ' + conClave.length + ' cifradas' : '');
+    } catch (err) {
+      $('aviso').className = 'mal';
+      $('aviso').textContent = 'no se pudo guardar, ' + err.message;
+    }
+  });
+
+  pintar();
+})();
+</script>
+</body></html>

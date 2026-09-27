@@ -252,6 +252,68 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .lec-ficha span{font-size:9px; letter-spacing:.14em; color:var(--tinta-baja)}
 .lec-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px}
 .lec-tag{font-size:9px; letter-spacing:.14em; text-transform:uppercase; border:1px solid var(--linea); padding:3px 8px}
+/* ── el blog ── */
+.blog-filtros{display:flex; gap:7px; flex-wrap:wrap; margin:-26px 0 34px}
+.blog-f{font:inherit; font-size:9px; letter-spacing:.16em; text-transform:uppercase;
+  padding:6px 12px; background:none; color:var(--tinta-baja); cursor:pointer;
+  border:1px solid var(--linea); transition:color .14s ease, border-color .14s ease}
+.blog-f:hover{color:var(--tinta)}
+.blog-f.viva{color:var(--campo); background:var(--tinta); border-color:var(--tinta)}
+
+.blog-indice{list-style:none; margin:0; padding:0; max-width:1000px;
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto}
+.blog-fila{display:grid; grid-column:1 / -1; grid-template-columns:subgrid;
+  gap:5px 18px; align-items:baseline; padding:16px 0 15px; border-top:1px dashed var(--linea)}
+.blog-meta{display:flex; gap:9px; align-items:baseline; white-space:nowrap}
+.blog-fecha{font-size:10px; letter-spacing:.14em; color:var(--tinta-baja);
+  font-variant-numeric:tabular-nums}
+.blog-tit{font:inherit; font-size:17px; font-weight:500; letter-spacing:-.01em;
+  text-align:left; background:none; border:0; padding:0; color:inherit; cursor:pointer}
+button.blog-tit{transition:transform .13s cubic-bezier(.2,.9,.25,1)}
+button.blog-tit:hover{transform:translateX(5px)}
+.blog-clase{font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--tinta-baja)}
+.blog-sub{grid-column:2 / -1; margin-top:2px; font-size:12px; font-weight:300; line-height:1.6;
+  color:var(--tinta-baja); max-width:66ch}
+.blog-fila.cerrada .blog-tit{cursor:default}
+
+.blog-entrada{max-width:70ch}
+.blog-bajada{font-size:15px; font-weight:300; line-height:1.7; margin:0 0 32px;
+  color:var(--tinta-baja); max-width:66ch}
+.blog-cita{margin:26px 0; padding-left:20px; border-left:2px solid var(--linea); max-width:62ch}
+.blog-cita p{margin:0; font-size:14px; line-height:1.75; font-style:italic}
+.blog-cita cite{display:block; margin-top:9px; font-size:9.5px; font-style:normal;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--tinta-baja)}
+.blog-img{margin:26px 0}
+.blog-img img{width:100%; max-width:min(560px,100%); height:auto; display:block; cursor:zoom-in}
+.blog-img figcaption{padding-top:8px; font-size:10px; letter-spacing:.08em; color:var(--tinta-baja)}
+.blog-media{margin:26px 0; max-width:560px}
+.blog-pie{margin-top:44px}
+
+.blog-audio{display:flex; align-items:center; gap:14px; margin:26px 0; max-width:60ch;
+  border:1px solid var(--linea); padding:12px 15px}
+.au-boton{font:inherit; font-size:12px; line-height:1; width:34px; height:34px; flex:none;
+  cursor:pointer; background:none; color:var(--tinta); border:1px solid var(--linea);
+  transition:background .14s ease, color .14s ease}
+.au-boton:hover{background:var(--tinta); color:var(--campo)}
+.au-medio{flex:1; min-width:0; display:flex; flex-direction:column; gap:7px}
+.au-tit{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--tinta-baja);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.au-barra{height:3px; background:var(--linea); cursor:pointer; position:relative}
+.au-barra i{display:block; height:100%; width:0; background:var(--tinta); transition:width .1s linear}
+.au-tiempo{font-size:10px; letter-spacing:.1em; color:var(--tinta-baja);
+  font-variant-numeric:tabular-nums; flex:none}
+.blog-audio.sonando{border-color:var(--tinta)}
+
+@supports not (grid-template-columns: subgrid){
+  .blog-indice{display:block}
+  .blog-fila{grid-template-columns:auto minmax(0,1fr) auto}
+}
+@media (max-width: 700px){
+  .blog-indice{display:block}
+  .blog-fila{grid-template-columns:1fr auto; gap:4px 12px}
+  .blog-fecha{grid-column:1 / -1}
+  .blog-sub{grid-column:1 / -1}
+}
 .lec-vinculo{display:inline-block; margin-top:8px; font-size:12px; border-bottom:1px solid var(--linea)}
 @media (max-width:860px){ #lector{padding:100px 22px 70px} }
 
@@ -342,6 +404,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
 <script src="contenido.js"></script>
 <script src="derivadas.js"></script>
 <script src="arte.js"></script>
+<script src="blog.js"></script>
 <script>
 (function () {
   'use strict';
@@ -351,6 +414,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
   var hayMapa   = typeof MAPA    !== 'undefined';
   var hayPerfil = typeof PERFIL  !== 'undefined';
   var hayObras  = typeof OBRAS   !== 'undefined';
+  var hayBlog   = typeof BLOG    !== 'undefined';
 
   /* ── el contenido del escritorio ── */
   var CAMPOS = { negro:'#0A0A0B', papel:'#F2F0EA', corp:'#28B8EA', art:'#E8428E', aca:'#E49F37' };
@@ -382,7 +446,11 @@ body.claro .marca-caja .marca-pos{opacity:1}
         { id:'art',  et:'ART.'  },
         { id:'aca',  et:'ACA.'  }
       ]},
-    { id:'blog', titulo:'BLOG', x:72, y:62, ramas:[] }
+    { id:'blog', titulo:'BLOG', x:72, y:62, ramas:[
+        { id:'lecturas',     et:'LECTURAS.'     },
+        { id:'ideas',        et:'IDEAS.'        },
+        { id:'experimentos', et:'EXPERIMENTOS.' }
+      ]}
   ];
 
   var HOJAS = {
@@ -409,7 +477,9 @@ body.claro .marca-caja .marca-pos{opacity:1}
       {t:'DISTINCIONES',         d:'distinciones'}] },
     bio:{ pag:'001', x:37, y:33, items:[{t:'VER BIOGRAFÍA', d:'bio'}] },
     cv:{ pag:'001', x:37, y:33, items:[{t:'VER TRAYECTORIA', d:'cv'}] },
-    blog:{ pag:'005', x:37, y:33, items:[{t:'ENTRAR AL BLOG', d:'blog'}] }
+    lecturas:{     pag:'005', x:37, y:33, items:[{t:'VER LAS LECTURAS',     d:'blog-lectura'}] },
+    ideas:{        pag:'006', x:37, y:33, items:[{t:'VER LAS IDEAS',        d:'blog-idea'}] },
+    experimentos:{ pag:'007', x:37, y:33, items:[{t:'VER LOS EXPERIMENTOS', d:'blog-experimento'}] }
   };
 
   var abierta = null;
@@ -503,7 +573,6 @@ body.claro .marca-caja .marca-pos{opacity:1}
     var h = HOJAS[id];
     $('#f-pag').textContent = h.pag;
 
-    document.querySelector('.saludo').classList.add('fuera');
     document.querySelector('.saludo').classList.add('fuera');
     var hoja = $('#hoja-' + id);
     hoja.classList.add('abierta');
@@ -643,7 +712,6 @@ body.claro .marca-caja .marca-pos{opacity:1}
       var t = function (w) {
         return src.replace('/upload/', '/upload/w_' + w + ',q_auto,f_auto/');
       };
-      void 0;
       return { src: t(640),
                set: t(320) + ' 320w, ' + t(640) + ' 640w, ' + t(960) + ' 960w' };
     }
@@ -691,6 +759,138 @@ body.claro .marca-caja .marca-pos{opacity:1}
     $('#lector').querySelectorAll('img[data-src]').forEach(function (im) { vigia.observe(im); });
   }
 
+
+  /* ── el blog ── */
+
+  var CLASES = { lectura:'Lectura', idea:'Idea en proceso', experimento:'Experimento' };
+
+  // Una entrada con clave no trae su cuerpo en blog.js. Vive dentro de
+  // reservado.enc y aparece recién cuando alguien lo descifra.
+  function cuerpoDe(e) {
+    if (!e.clave) return e;
+    var g = RESERVADO && RESERVADO.entradas ? RESERVADO.entradas[e.id] : null;
+    return g ? { id:e.id, fecha:e.fecha, clase:e.clase,
+                 titulo:g.titulo || e.titulo, bajada:g.bajada || e.bajada,
+                 piezas:g.piezas || [], clave:true, abierta:true } : null;
+  }
+
+  function htmlPiezaBlog(z) {
+    if (z.tipo === 'titulo')  return '<h2 class="lec-h">' + esc(z.texto) + '</h2>';
+    if (z.tipo === 'cita')    return '<blockquote class="blog-cita"><p>' + esc(z.texto) + '</p>' +
+      (z.quien ? '<cite>' + esc(z.quien) + '</cite>' : '') + '</blockquote>';
+    if (z.tipo === 'lista')   return '<ul class="lec-lista">' + (z.items || []).map(function (x) {
+      return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+    if (z.tipo === 'imagen')  return '<figure class="blog-img"><img ' + attrImg(z.src) +
+      ' alt="' + esc(z.pie || '') + '" data-grande="' + esc(z.src) + '" decoding="async">' +
+      (z.pie ? '<figcaption>' + esc(z.pie) + '</figcaption>' : '') + '</figure>';
+    if (z.tipo === 'video')   return '<figure class="blog-media lec-video">' +
+      '<video controls preload="none" playsinline' +
+      (z.portada ? ' poster="' + esc(z.portada) + '"' : '') + '>' +
+      '<source src="' + esc(z.src) + '" type="video/mp4">' +
+      'Tu navegador no puede reproducir este video.</video></figure>';
+    if (z.tipo === 'audio')   return htmlAudio(z);
+    return '<p class="lec-p">' + velar(esc(z.texto || '')) + '</p>';
+  }
+
+  function htmlEntrada(e) {
+    return '<div class="lec-bloque blog-entrada">' +
+      (e.bajada ? '<p class="blog-bajada">' + esc(e.bajada) + '</p>' : '') +
+      (e.piezas || []).map(htmlPiezaBlog).join('') +
+      '<div class="blog-pie"></div>' +
+      '<button class="lec-enlace" data-ir="' + esc('blog-' + (e.clase || 'idea')) + '">' +
+      'Volver al índice</button></div>';
+  }
+
+  // El índice. Lo que tiene clave se muestra tachado, con su fecha a la vista.
+  function htmlIndiceBlog(clase) {
+    var lista = (hayBlog ? BLOG : []).filter(function (e) {
+      return !clase || e.clase === clase;
+    });
+    var filtros = '<div class="blog-filtros">' +
+      '<button class="blog-f' + (clase ? '' : ' viva') + '" data-ir="blog">Todo</button>' +
+      Object.keys(CLASES).map(function (k) {
+        return '<button class="blog-f' + (clase === k ? ' viva' : '') +
+               '" data-ir="blog-' + k + '">' + esc(CLASES[k]) + '</button>';
+      }).join('') + '</div>';
+
+    if (!lista.length) {
+      return filtros + '<div class="lec-bloque"><p class="lec-p">' +
+        (hayBlog ? 'Todavía no hay nada escrito acá.'
+                 : 'Falta subir el archivo blog.js. Abrí GitHub Desktop y apretá Push origin.') +
+        '</p></div>';
+    }
+
+    return filtros + '<div class="lec-bloque"><ul class="blog-indice">' +
+      lista.map(function (e) {
+        var g = cuerpoDe(e);
+        var cerrada = e.clave && !g;
+        var tit = cerrada
+          ? '<span class="velado" data-n="22" title="Esta entrada no está publicada. Hace falta la clave.">' +
+            ruido(22) + '</span>'
+          : esc((g || e).titulo);
+        return '<li class="blog-fila' + (cerrada ? ' cerrada' : '') + '">' +
+          '<span class="blog-fecha">' + esc(e.fecha) + '</span>' +
+          (cerrada ? '<span class="blog-tit">' + tit + '</span>'
+                   : '<button class="blog-tit" data-ir="blog:' + esc(e.id) + '">' + tit + '</button>') +
+          '<span class="blog-meta"><span class="blog-clase">' +
+          esc(CLASES[e.clase] || e.clase || '') + '</span>' +
+          (cerrada ? '<span class="lec-cerrado">Con clave</span>' : '') + '</span>' +
+          ((g || e).bajada ? '<span class="blog-sub">' + esc((g || e).bajada) + '</span>' : '') +
+          '</li>';
+      }).join('') + '</ul></div>';
+  }
+
+  /* ── el reproductor de audio, con la tipografía del sitio ── */
+
+  function reloj(s) {
+    if (!isFinite(s)) return '--:--';
+    var m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function htmlAudio(z) {
+    return '<figure class="blog-audio">' +
+      '<audio preload="none" src="' + esc(z.src) + '"></audio>' +
+      '<button class="au-boton" aria-label="Reproducir">&#9654;</button>' +
+      '<div class="au-medio">' +
+      (z.titulo ? '<span class="au-tit">' + esc(z.titulo) + '</span>' : '') +
+      '<div class="au-barra" role="slider" tabindex="0" aria-label="Avance"><i></i></div></div>' +
+      '<span class="au-tiempo">' + esc(z.duracion || '0:00') + '</span></figure>';
+  }
+  function armarAudios() {
+    $('#lector').querySelectorAll('.blog-audio').forEach(function (f) {
+      if (f.dataset.listo) return;
+      f.dataset.listo = '1';
+      var a = f.querySelector('audio'), b = f.querySelector('.au-boton'),
+          barra = f.querySelector('.au-barra'), i = barra.querySelector('i'),
+          t = f.querySelector('.au-tiempo');
+      b.addEventListener('click', function () {
+        if (a.paused) {
+          $('#lector').querySelectorAll('.blog-audio audio').forEach(function (o) {
+            if (o !== a) o.pause(); });
+          a.play();
+        } else { a.pause(); }
+      });
+      a.addEventListener('play',  function () { b.innerHTML = '&#10073;&#10073;'; f.classList.add('sonando'); });
+      a.addEventListener('pause', function () { b.innerHTML = '&#9654;'; f.classList.remove('sonando'); });
+      a.addEventListener('ended', function () { i.style.width = '0%'; t.textContent = reloj(a.duration); });
+      a.addEventListener('timeupdate', function () {
+        if (a.duration) i.style.width = (a.currentTime / a.duration * 100) + '%';
+        t.textContent = reloj(a.duration ? a.duration - a.currentTime : 0);
+      });
+      function saltar(ev) {
+        if (!a.duration) return;
+        var r = barra.getBoundingClientRect();
+        a.currentTime = Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width)) * a.duration;
+      }
+      barra.addEventListener('click', saltar);
+      barra.addEventListener('keydown', function (ev) {
+        if (!a.duration) return;
+        if (ev.key === 'ArrowRight') a.currentTime = Math.min(a.duration, a.currentTime + 5);
+        if (ev.key === 'ArrowLeft')  a.currentTime = Math.max(0, a.currentTime - 5);
+      });
+    });
+  }
+
   function htmlPieza(z) {
     if (z.tipo === 'video') {
       return '<figure class="lec-pieza lec-video">' +
@@ -727,14 +927,36 @@ body.claro .marca-caja .marca-pos{opacity:1}
   }
 
   function leer(destino) {
+    if (destino.indexOf('blog:') === 0) {
+      var id = destino.slice(5);
+      var e = (hayBlog ? BLOG : []).find(function (x) { return x.id === id; });
+      var g = e ? cuerpoDe(e) : null;
+      if (g) {
+        $('#lec-cuerpo').innerHTML =
+          '<h1 class="lec-tit">' + esc(g.titulo) + '</h1>' +
+          '<p class="lec-bajada">' + esc(g.fecha) + ' · ' +
+          esc(CLASES[g.clase] || g.clase || '') +
+          (e.clave ? ' · reservada' : '') + '</p>' + htmlEntrada(g);
+        abrirLector();
+        return;
+      }
+      if (e) {                                  // existe pero está cerrada
+        $('#lec-cuerpo').innerHTML =
+          '<h1 class="lec-tit">Entrada reservada</h1>' +
+          '<p class="lec-bajada">' + esc(e.fecha) + ' · ' +
+          esc(CLASES[e.clase] || e.clase || '') + '</p>' +
+          '<div class="lec-bloque"><p class="lec-p">Esta entrada no está publicada. ' +
+          'Su texto vive cifrado y hace falta la clave para leerlo.</p>' +
+          '<button class="lec-enlace" data-ir="blog">Volver al índice</button></div>';
+        abrirLector();
+        return;
+      }
+    }
     if (destino.indexOf('arte:') === 0) {
       var html = leerArte(destino.slice(5));
       if (html) {
         $('#lec-cuerpo').innerHTML = html;
-        $('#lector').classList.add('abierto');
-        $('#lector').setAttribute('aria-hidden', 'false');
-        $('#lector').scrollTop = 0;
-        armarVigia();
+        abrirLector();
         return;
       }
     }
@@ -746,9 +968,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
         '<div class="lec-bloque"><p class="lec-p">Esta página no pudo cargar sus datos. ' +
         'Si la estás viendo publicada, falta subir el archivo <strong>contenido.js</strong>. ' +
         'Abrí GitHub Desktop y apretá Push origin.</p></div>';
-      $('#lector').classList.add('abierto');
-      $('#lector').setAttribute('aria-hidden', 'false');
-      $('#lector').scrollTop = 0;
+      abrirLector();
       return;
     }
     var cuerpo = '', bajada = '';
@@ -850,8 +1070,12 @@ body.claro .marca-caja .marca-pos{opacity:1}
             '<p class="lec-p">' + esc(e.texto) + '</p></div>'; }).join('') + '</div>';
       }
 
+    } else if (m.tipo === 'blog') {
+      bajada = m.clase ? 'Blog · ' + esc(CLASES[m.clase] || m.clase) : 'Blog';
+      cuerpo = htmlIndiceBlog(m.clase || null);
+
     } else if (m.tipo === 'texto') {
-      bajada = 'Blog';
+      bajada = esc(m.bajada || 'Nota');
       cuerpo = '<div class="lec-bloque"><p class="lec-p">' + esc(m.cuerpo) + '</p></div>';
 
     } else {
@@ -874,10 +1098,15 @@ body.claro .marca-caja .marca-pos{opacity:1}
 
     c.innerHTML = '<h1 class="lec-tit">' + esc(m.titulo || destino) + '</h1>' +
                   '<p class="lec-bajada">' + bajada + '</p>' + cuerpo;
+    abrirLector();
+  }
+
+  function abrirLector() {
     $('#lector').classList.add('abierto');
     $('#lector').setAttribute('aria-hidden', 'false');
     $('#lector').scrollTop = 0;
     armarVigia();
+    armarAudios();
     latido();
   }
 
@@ -1061,6 +1290,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
       $('#puerta-error').textContent = '';
       RESERVADO = d;
       if (d.bloques && d.bloques.length) mostrarReservado(d);
+      else if (d.entradas && $('#lector').classList.contains('abierto')) leer('blog');
       else if ($('#lector').classList.contains('abierto')) leer('bio');
       probando = false;
       return;

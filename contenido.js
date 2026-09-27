@@ -368,8 +368,22 @@ const MAPA = {
   "titulo": "Distinciones"
  },
  "blog": {
-  "tipo": "texto",
-  "titulo": "Blog",
-  "cuerpo": "En preparación. Acá van a vivir lecturas, ideas en proceso y experimentos de audio y video."
+  "tipo": "blog",
+  "titulo": "Blog"
+ },
+ "blog-lectura": {
+  "tipo": "blog",
+  "titulo": "Lecturas",
+  "clase": "lectura"
+ },
+ "blog-idea": {
+  "tipo": "blog",
+  "titulo": "Ideas",
+  "clase": "idea"
+ },
+ "blog-experimento": {
+  "tipo": "blog",
+  "titulo": "Experimentos",
+  "clase": "experimento"
  }
 };
