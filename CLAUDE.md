@@ -158,44 +158,80 @@ propia, tipo Cloudflare Access.
 
 ### Las trabas, lo que todavía no se abre
 
-Arriba del IIFE hay dos mapas chicos.
+Rehecho entero el 2026-09-30, después de dos vueltas que salieron mal. **Leer
+esto antes de tocar una sola línea del bloqueo.**
+
+#### Tres niveles, un solo comportamiento
+
+| nivel | clave en `TRABAS` | ejemplo | qué deja de pasar |
+|---|---|---|---|
+| panel | `panel:blog` | BLOG | no despliega sus ramas |
+| carpeta | `carpeta:fotos` | FOTOS | no despliega su contenido |
+| pieza | `arte:evp` | EVP | no abre el lector |
+
+Dos mapas chicos arriba del IIFE. `TRABAS` va de destino a cerrojo, `CERROJOS`
+de cerrojo a huella SHA-256, y esa la escribe el lanzador 7. Un cerrojo vacío
+quiere decir que **ninguna clave lo abre**, ni la suya.
+
+**Trabar algo nuevo es una línea en `TRABAS` y otra en `CERROJOS`.** Destrabarlo
+es borrar la de `TRABAS`. Nada más.
+
+#### Las tres reglas, no negociables
+
+1. **Lo cerrado se ve antes de tocarlo.** Candado dibujado, siempre visible. Un
+   SVG enmascarado sobre `currentColor`, así sigue la tinta del campo claro y
+   del oscuro sin tener dos archivos.
+2. **Nada que se pueda tocar puede no hacer nada.** Tocar algo cerrado abre
+   CONTRASEÑAS diciendo qué se quería abrir, y pasar por encima muestra la nota
+   flotante. Vale para los tres niveles, sin excepciones.
+3. **Una sola manera de decir cerrado en todo el sitio.** Mismo candado, misma
+   nota, mismo comportamiento. Nunca inventarle a un nivel su propio cartel.
+
+Por qué están escritas. Primero hubo una pantalla genérica que decía hace falta
+la clave y la hizo sacar. Después un sello EN OBRAS al lado del título, y lo hizo
+sacar también. Lo que quería no era menos aviso, era **un aviso que se entienda y
+que lleve a algún lado**.
+
+#### Las piezas del código
+
+`marcarTrabas()` marca con la clase `trabado` **todo lo que tenga `data-traba`**,
+sea panel, carpeta o pieza. `pedirLaClave(el)` abre la puerta y le pone el nombre
+que viaja en `data-nombre`. `#nota` es la nota flotante, un solo div que se mueve.
+`probar()` llama a `marcarTrabas()` al acertar, así la sección queda usable sin
+recargar.
+
+#### La lista de prueba, se corre entera cada vez
+
+Cualquier cambio en el bloqueo se prueba con esto, en el navegador, no a ojo.
 
 ```
-TRABAS   destino → con qué cerrojo se abre
-NOTAS    cerrojo → qué se lee mientras esté cerrado
+ 1  panel trabado no despliega ramas
+ 2  carpeta trabada no despliega contenido
+ 3  pieza trabada no abre el lector
+ 4  los tres muestran candado
+ 5  los tres muestran la nota al pasar por encima
+ 6  los tres abren CONTRASEÑAS al tocar, con su nombre
+ 7  la clave correcta destraba y deja usable sin recargar
+ 8  la clave incorrecta avisa y no destraba
+ 9  un puente de adentro del lector a algo trabado tampoco abre
+10  nada trabado queda con cursor de mano
+11  ninguna animación arriba de 450 ms
+12  sin errores en la consola
+13  anda a 390 px de ancho
 ```
 
-**Lo trabado no abre nada.** Ni el lector, ni la carpeta. Lo pidió así el
-2026-09-30, antes había una pantalla genérica que decía hace falta la clave y no
-la quiso. El clic muere en dos lugares, en el oyente de la mesa si el botón
-tiene la clase `trabado`, y al principio de `leer()` para los puentes de adentro
-del lector.
+#### El límite de las animaciones
 
-**Y no lo anuncia de ninguna manera.** Hubo un sello que decía EN OBRAS y lo
-hizo sacar el mismo día. Una sección trabada se ve **igual que las demás**, ni
-tachada ni atenuada, y lo único que cambia es el cursor, que deja de ser mano.
-La clase `trabado` que pone `marcarTrabas()` es lo que la desactiva.
+**450 ms es el techo de todo el sitio.** Los paneles estaban en 800 y los campos
+de color en 850, y se sentía lento. Hoy lo más lento son 400 ms. El escalonado de
+las listas arranca en 60 ms y suma 22 por item, antes arrancaba en 280 y sumaba
+55.
 
-No agregarle nunca un cartel, un candado ni un color distinto. Ya lo pidió dos
-veces. Se destraba desde **CONTRASEÑAS**, arriba a la derecha, y al acertar la
-clave `probar()` llama a `marcarTrabas()` y la sección queda clickeable.
+#### Lo que esto no es
 
-**Trabar una sección nueva son tres líneas.** Una en `TRABAS`, una en `NOTAS`
-si querés un texto propio, y una en `CERROJOS` con la huella, que la escribe el
-lanzador 7. Destrabarla es borrar su línea de `TRABAS`. Un cerrojo vacío en
-`CERROJOS` quiere decir que **ninguna clave lo abre**, ni la suya.
-
-Al 2026-09-30 hay seis cosas trabadas y **cada una con su propia clave**, que fue
-lo que él eligió. `anarky`, `evp`, `fanzine01`, `fanzinemascara`, `fotos` y
-`blog`. Las entradas sueltas `blog:<id>` siguen el cerrojo de su índice.
-
-`tituloDe(destino)` resuelve el nombre para la pantalla de la clave, y sabe de
-carpetas, de proyectos de `arte.js` y de destinos del `MAPA`.
-
-Igual que lo velado, **esto tapa a la vista**. Los datos de la sección viajan en
-los archivos del sitio. Es un freno, no una caja fuerte.
-
----
+Igual que lo velado, **tapa a la vista**. Los datos de la sección viajan en los
+archivos del sitio. Es un freno para que nadie entre de casualidad antes de
+tiempo, no una caja fuerte.
 
 ## La anchura de la letra
 

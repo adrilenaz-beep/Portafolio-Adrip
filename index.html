@@ -42,7 +42,7 @@ html,body{height:100%}
 body{
   margin:0; background:var(--campo); color:var(--tinta);
   font-family:var(--mono); font-size:13px; overflow:hidden;
-  transition:background .85s cubic-bezier(.65,0,.2,1), color .85s;
+  transition:background .4s cubic-bezier(.65,0,.2,1), color .4s;
   -webkit-font-smoothing:antialiased;
 }
 /* sobre los campos claros la tinta se da vuelta */
@@ -60,7 +60,7 @@ button{font-family:var(--mono);color:inherit;background:none;border:0;cursor:poi
 /* ── marca ── */
 .marca{position:fixed; top:26px; left:28px; z-index:20}
 .marca-caja{display:block; position:relative; width:clamp(118px,11vw,152px)}
-.marca-caja img{display:block; width:100%; height:auto; transition:opacity .5s ease}
+.marca-caja img{display:block; width:100%; height:auto; transition:opacity .3s ease}
 .marca-caja .marca-pos{position:absolute; inset:0; opacity:0}
 body.claro .marca-caja .marca-neg{opacity:0}
 body.claro .marca-caja .marca-pos{opacity:1}
@@ -81,10 +81,10 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .marco{
   position:fixed; inset:130px 28px 34px; z-index:2; pointer-events:none;
   border-bottom:1px dashed var(--linea); border-right:1px dashed var(--linea);
-  transition:border-color .85s;
+  transition:border-color .4s;
 }
 
-.saludo{position:fixed; left:28px; top:31%; z-index:6; transition:opacity .5s}
+.saludo{position:fixed; left:28px; top:31%; z-index:6; transition:opacity .28s}
 .saludo.fuera{opacity:0; pointer-events:none}
 .bienvenida{
   margin:0; font-size:clamp(24px,3.4vw,42px); font-weight:400;
@@ -97,7 +97,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
 
 .panel{
   position:absolute; user-select:none;
-  transition:transform .8s cubic-bezier(.22,1,.3,1), opacity .5s;
+  transition:transform .38s cubic-bezier(.22,1,.3,1), opacity .26s;
   will-change:transform;
 }
 .panel.arrastrando{transition:none; z-index:30}
@@ -109,8 +109,8 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .panel-tit.espejo{transform:scaleX(-1) scaleY(-1); display:inline-block}
 .panel-sub{
   margin-top:0; display:grid; grid-template-rows:0fr; opacity:0;
-  transition:grid-template-rows .34s cubic-bezier(.2,.9,.25,1),
-             opacity .17s ease, margin-top .34s cubic-bezier(.2,.9,.25,1);
+  transition:grid-template-rows .24s cubic-bezier(.2,.9,.25,1),
+             opacity .14s ease, margin-top .24s cubic-bezier(.2,.9,.25,1);
 }
 .panel-caja{overflow:hidden; display:flex; flex-direction:column; gap:9px; align-items:flex-start; min-height:0}
 .panel.desplegado .panel-sub{grid-template-rows:1fr; opacity:1; margin-top:14px}
@@ -129,7 +129,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .rama::before{
   content:''; width:26px; height:13px; flex:none;
   border-left:1.5px solid var(--tinta); border-bottom:1.5px solid var(--tinta);
-  transform:translateY(-5px); transition:border-color .85s;
+  transform:translateY(-5px); transition:border-color .4s;
 }
 .rama.viva{opacity:1}
 .rama.viva::after{content:'_'; font-weight:700; line-height:.7; animation:latir 1.05s steps(1) infinite}
@@ -137,7 +137,7 @@ body.claro .marca-caja .marca-pos{opacity:1}
 
 .panel.encabeza{
   left:28px !important; top:132px !important;
-  transition:left .8s cubic-bezier(.22,1,.3,1), top .8s cubic-bezier(.22,1,.3,1);
+  transition:left .38s cubic-bezier(.22,1,.3,1), top .38s cubic-bezier(.22,1,.3,1);
 }
 .panel.encabeza .rama{font-size:clamp(15px,1.7vw,21px)}
 .panel.encabeza .rama:not(.viva){opacity:.4}
@@ -146,29 +146,50 @@ body.claro .marca-caja .marca-pos{opacity:1}
 /* lo que abre una rama */
 .hoja{
   position:absolute; z-index:10; opacity:0; pointer-events:none;
-  transition:opacity .55s ease .22s, transform .8s cubic-bezier(.22,1,.3,1);
+  transition:opacity .26s ease .08s, transform .38s cubic-bezier(.22,1,.3,1);
   transform:translateY(16px);
 }
 .hoja.abierta{opacity:1; pointer-events:auto; transform:translateY(0)}
 .hoja-lista{display:flex; flex-direction:column; gap:clamp(14px,2.4vh,30px)}
 /* una carpeta se despliega acá mismo, abajo de su título y sangrada */
-.es-carpeta::before{content:'▸ '; display:inline-block; transition:transform .22s cubic-bezier(.2,.9,.25,1)}
-.es-carpeta.desplegada::before{transform:rotate(90deg)}
+.es-carpeta::after{content:' ▸'; display:inline-block; margin-left:.35em;
+  transition:transform .18s cubic-bezier(.2,.9,.25,1)}
+.es-carpeta.desplegada::after{transform:rotate(90deg)}
 .hoja-sub{display:none; flex-direction:column; gap:clamp(12px,2vh,24px); padding-left:30px}
-.hoja-sub.abierta{display:flex; animation:asoma .3s ease both}
+.hoja-sub.abierta{display:flex; animation:asoma .2s ease both}
 .hoja-sub .hoja-item{font-size:clamp(13px,1.6vw,20px)}
 .hoja-item{
   font-size:clamp(15px,2vw,25px); font-weight:400; letter-spacing:.02em;
   opacity:0; transform:translateY(10px); text-align:left;
-  transition:opacity .5s, transform .5s, padding-left .25s;
+  transition:opacity .28s, transform .28s, padding-left .18s;
 }
 .hoja.abierta .hoja-item{opacity:1; transform:translateY(0)}
 .hoja-item:hover{padding-left:12px}
-/* Lo trabado se ve igual que todo lo demás y no responde al clic. Sin sello,
-   sin cartel y sin atenuar, la sección no anuncia que existe algo detrás.
-   Lo único que cambia es el cursor, que deja de ser mano. */
-.hoja-item.trabado{cursor:default}
+/* ── lo cerrado ───────────────────────────────────────────────
+   Un solo candado para los tres niveles, panel, carpeta y pieza. Va dibujado
+   y enmascarado sobre currentColor, así sigue la tinta del campo claro y del
+   oscuro sin tener dos archivos. */
+.trabado{cursor:help}
+.trabado::before{
+  content:''; display:inline-block; width:.56em; height:.74em; margin-right:.46em;
+  vertical-align:-.08em; background:currentColor; opacity:.75;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Cpath d='M3.1 7.2V4.7a2.9 2.9 0 0 1 5.8 0v2.5' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3Crect x='.9' y='7.2' width='10.2' height='8' rx='1.1' fill='%23000'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Cpath d='M3.1 7.2V4.7a2.9 2.9 0 0 1 5.8 0v2.5' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3Crect x='.9' y='7.2' width='10.2' height='8' rx='1.1' fill='%23000'/%3E%3C/svg%3E") center/contain no-repeat;
+}
 .hoja-item.trabado:hover{padding-left:0}
+/* una carpeta cerrada muestra el candado y no su flecha, porque no despliega */
+.es-carpeta.trabado::after{content:none}
+.panel-tit.trabado{cursor:help}
+.panel-tit.trabado .senal{display:none}
+
+/* la nota flotante, aparece al pasar por encima de algo cerrado */
+#nota{
+  position:fixed; z-index:95; pointer-events:none; opacity:0;
+  background:var(--tinta); color:var(--campo); padding:7px 11px;
+  font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+  white-space:nowrap; transition:opacity .14s ease;
+}
+#nota.viva{opacity:1}
 .hoja-item.espejo{transform:scaleX(-1) scaleY(-1); transform-origin:left center}
 .hoja.abierta .hoja-item.espejo{transform:scaleX(-1) scaleY(-1)}
 
@@ -217,6 +238,7 @@ html.cerrado #portada{ display:flex }
 .puerta-caja{border:1px solid rgba(242,240,234,.4); padding:34px 38px; max-width:440px; color:#F2F0EA}
 .puerta-caja h2{margin:0 0 6px; font-size:13px; letter-spacing:.24em; text-transform:uppercase}
 .puerta-caja p{margin:0 0 20px; font-size:11.5px; line-height:1.75; color:rgba(242,240,234,.6)}
+.puerta-que{color:#F2F0EA !important; margin-bottom:10px !important; letter-spacing:.06em}
 .puerta-caja input{
   width:100%; background:transparent; border:0; border-bottom:1px solid rgba(242,240,234,.4);
   color:#F2F0EA; font-family:var(--mono); font-size:15px; padding:9px 0; letter-spacing:.2em;
@@ -231,7 +253,7 @@ html.cerrado #portada{ display:flex }
   position:fixed; inset:0; z-index:70; overflow-y:auto; display:none;
   background:var(--campo); padding:120px 28px 90px;
 }
-#lector.abierto{display:block; animation:entra .45s ease}
+#lector.abierto{display:block; animation:entra .26s ease}
 @keyframes entra{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
 /* el volver va en negativo, una pastilla llena. Antes era texto pelado y se
    perdía encima de las fotos y de los campos de color */
@@ -485,6 +507,8 @@ button.blog-tit:hover{transform:translateX(5px)}
 </head>
 <body>
 
+<div id="nota" aria-hidden="true"></div>
+
 <div id="portada">
   <div class="portada-caja">
     <img src="marca/marca-negativo.png" alt="ADRIP" width="760" height="353">
@@ -536,6 +560,7 @@ button.blog-tit:hover{transform:translateX(5px)}
 <div id="puerta">
   <div class="puerta-caja">
     <h2>Acceso restringido</h2>
+    <p class="puerta-que" id="puerta-que" hidden></p>
     <p>Hay material que no está publicado. Obra en proceso, escritura sin filtro y datos de
        contacto que no dejo sueltos por ahí. Si tenés la clave, entrás.</p>
     <input type="password" id="clave" placeholder="CLAVE" autocomplete="off" spellcheck="false">
@@ -578,6 +603,7 @@ button.blog-tit:hover{transform:translateX(5px)}
   // verdad no puede verse va cifrado, en reservado.enc.
   // destino → con qué cerrojo se abre
   var TRABAS = {
+    'panel:blog':                             'blog',
     'arte:anarky-jaket':                      'anarky',
     'arte:evp':                               'evp',
     'arte:fanzine-01':                        'fanzine01',
@@ -686,6 +712,11 @@ button.blog-tit:hover{transform:translateX(5px)}
     var t = document.createElement('span');
     t.className = 'panel-tit';
     t.appendChild(document.createTextNode(p.titulo));
+    // un panel entero se traba con el prefijo panel:, y entonces no despliega
+    if (TRABAS['panel:' + p.id]) {
+      t.dataset.traba = TRABAS['panel:' + p.id];
+      t.dataset.nombre = p.titulo;
+    }
     if (p.ramas.length) {
       var sen = document.createElement('span');
       sen.className = 'senal'; sen.textContent = '▸';
@@ -706,7 +737,11 @@ button.blog-tit:hover{transform:translateX(5px)}
         et.className = 'rama-txt';
         et.appendChild(document.createTextNode(r.et));
         b.appendChild(et);
-        b.addEventListener('click', function (e) { e.stopPropagation(); alternar(r.id, d); });
+          b.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (t.classList.contains('trabado')) { pedirLaClave(t); return; }
+          alternar(r.id, d);
+        });
         caja.appendChild(b);
       });
       d.appendChild(sub);
@@ -716,13 +751,17 @@ button.blog-tit:hover{transform:translateX(5px)}
       t.addEventListener('pointermove', function (e) { if (e.buttons) arrastro = true; });
       t.addEventListener('click', function () {
         if (arrastro) return;
+        if (t.classList.contains('trabado')) { pedirLaClave(t); return; }
         d.classList.toggle('desplegado');
         if (!d.classList.contains('desplegado') && abierta &&
             p.ramas.some(function (r) { return r.id === abierta; })) cerrar();
       });
     } else {
       t.style.cursor = 'pointer';
-      t.addEventListener('click', function () { alternar(p.id, d); });
+      t.addEventListener('click', function () {
+        if (t.classList.contains('trabado')) { pedirLaClave(t); return; }
+        alternar(p.id, d);
+      });
     }
     mesa.appendChild(d);
     arrastrable(d, t);
@@ -742,18 +781,18 @@ button.blog-tit:hover{transform:translateX(5px)}
     var b = document.createElement('button');
     b.className = 'hoja-item' + (it.espejo ? ' espejo' : '');
     b.textContent = it.t || it;
-    b.style.transitionDelay = (0.28 + i * 0.055) + 's';
+    b.style.transitionDelay = (0.06 + i * 0.022) + 's';
     if (it.oculto) { b.dataset.oculto = '1'; b.style.display = 'none'; }
 
     if (it.carpeta) {
       var puerta = 'carpeta:' + it.carpeta;
       b.classList.add('es-carpeta');
       b.dataset.carpeta = it.carpeta;
-      if (TRABAS[puerta]) b.dataset.traba = TRABAS[puerta];
+      if (TRABAS[puerta]) { b.dataset.traba = TRABAS[puerta]; b.dataset.nombre = it.t; }
       return b;
     }
 
-    if (it.d && TRABAS[it.d]) b.dataset.traba = TRABAS[it.d];
+    if (it.d && TRABAS[it.d]) { b.dataset.traba = TRABAS[it.d]; b.dataset.nombre = it.t; }
     if (it.d) b.dataset.ir = it.d;
     return b;
   }
@@ -788,7 +827,8 @@ button.blog-tit:hover{transform:translateX(5px)}
   // un solo oyente para toda la mesa, así da lo mismo cuándo se dibujó el botón
   mesa.addEventListener('click', function (ev) {
     var b = ev.target.closest('.hoja-item');
-    if (!b || b.classList.contains('trabado')) return;   // trabado no abre nada
+    if (!b) return;
+    if (b.classList.contains('trabado')) { pedirLaClave(b); return; }
     if (b.dataset.carpeta) {
       var sub = b.parentNode.querySelector('.hoja-sub[data-de="' + b.dataset.carpeta + '"]');
       if (!sub) return;
@@ -811,10 +851,12 @@ button.blog-tit:hover{transform:translateX(5px)}
   }
 
   // ojo, se llama al final del todo, `abiertos` se declara mucho más abajo
+  // paneles, carpetas y piezas, todos se marcan igual
   function marcarTrabas() {
-    document.querySelectorAll('.hoja-item[data-traba]').forEach(function (b) {
+    document.querySelectorAll('[data-traba]').forEach(function (b) {
       b.classList.toggle('trabado', !(abiertos && abiertos[b.dataset.traba]));
     });
+    if (typeof esconderNota === 'function') esconderNota();
   }
 
   /* ── abrir una rama, y correr lo demás para hacerle lugar ── */
@@ -1421,8 +1463,45 @@ button.blog-tit:hover{transform:translateX(5px)}
     campo.focus();
   })();
 
+  /* ── lo cerrado, un solo comportamiento para los tres niveles ──
+     La regla es que nada que se pueda tocar puede no hacer nada. Tocar algo
+     cerrado abre el pedido de clave diciendo qué se quería abrir, y pasar por
+     encima muestra la nota. El candado ya se ve desde antes, en el CSS. */
+
+  var nota = $('#nota');
+  function mostrarNota(el) {
+    var r = el.getBoundingClientRect();
+    nota.textContent = 'Cerrado · hace falta la clave';
+    nota.classList.add('viva');
+    var n = nota.getBoundingClientRect();
+    var x = Math.min(r.left, window.innerWidth - n.width - 14);
+    var y = r.top - n.height - 9;
+    nota.style.left = Math.max(14, x) + 'px';
+    nota.style.top = (y < 10 ? r.bottom + 9 : y) + 'px';
+  }
+  function esconderNota() { nota.classList.remove('viva'); }
+
+  document.addEventListener('mouseover', function (e) {
+    var t = e.target.closest ? e.target.closest('.trabado') : null;
+    if (t) mostrarNota(t); else esconderNota();
+  });
+  document.addEventListener('mouseout', function (e) {
+    if (e.target.closest && e.target.closest('.trabado')) esconderNota();
+  });
+
+  function pedirLaClave(el) {
+    esconderNota();
+    var q = $('#puerta-que');
+    var nombre = el && el.dataset ? (el.dataset.nombre || el.textContent.trim()) : '';
+    if (nombre) { q.textContent = 'Para abrir ' + nombre; q.hidden = false; }
+    else q.hidden = true;
+    $('#puerta').classList.add('abierta');
+    $('#clave').focus();
+  }
+
   /* ── la puerta ── */
   $('#acceso').addEventListener('click', function () {
+    $('#puerta-que').hidden = true;
     $('#puerta').classList.add('abierta'); $('#clave').focus();
   });
   $('#puerta-cerrar').addEventListener('click', function () {
