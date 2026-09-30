@@ -1611,25 +1611,6 @@ const OBRAS = [
   ]
  },
  {
-  "id": "arete",
-  "seccion": "branding",
-  "fecha": "2023",
-  "titulo": "Arete",
-  "nota": "Pieza de producto dibujada como plano técnico. La estructura queda a la vista y esa es la decisión de diseño.",
-  "layout": "single",
-  "tags": [
-   "Producto",
-   "Plano",
-   "Objeto"
-  ],
-  "imgs": [
-   {
-    "src": "obra/arete-01-final.jpg",
-    "alt": "Arete, plano"
-   }
-  ]
- },
- {
   "id": "reas-de-dise-o",
   "seccion": "branding",
   "fecha": "2022",

@@ -19,6 +19,39 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGINA = os.path.join(RAIZ, 'index.html')
 PATRON = re.compile(r"window\.PORTADA\s*=\s*'([0-9a-f]*)'\s*;")
 
+# Los cerrojos viven en index.html, adentro del bloque CERROJOS. Cada uno abre
+# una cosa distinta. Los nombres salen del archivo, acá solo está cómo
+# nombrárselos a él. Si aparece uno nuevo y no está en esta lista, se muestra
+# con su nombre crudo y funciona igual.
+COMO_SE_LLAMAN = {
+    'velado':  'lo tachado, la biografía y el Club de Diseño en Voluntariado',
+    'secreto': 'el pasamontañas escondido, que es un juego',
+    'blog':    'el blog entero',
+}
+
+
+def cerrojos(texto):
+    """los cerrojos que hay en index.html, en el orden en que aparecen"""
+    bloque = re.search(r"var CERROJOS = \{(.*?)\};", texto, re.S)
+    if not bloque:
+        return []
+    return re.findall(r"(\w+)\s*:\s*'([0-9a-f]*)'", bloque.group(1))
+
+
+def escribir_cerrojo(nombre, huella):
+    texto = open(PAGINA, encoding='utf-8').read()
+    bloque = re.search(r"var CERROJOS = \{(.*?)\};", texto, re.S)
+    if not bloque:
+        print('\n  No encuentro el bloque CERROJOS dentro de index.html.\n')
+        sys.exit(1)
+    viejo = bloque.group(0)
+    nuevo, cuantas = re.subn(r"(\b%s\s*:\s*')[0-9a-f]*(')" % re.escape(nombre),
+                             r"\g<1>%s\g<2>" % huella, viejo, count=1)
+    if not cuantas:
+        print('\n  No encuentro el cerrojo %s.\n' % nombre)
+        sys.exit(1)
+    open(PAGINA, 'w', encoding='utf-8').write(texto.replace(viejo, nuevo, 1))
+
 
 def normal(t):
     """la clave viaja igual desde cualquier teclado"""
@@ -47,6 +80,64 @@ def escribir(huella):
     open(PAGINA, 'w', encoding='utf-8').write(texto)
 
 
+def pedir_clave_nueva():
+    """la pide dos veces y devuelve su huella, o None si algo no cerró"""
+    try:
+        a = normal(getpass.getpass('  Clave nueva   '))
+        b = normal(getpass.getpass('  De nuevo      '))
+    except (EOFError, KeyboardInterrupt):
+        print('\n  Listo, no toqué nada.\n'); return None
+    if not a:
+        print('\n  No escribiste nada, no toqué nada.\n'); return None
+    if a != b:
+        print('\n  Las dos no son iguales. Volvé a abrir el lanzador.\n'); return None
+    nivel, nota = fuerza(a)
+    print('\n  Clave %s. %s' % (nivel, nota))
+    return hashlib.sha256(a.encode('utf-8')).hexdigest()
+
+
+def las_partes():
+    lista = cerrojos(open(PAGINA, encoding='utf-8').read())
+    if not lista:
+        print('\n  No hay ninguna parte con clave todavía.\n'); return
+
+    print()
+    print('  LAS PARTES QUE PIDEN CLAVE')
+    print('  ' + '-' * 46)
+    print()
+    for n, (nombre, huella) in enumerate(lista, 1):
+        estado = 'con clave' if huella else 'CERRADA PARA TODOS, no tiene clave'
+        print('  %d   %s' % (n, COMO_SE_LLAMAN.get(nombre, nombre)))
+        print('      %s' % estado)
+    print()
+    print('  %d   volver sin tocar nada' % (len(lista) + 1))
+    print()
+
+    try:
+        que = input('  Cuál   ').strip()
+    except (EOFError, KeyboardInterrupt):
+        print('\n  Listo, no toqué nada.\n'); return
+    if not que.isdigit() or not (1 <= int(que) <= len(lista)):
+        print('\n  Listo, no toqué nada.\n'); return
+
+    nombre = lista[int(que) - 1][0]
+    print()
+    print('  %s' % COMO_SE_LLAMAN.get(nombre, nombre))
+    print()
+    h = pedir_clave_nueva()
+    if not h:
+        return
+    escribir_cerrojo(nombre, h)
+    print()
+    print('  Listo, esa parte quedó con su propia clave.')
+    print()
+    print('  Podés darle esta clave a alguien sin darle las otras, y al revés.')
+    print('  Es la gracia de tenerlas separadas.')
+    print()
+    print('  Falta subirlo. Abrí GitHub Desktop y apretá Push origin.')
+    print()
+
+
 def main():
     print('\n  LA CLAVE DEL SITIO')
     print('  ' + '-' * 46)
@@ -64,9 +155,10 @@ def main():
     puesta = bool(actual and actual.group(1))
     print('  Ahora mismo el sitio está %s.' % ('con clave' if puesta else 'abierto'))
     print()
-    print('  1   ponerle clave, o cambiar la que tiene')
-    print('  2   sacarle la clave y dejarlo abierto')
-    print('  3   salir sin tocar nada')
+    print('  1   ponerle clave a la entrada, o cambiar la que tiene')
+    print('  2   sacarle la clave a la entrada y dejarla abierta')
+    print('  3   las claves de las partes que todavía no están listas')
+    print('  4   salir sin tocar nada')
     print()
 
     try:
@@ -74,8 +166,11 @@ def main():
     except (EOFError, KeyboardInterrupt):
         print('\n  Listo, no toqué nada.\n'); return
 
-    if que == '3' or que == '':
+    if que in ('4', ''):
         print('\n  Listo, no toqué nada.\n'); return
+
+    if que == '3':
+        return las_partes()
 
     if que == '2':
         if not puesta:
@@ -91,21 +186,11 @@ def main():
         print('\n  No entendí. Volvé a abrir el lanzador.\n'); return
 
     print()
-    try:
-        a = normal(getpass.getpass('  Clave nueva   '))
-        b = normal(getpass.getpass('  De nuevo      '))
-    except (EOFError, KeyboardInterrupt):
-        print('\n  Listo, no toqué nada.\n'); return
+    h = pedir_clave_nueva()
+    if not h:
+        return
 
-    if not a:
-        print('\n  No escribiste nada, no toqué nada.\n'); return
-    if a != b:
-        print('\n  Las dos no son iguales. Volvé a abrir el lanzador.\n'); return
-
-    nivel, nota = fuerza(a)
-    print('\n  Clave %s. %s' % (nivel, nota))
-
-    escribir(hashlib.sha256(a.encode('utf-8')).hexdigest())
+    escribir(h)
     print()
     print('  Listo, el sitio quedó con clave.')
     print()

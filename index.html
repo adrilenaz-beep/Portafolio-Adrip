@@ -158,6 +158,12 @@ body.claro .marca-caja .marca-pos{opacity:1}
 }
 .hoja.abierta .hoja-item{opacity:1; transform:translateY(0)}
 .hoja-item:hover{padding-left:12px}
+.hoja-item.trabado{opacity:.5}
+.hoja-item.trabado::after{
+  content:'EN OBRAS'; display:inline-block; margin-left:14px; font-size:9px;
+  letter-spacing:.16em; border:1px solid var(--linea); padding:2px 7px;
+  vertical-align:middle; transform:translateY(-2px);
+}
 .hoja-item.espejo{transform:scaleX(-1) scaleY(-1); transform-origin:left center}
 .hoja.abierta .hoja-item.espejo{transform:scaleX(-1) scaleY(-1)}
 
@@ -222,11 +228,15 @@ html.cerrado #portada{ display:flex }
 }
 #lector.abierto{display:block; animation:entra .45s ease}
 @keyframes entra{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
+/* el volver va en negativo, una pastilla llena. Antes era texto pelado y se
+   perdía encima de las fotos y de los campos de color */
 .lec-cerrar{
-  position:fixed; top:26px; right:28px; z-index:80; font-size:11px;
-  letter-spacing:.2em; text-transform:uppercase; border-bottom:1px solid transparent;
+  position:fixed; top:22px; right:28px; z-index:80; font-size:10px;
+  letter-spacing:.2em; text-transform:uppercase;
+  background:var(--tinta); color:var(--campo); border:1px solid var(--tinta);
+  padding:9px 15px; transition:background .18s ease, color .18s ease;
 }
-.lec-cerrar:hover{border-bottom-color:var(--tinta)}
+.lec-cerrar:hover{background:transparent; color:var(--tinta)}
 .lec-tit{font-size:clamp(26px,4vw,52px); font-weight:700; letter-spacing:-.03em; margin:0 0 6px}
 .lec-bajada{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--tinta-baja); margin:0 0 44px}
 .lec-bloque{margin-bottom:52px; max-width:1300px}
@@ -279,6 +289,7 @@ html.cerrado #portada{ display:flex }
   color:var(--tinta); background:none; border:1px solid var(--linea); border-radius:0;
   transition:background .18s ease, border-color .18s ease}
 .lec-enlace::after{content:'↗'; font-size:11px}
+.lec-llave::after{content:none}
 .lec-enlace:hover{background:var(--tinta); color:var(--campo); border-color:var(--tinta)}
 .lec-obra-cab{display:flex; gap:16px; align-items:baseline; flex-wrap:wrap}
 .lec-obra-tit{font-size:16px; font-weight:500; letter-spacing:-.01em}
@@ -370,6 +381,7 @@ button.blog-tit:hover{transform:translateX(5px)}
   .blog-fecha{grid-column:1 / -1}
   .blog-sub{grid-column:1 / -1}
 }
+.lec-cierre{margin-top:26px; font-size:15px; line-height:1.85; font-weight:300; max-width:80ch}
 .lec-vinculo{display:inline-block; margin-top:8px; font-size:12px; border-bottom:1px solid var(--linea)}
 @media (max-width:860px){ #lector{padding:100px 22px 70px} }
 
@@ -489,7 +501,7 @@ button.blog-tit:hover{transform:translateX(5px)}
 </div>
 
 <div class="ficha">
-  <button class="acceso" id="acceso">LOG IN / SIGN UP</button>
+  <button class="acceso" id="acceso">CONTRASEÑAS</button>
   <dl>
     <dt>Fecha</dt><dd id="f-hoy">—</dd>
     <dt>Última actualización</dt><dd id="f-act">—</dd>
@@ -548,12 +560,36 @@ button.blog-tit:hover{transform:translateX(5px)}
   var hayObras  = typeof OBRAS   !== 'undefined';
   var hayBlog   = typeof BLOG    !== 'undefined';
 
-  // El blog todavía no está listo, así que está bloqueado. Mientras esto sea
-  // true, los tres destinos de blog y cualquier entrada abren la nota de en
-  // obras en lugar del índice. No hay nada tapado ni cifrado acá, el blog se
-  // lee entero, simplemente todavía no hay qué leer. Para abrirlo, poner
-  // false y listo, blog.js y el lanzador 6 quedaron intactos.
-  var BLOG_EN_OBRAS = true;
+  // ── lo que todavía no se abre ────────────────────────────────────────────
+  //
+  // TRABAS dice qué destinos piden clave, con qué cerrojo se abren y qué se
+  // lee mientras están cerrados. El cerrojo es el nombre que aparece en
+  // CERROJOS, más abajo, y su huella la pone el lanzador 7. Dos destinos
+  // pueden compartir cerrojo, como los tres del blog, o tener uno cada uno.
+  //
+  // Sacar una traba es borrar su línea de acá. Nada más.
+  //
+  // Ojo, esto tapa a la vista. Los datos de la sección viajan igual dentro de
+  // los archivos del sitio, así que es un freno, no una caja fuerte. Lo que de
+  // verdad no puede verse va cifrado, en reservado.enc.
+  // destino → con qué cerrojo se abre
+  var TRABAS = {
+    'blog':             'blog',
+    'blog-lectura':     'blog',
+    'blog-idea':        'blog',
+    'blog-experimento': 'blog'
+  };
+  // cerrojo → qué se lee mientras esté cerrado
+  var NOTAS = {
+    blog: 'Todavía no hay nada acá. Lecturas, ideas y experimentos de audio y video, pronto.'
+  };
+  var NOTA_POR_DEFECTO = 'Esta parte todavía no está lista para mostrarse.';
+
+  function cerrojoDe(destino) {
+    // las entradas sueltas del blog siguen el cerrojo de su índice
+    return TRABAS[destino] ||
+           (destino.indexOf('blog:') === 0 ? TRABAS['blog'] : null);
+  }
 
   /* ── el contenido del escritorio ── */
   var CAMPOS = { negro:'#0A0A0B', papel:'#F2F0EA', corp:'#28B8EA', art:'#E8428E', aca:'#E49F37' };
@@ -689,12 +725,21 @@ button.blog-tit:hover{transform:translateX(5px)}
       b.textContent = it.t || it;
       b.style.transitionDelay = (0.28 + i * 0.055) + 's';
       if (it.oculto) { b.dataset.oculto = '1'; b.style.display = 'none'; }
+      // lo que pide clave se avisa desde el escritorio, no se descubre al entrar
+      if (it.d && TRABAS[it.d]) b.dataset.traba = TRABAS[it.d];
       if (it.d) b.addEventListener('click', function () { leer(it.d); });
       l.appendChild(b);
     });
     d.appendChild(l);
     mesa.appendChild(d);
   });
+
+  // ojo, se llama al final del todo, `abiertos` se declara mucho más abajo
+  function marcarTrabas() {
+    document.querySelectorAll('.hoja-item[data-traba]').forEach(function (b) {
+      b.classList.toggle('trabado', !(abiertos && abiertos[b.dataset.traba]));
+    });
+  }
 
   /* ── abrir una rama, y correr lo demás para hacerle lugar ── */
   function alternar(id, panel) {
@@ -1055,7 +1100,10 @@ button.blog-tit:hover{transform:translateX(5px)}
     var caps = (a.capitulos || []).map(function (c) {
       return '<div class="lec-bloque">' +
         (c.nombre ? '<h2 class="lec-h">' + esc(c.nombre) + '</h2>' : '') +
-        '<div class="lec-piezas">' + c.piezas.map(htmlPieza).join('') + '</div></div>';
+        '<div class="lec-piezas">' + c.piezas.map(htmlPieza).join('') + '</div>' +
+        // el cierre es el texto que va abajo de las piezas, el que remata el capítulo
+        (c.cierre ? '<p class="lec-p lec-cierre">' + velar(esc(c.cierre)) + '</p>' : '') +
+        '</div>';
     }).join('');
     var n = (a.capitulos || []).reduce(function (t, c) { return t + c.piezas.length; }, 0);
     return '<h1 class="lec-tit">' + esc(a.titulo) + '</h1>' +
@@ -1066,17 +1114,8 @@ button.blog-tit:hover{transform:translateX(5px)}
   }
 
   function leer(destino) {
-    if (BLOG_EN_OBRAS && (destino === 'blog' ||
-        destino.indexOf('blog-') === 0 || destino.indexOf('blog:') === 0)) {
-      var tit = (hayMapa && MAPA[destino] && MAPA[destino].titulo) || 'Blog';
-      $('#lec-cuerpo').innerHTML =
-        '<h1 class="lec-tit">' + esc(tit) + '</h1>' +
-        '<p class="lec-bajada">Blog · en obras</p>' +
-        '<div class="lec-bloque"><p class="lec-p">Todavía no hay nada acá. ' +
-        'Lecturas, ideas y experimentos de audio y video, pronto.</p></div>';
-      abrirLector();
-      return;
-    }
+    var cerrojo = cerrojoDe(destino);
+    if (cerrojo && !abiertos[cerrojo]) { pedirLaClave(destino, cerrojo); return; }
     if (destino.indexOf('blog:') === 0) {
       var id = destino.slice(5);
       var e = (hayBlog ? BLOG : []).find(function (x) { return x.id === id; });
@@ -1251,6 +1290,22 @@ button.blog-tit:hover{transform:translateX(5px)}
     abrirLector();
   }
 
+  // La pantalla que aparece cuando el destino está trabado. Queda anotado a
+  // dónde quería ir, así que al acertar la clave entra solo, sin volver a
+  // buscarlo a mano.
+  var pendiente = null;
+  function pedirLaClave(destino, cerrojo) {
+    pendiente = destino;
+    var m = (hayMapa && MAPA[destino]) || {};
+    $('#lec-cuerpo').innerHTML =
+      '<h1 class="lec-tit">' + esc(m.titulo || 'Con clave') + '</h1>' +
+      '<p class="lec-bajada">En obras · hace falta la clave</p>' +
+      '<div class="lec-bloque"><p class="lec-p">' +
+      esc(NOTAS[cerrojo] || NOTA_POR_DEFECTO) + '</p>' +
+      '<button class="lec-enlace lec-llave" data-clave="1">Escribir la clave</button></div>';
+    abrirLector();
+  }
+
   function abrirLector() {
     $('#lector').classList.add('abierto');
     $('#lector').setAttribute('aria-hidden', 'false');
@@ -1268,6 +1323,10 @@ button.blog-tit:hover{transform:translateX(5px)}
 
   // los puentes entre secciones se resuelven sin cerrar el lector
   $('#lec-cuerpo').addEventListener('click', function (ev) {
+    if (ev.target.closest('[data-clave]')) {
+      $('#puerta').classList.add('abierta'); $('#clave').focus();
+      return;
+    }
     var b = ev.target.closest('[data-ir]');
     if (b) leer(b.dataset.ir);
   });
@@ -1337,9 +1396,14 @@ button.blog-tit:hover{transform:translateX(5px)}
   // tapan cosas que ya viajan dentro de la página, así que son un gesto, no
   // una caja fuerte. Lo que de verdad no puede verse va en reservado.enc, que
   // está cifrado y no se abre sin la clave.
+  //
+  // Los cerrojos de abajo los escribe el lanzador 7, no se tocan a mano. Uno
+  // vacío quiere decir que ninguna clave lo abre, o sea que esa parte queda
+  // cerrada para todos, incluido vos.
   var CERROJOS = {
     velado:  '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230',
-    secreto: '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230'
+    secreto: '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230',
+    blog:    ''
   };
   var abiertos = {};
 
@@ -1488,7 +1552,10 @@ button.blog-tit:hover{transform:translateX(5px)}
       $('#puerta').classList.remove('abierta');
       $('#puerta-error').textContent = '';
       if (abiertos.secreto) destapar();
-      if (abiertos.velado && $('#lector').classList.contains('abierto')) leer('bio');
+      marcarTrabas();
+      var aDonde = pendiente, c = aDonde ? cerrojoDe(aDonde) : null;
+      if (c && abiertos[c]) { pendiente = null; leer(aDonde); }
+      else if (abiertos.velado && $('#lector').classList.contains('abierto')) leer('bio');
       probando = false;
       return;
     }
@@ -1511,6 +1578,7 @@ button.blog-tit:hover{transform:translateX(5px)}
   }
   $('#f-hoy').textContent = fecha(new Date());
   $('#f-act').textContent = fecha(new Date(document.lastModified));
+  marcarTrabas();
 
   if (!hayMapa || !hayPerfil || !hayObras) {
     $('#pie-estado').textContent = 'Faltan datos · subí contenido.js con Push origin';

@@ -23,7 +23,7 @@ lanzador, no se le documenta un comando.
 | 4 PROTEGER LOS PDF | cifra los PDF de la PBFCC con AES-256 |
 | 5 GUARDAR LO RESERVADO | cifra el material que no se publica, guarda solo |
 | 6 ESCRIBIR EN EL BLOG | escribe, ordena y publica entradas |
-| 7 LA CLAVE DEL SITIO | pone o saca la cortina de entrada a toda la página |
+| 7 LA CLAVE DEL SITIO | la cortina de entrada y las claves de cada sección trabada |
 
 **Publica con GitHub Desktop**, apretando Push origin. Desde acá se puede
 commitear pero conviene avisarle cuántos commits quedan sin subir.
@@ -137,13 +137,33 @@ Si alguna vez quiere protección de verdad, no hay forma en GitHub Pages con
 repositorio público. Eso es mudar el sitio a algo que tenga autenticación
 propia, tipo Cloudflare Access.
 
-### El blog bloqueado
+### Las trabas, lo que todavía no se abre
 
-`BLOG_EN_OBRAS` arriba del IIFE. Mientras sea `true`, los destinos `blog`,
-`blog-*` y `blog:<id>` abren una nota corta de en obras en lugar del índice.
-**No está censurado ni cifrado**, el texto se lee entero, simplemente todavía
-no hay qué leer. `blog.js`, el lanzador 6 y todo el resto quedaron intactos,
-abrirlo es poner `false`.
+Arriba del IIFE hay dos mapas chicos.
+
+```
+TRABAS   destino → con qué cerrojo se abre
+NOTAS    cerrojo → qué se lee mientras esté cerrado
+```
+
+`leer(destino)` corta al principio, y si el cerrojo no está abierto muestra la
+pantalla de `pedirLaClave()` con el botón que abre la puerta. Queda anotado a
+dónde quería ir en `pendiente`, así que al acertar la clave `probar()` lo lleva
+solo, sin que tenga que volver a buscarlo. `marcarTrabas()` le pone el sello
+**EN OBRAS** a los `hoja-item` del escritorio, así se avisa antes de entrar y no
+al chocarse.
+
+**Trabar una sección nueva son tres líneas.** Una en `TRABAS`, una en `NOTAS`
+si querés un texto propio, y una en `CERROJOS` con la huella, que la escribe el
+lanzador 7. Destrabarla es borrar su línea de `TRABAS`. Un cerrojo vacío en
+`CERROJOS` quiere decir que **ninguna clave lo abre**, ni la suya.
+
+El blog entra por acá desde el 2026-09-30, con el cerrojo `blog`, y las entradas
+sueltas `blog:<id>` siguen el cerrojo de su índice. Antes era una bandera
+`BLOG_EN_OBRAS`, que ya no existe.
+
+Igual que lo velado, **esto tapa a la vista**. Los datos de la sección viajan en
+los archivos del sitio. Es un freno, no una caja fuerte.
 
 ---
 

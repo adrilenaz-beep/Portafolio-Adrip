@@ -60,7 +60,8 @@ const ARTE = [
       "tipo": "imagen",
       "src": "obra/quemalo-gato.jpg"
      }
-    ]
+    ],
+    "cierre": "En algún momento, el cansancio, como cualquier otra emoción dejarán de ser sentidos, el alivio (?) de la muerte y de la renovación, ojalá traiga el futuro que no fuimos capaces de cambiar. Que de las cenizas crezca algo nuevo."
    }
   ]
  },
