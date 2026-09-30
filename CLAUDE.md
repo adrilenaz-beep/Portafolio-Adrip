@@ -45,6 +45,20 @@ escritorio, guardada para reusar la idea al customizar cada sección artística.
 Los títulos del escritorio **se arrastran como ventanas**. Al abrir una rama los
 demás se corren para hacerle lugar.
 
+### Las carpetas de una hoja
+
+Una hoja puede tener **carpetas adentro**, que son otro nivel de la misma hoja y
+no una hoja nueva, así que no llevan posición propia. Un item con `carpeta:'x'`
+en vez de `d:'...'` abre el nivel `x`, que sale de `CARPETAS`.
+
+**Todos los niveles se dibujan de entrada** y se muestra uno solo, con la clase
+`oculta`. Es a propósito. Si se dibujaran recién al abrirlos, `destapar()` y
+`marcarTrabas()` no encontrarían los botones que todavía no se mostraron, y el
+pasamontañas escondido vive justamente adentro de una carpeta.
+
+Hoy hay dos, `fotos` y `pasamontanas`. Una carpeta se traba con el prefijo
+`carpeta:` en `TRABAS`.
+
 ### Los archivos de datos
 
 Se cargan como scripts globales, sin `defer`, y el IIFE tolera que falte
@@ -158,9 +172,12 @@ si querés un texto propio, y una en `CERROJOS` con la huella, que la escribe el
 lanzador 7. Destrabarla es borrar su línea de `TRABAS`. Un cerrojo vacío en
 `CERROJOS` quiere decir que **ninguna clave lo abre**, ni la suya.
 
-El blog entra por acá desde el 2026-09-30, con el cerrojo `blog`, y las entradas
-sueltas `blog:<id>` siguen el cerrojo de su índice. Antes era una bandera
-`BLOG_EN_OBRAS`, que ya no existe.
+Al 2026-09-30 hay seis cosas trabadas y **cada una con su propia clave**, que fue
+lo que él eligió. `anarky`, `evp`, `fanzine01`, `fanzinemascara`, `fotos` y
+`blog`. Las entradas sueltas `blog:<id>` siguen el cerrojo de su índice.
+
+`tituloDe(destino)` resuelve el nombre para la pantalla de la clave, y sabe de
+carpetas, de proyectos de `arte.js` y de destinos del `MAPA`.
 
 Igual que lo velado, **esto tapa a la vista**. Los datos de la sección viajan en
 los archivos del sitio. Es un freno, no una caja fuerte.

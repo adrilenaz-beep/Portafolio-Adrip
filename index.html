@@ -151,6 +151,9 @@ body.claro .marca-caja .marca-pos{opacity:1}
 }
 .hoja.abierta{opacity:1; pointer-events:auto; transform:translateY(0)}
 .hoja-lista{display:flex; flex-direction:column; gap:clamp(14px,2.4vh,30px)}
+.hoja-lista.oculta{display:none}
+.hoja-item.volver{font-size:clamp(11px,1.2vw,14px); letter-spacing:.16em; opacity:.55}
+.hoja-item.volver:hover{opacity:1}
 .hoja-item{
   font-size:clamp(15px,2vw,25px); font-weight:400; letter-spacing:.02em;
   opacity:0; transform:translateY(10px); text-align:left;
@@ -574,6 +577,11 @@ button.blog-tit:hover{transform:translateX(5px)}
   // verdad no puede verse va cifrado, en reservado.enc.
   // destino → con qué cerrojo se abre
   var TRABAS = {
+    'arte:anarky-jaket':                      'anarky',
+    'arte:evp':                               'evp',
+    'arte:fanzine-01':                        'fanzine01',
+    'arte:fanzine-historia-del-pasamontanas': 'fanzinemascara',
+    'carpeta:fotos':                          'fotos',
     'blog':             'blog',
     'blog-lectura':     'blog',
     'blog-idea':        'blog',
@@ -584,6 +592,20 @@ button.blog-tit:hover{transform:translateX(5px)}
     blog: 'Todavía no hay nada acá. Lecturas, ideas y experimentos de audio y video, pronto.'
   };
   var NOTA_POR_DEFECTO = 'Esta parte todavía no está lista para mostrarse.';
+
+  function tituloDe(destino) {
+    if (destino.indexOf('carpeta:') === 0) {
+      var c = CARPETAS[destino.slice(8)];
+      return c ? c.titulo : 'Con clave';
+    }
+    if (destino.indexOf('arte:') === 0) {
+      var a = (typeof ARTE !== 'undefined' ? ARTE : []).filter(function (x) {
+        return x.id === destino.slice(5); })[0];
+      if (a) return a.titulo;
+    }
+    var m = (hayMapa && MAPA[destino]) || {};
+    return m.titulo || 'Con clave';
+  }
 
   function cerrojoDe(destino) {
     // las entradas sueltas del blog siguen el cerrojo de su índice
@@ -637,14 +659,12 @@ button.blog-tit:hover{transform:translateX(5px)}
     art:{ pag:'003', x:37, y:22, items:[
       {t:'ANARKY JAKET', d:'arte:anarky-jaket'},
       {t:'CANSADO', d:'arte:cansado'},
+      {t:'EMBELLECIENDO LA CIUDAD', d:'arte:rosa-embelleciendo'},
       {t:'EVP', d:'arte:evp'},
       {t:'FANZINE 01', d:'arte:fanzine-01'},
-      {t:'FOTOS PALOMA', d:'arte:fotos-paloma'},
-      {t:'FOTOS VIAJE, AUTO', d:'arte:fotos-viaje-auto'},
-      {t:'FANZINE HISTORIA DEL PASAMONTAÑAS', d:'arte:fanzine-historia-del-pasamontanas'},
+      {t:'FOTOS', carpeta:'fotos'},
       {t:'LA RAMONA', d:'arte:la-ramona'},
-      {t:'PASAMONTAÑAS (HISTORIA)', d:'arte:pasamontanas-historia', oculto:true},
-      {t:'ROSA : EMBELLECIENDO', d:'arte:rosa-embelleciendo'},
+      {t:'PASAMONTAÑAS', carpeta:'pasamontanas'},
       {t:'STICKERS', d:'arte:stickers'}] },
     aca:{ pag:'004', x:37, y:33, items:[
       {t:'ARTÍCULOS ACADÉMICOS', d:'articulos'},
@@ -655,6 +675,20 @@ button.blog-tit:hover{transform:translateX(5px)}
     lecturas:{     pag:'005', x:37, y:33, items:[{t:'VER LAS LECTURAS',     d:'blog-lectura'}] },
     ideas:{        pag:'006', x:37, y:33, items:[{t:'VER LAS IDEAS',        d:'blog-idea'}] },
     experimentos:{ pag:'007', x:37, y:33, items:[{t:'VER LOS EXPERIMENTOS', d:'blog-experimento'}] }
+  };
+
+  // Lo que hay adentro de cada carpeta. Una carpeta es un nivel más de la
+  // misma hoja, no una hoja nueva, así que no lleva posición propia y todo
+  // se dibuja de entrada, aunque esté cerrada.
+  var CARPETAS = {
+    fotos: { titulo:'Fotos', items:[
+      {t:'FOTOS PALOMA', d:'arte:fotos-paloma'},
+      {t:'FOTOS VIAJE, AUTO', d:'arte:fotos-viaje-auto'}] },
+    pasamontanas: { titulo:'Pasamontañas', items:[
+      {t:'PASAMONTAÑAS (HISTORIA)', d:'arte:pasamontanas-historia', oculto:true},
+      {t:'PODRÍA SER TU / PODRÍA SER YO', d:'podria-ser'},
+      {t:'NO PIERDAS TU HUMANIDAD', d:'humanidad'},
+      {t:'FANZINE HISTORIA DEL PASAMONTAÑAS', d:'arte:fanzine-historia-del-pasamontanas'}] }
   };
 
   var abierta = null;
@@ -712,25 +746,65 @@ button.blog-tit:hover{transform:translateX(5px)}
     arrastrable(d, t);
   });
 
+  // Cada nivel de una hoja es su propia lista y se ve una sola a la vez. Todas
+  // se dibujan de entrada, aunque su carpeta esté cerrada, así destapar() y
+  // marcarTrabas() encuentran los botones que todavía no se mostraron.
+  function botonDeItem(it, i, hoja) {
+    var b = document.createElement('button');
+    b.className = 'hoja-item' + (it.espejo ? ' espejo' : '');
+    b.textContent = (it.t || it) + (it.carpeta ? '  ▸' : '');
+    b.style.transitionDelay = (0.28 + i * 0.055) + 's';
+    if (it.oculto) { b.dataset.oculto = '1'; b.style.display = 'none'; }
+
+    if (it.carpeta) {
+      var puerta = 'carpeta:' + it.carpeta;
+      if (TRABAS[puerta]) b.dataset.traba = TRABAS[puerta];
+      b.addEventListener('click', function () {
+        var cer = TRABAS[puerta];
+        if (cer && !abiertos[cer]) { pedirLaClave(puerta, cer); return; }
+        verNivel(hoja, it.carpeta);
+      });
+      return b;
+    }
+
+    // lo que pide clave se avisa desde el escritorio, no se descubre al entrar
+    if (it.d && TRABAS[it.d]) b.dataset.traba = TRABAS[it.d];
+    if (it.d) b.addEventListener('click', function () { leer(it.d); });
+    return b;
+  }
+
+  function listaDe(items, hoja, nivel) {
+    var l = document.createElement('div');
+    l.className = 'hoja-lista' + (nivel === 'raiz' ? '' : ' oculta');
+    l.dataset.nivel = nivel;
+    if (nivel !== 'raiz') {
+      var v = document.createElement('button');
+      v.className = 'hoja-item volver';
+      v.textContent = '← VOLVER';
+      v.addEventListener('click', function () { verNivel(hoja, 'raiz'); });
+      l.appendChild(v);
+    }
+    items.forEach(function (it, i) { l.appendChild(botonDeItem(it, i, hoja)); });
+    return l;
+  }
+
+  function verNivel(hoja, nivel) {
+    hoja.querySelectorAll('.hoja-lista').forEach(function (l) {
+      l.classList.toggle('oculta', l.dataset.nivel !== nivel);
+    });
+  }
+
   Object.keys(HOJAS).forEach(function (k) {
     var h = HOJAS[k];
     var d = document.createElement('div');
     d.className = 'hoja'; d.id = 'hoja-' + k;
     d.style.left = h.x + '%'; d.style.top = h.y + '%';
-    var l = document.createElement('div');
-    l.className = 'hoja-lista';
-    h.items.forEach(function (it, i) {
-      var b = document.createElement('button');
-      b.className = 'hoja-item' + (it.espejo ? ' espejo' : '');
-      b.textContent = it.t || it;
-      b.style.transitionDelay = (0.28 + i * 0.055) + 's';
-      if (it.oculto) { b.dataset.oculto = '1'; b.style.display = 'none'; }
-      // lo que pide clave se avisa desde el escritorio, no se descubre al entrar
-      if (it.d && TRABAS[it.d]) b.dataset.traba = TRABAS[it.d];
-      if (it.d) b.addEventListener('click', function () { leer(it.d); });
-      l.appendChild(b);
+    d.appendChild(listaDe(h.items, d, 'raiz'));
+    h.items.forEach(function (it) {
+      if (it.carpeta && CARPETAS[it.carpeta]) {
+        d.appendChild(listaDe(CARPETAS[it.carpeta].items, d, it.carpeta));
+      }
     });
-    d.appendChild(l);
     mesa.appendChild(d);
   });
 
@@ -779,7 +853,7 @@ button.blog-tit:hover{transform:translateX(5px)}
   function cerrar(silencioso) {
     if (!abierta) return;
     var hoja = $('#hoja-' + abierta);
-    if (hoja) hoja.classList.remove('abierta');
+    if (hoja) { hoja.classList.remove('abierta'); verNivel(hoja, 'raiz'); }
     abierta = null;
     if (!silencioso) {
       alBase();
@@ -1296,9 +1370,8 @@ button.blog-tit:hover{transform:translateX(5px)}
   var pendiente = null;
   function pedirLaClave(destino, cerrojo) {
     pendiente = destino;
-    var m = (hayMapa && MAPA[destino]) || {};
     $('#lec-cuerpo').innerHTML =
-      '<h1 class="lec-tit">' + esc(m.titulo || 'Con clave') + '</h1>' +
+      '<h1 class="lec-tit">' + esc(tituloDe(destino)) + '</h1>' +
       '<p class="lec-bajada">En obras · hace falta la clave</p>' +
       '<div class="lec-bloque"><p class="lec-p">' +
       esc(NOTAS[cerrojo] || NOTA_POR_DEFECTO) + '</p>' +
@@ -1403,7 +1476,12 @@ button.blog-tit:hover{transform:translateX(5px)}
   var CERROJOS = {
     velado:  '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230',
     secreto: '48bf9b4f142ab45cac6f33cf99415bca6ca8e07608a031237aa76560fec2204b',
-    blog:    ''
+    blog:           '',
+    anarky:         '',
+    evp:            '',
+    fanzine01:      '',
+    fanzinemascara: '',
+    fotos:          ''
   };
   var abiertos = {};
 
@@ -1554,7 +1632,14 @@ button.blog-tit:hover{transform:translateX(5px)}
       if (abiertos.secreto) destapar();
       marcarTrabas();
       var aDonde = pendiente, c = aDonde ? cerrojoDe(aDonde) : null;
-      if (c && abiertos[c]) { pendiente = null; leer(aDonde); }
+      if (c && abiertos[c]) {
+        pendiente = null;
+        if (aDonde.indexOf('carpeta:') === 0) {
+          cerrarLector();
+          var hj = abierta ? $('#hoja-' + abierta) : null;
+          if (hj) verNivel(hj, aDonde.slice(8));
+        } else { leer(aDonde); }
+      }
       else if (abiertos.velado && $('#lector').classList.contains('abierto')) leer('bio');
       probando = false;
       return;

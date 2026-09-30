@@ -26,7 +26,12 @@ PATRON = re.compile(r"window\.PORTADA\s*=\s*'([0-9a-f]*)'\s*;")
 COMO_SE_LLAMAN = {
     'velado':  'lo tachado, la biografía y el Club de Diseño en Voluntariado',
     'secreto': 'el pasamontañas escondido, que es un juego',
-    'blog':    'el blog entero',
+    'blog':           'el blog entero',
+    'anarky':         'ANARKY JAKET',
+    'evp':            'EVP',
+    'fanzine01':      'FANZINE 01',
+    'fanzinemascara': 'FANZINE HISTORIA DEL PASAMONTAÑAS',
+    'fotos':          'la carpeta FOTOS, las dos series de foto',
 }
 
 

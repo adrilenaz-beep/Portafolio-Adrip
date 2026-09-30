@@ -376,7 +376,7 @@ const ARTE = [
  },
  {
   "id": "rosa-embelleciendo",
-  "titulo": "ROSA : EMBELLECIENDO",
+  "titulo": "Embelleciendo la ciudad",
   "anio": "2022",
   "nota": "Patrón floral sobre los principios ornamentales de William Morris, impreso, cortado a mano y pegado en muros de Cochabamba. La rosa como belleza y la espina como advertencia.",
   "oculto": false,
