@@ -172,7 +172,7 @@ const PERFIL = {
  "extras": [
   {
    "anio": "2024 abril",
-   "texto": "Fundador y coordinador de sociedad estudiantil enfocada en pensamiento creativo y divergente a través del diseño.",
+   "texto": "Fundador y coordinador de [[sociedad estudiantil enfocada en pensamiento creativo y divergente a través del diseño]].",
    "sello": "Fundador"
   },
   {
@@ -196,14 +196,19 @@ const PERFIL = {
    "sello": "Masterclass"
   },
   {
-   "anio": "2025 junio",
-   "texto": "Intervención gráfica de poster de 2.5m x 1.8m. Diseño, fotomontaje e instalación crítica.",
-   "sello": "Intervención"
+   "anio": "2025 julio",
+   "texto": "XX Semana Internacional de Diseño en Palermo, XVI Congreso de Enseñanza del Diseño. Universidad de Palermo, Buenos Aires. Presentación de «Deconstrucción de símbolos gráficos coloniales en Bolivia», una aproximación desde el diseño gráfico crítico y la semiótica decolonial.",
+   "sello": "Ponente"
   },
   {
-   "anio": "2025 julio",
-   "texto": "XX Semana Internacional de Diseño en Palermo, XVI Congreso de Enseñanza del Diseño. Presentación de investigación sobre deconstrucción de símbolos gráficos coloniales en Bolivia desde perspectiva decolonial y semiótica.",
+   "anio": "2026 julio",
+   "texto": "XXI Semana Internacional de Diseño en Palermo, XVI Congreso de Enseñanza del Diseño. Universidad de Palermo, Buenos Aires, del 13 al 21 de julio. Presentación de «Hip hop ch'ixi. Prácticas culturales urbanas en Cochabamba», que extiende el marco ch'ixi de la tesis de grado.",
    "sello": "Ponente"
+  },
+  {
+   "anio": "2026",
+   "texto": "Licenciatura en Diseño Gráfico por la Universidad Privada Boliviana. Trabajo de grado «La cultura como ch'ixi. Vanguardia por medio de la interpretación y la descolonización de signos gráficos en obras coloniales del Virreinato del Perú», defendido.",
+   "sello": "Titulación"
   },
   {
    "anio": "2026 agosto",

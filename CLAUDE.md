@@ -260,6 +260,28 @@ sumarla a esa lista o la foto sale deformada.
 
 Todo sale de `--anchura` en `:root`. Cambiarla cambia el sitio entero.
 
+## El portafolio académico
+
+Se lee **como un documento y no como una galería**, y eso es a propósito, lo
+pidió el 2026-09-30 porque quería que esa sección se sintiera otro lugar.
+Margen numerado, filete al costado, los estados en pastilla llena, y **el
+artículo publicado se da vuelta entero**, campo por tinta. Es el contraste más
+fuerte que tiene el sitio sin inventarle un color nuevo.
+
+Lo activa la clase `lec-aca` en `#lec-cuerpo`, que pone la bandera `aca` del
+`leer()`. Los tres destinos académicos, `articulos`, `voluntariado` y
+`distinciones`, arman sus fichas con `fichaAca()`.
+
+## Los saludos que giran
+
+El saludo del escritorio y el `Inicia` de la portada **rotan idiomas**. La caja
+no se mueve nunca, la reserva el más largo de la lista en un hueco invisible,
+así el escritorio no salta a cada vuelta. Están en `SALUDOS` e `INICIOS`,
+arriba del todo, y cambiarlos es cambiar el array.
+
+**Ojo con los idiomas.** El quechua está puesto para que él lo confirme y el
+aymara no está, porque no se inventa una lengua que él estudia en serio.
+
 ## Las imágenes
 
 Todas pasan por `attrImg(src)`, que da carga diferida propia, `srcset` y la

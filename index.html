@@ -90,6 +90,17 @@ body.claro .marca-caja .marca-pos{opacity:1}
   margin:0; font-size:clamp(24px,3.4vw,42px); font-weight:400;
   letter-spacing:.02em; line-height:1;
 }
+/* el saludo gira de idioma. La caja no se mueve, la reserva el más largo de
+   todos, así el resto del escritorio no salta a cada vuelta */
+.gira{display:inline-block; position:relative; white-space:nowrap; overflow:hidden}
+.gira i{
+  display:block; font-style:normal;
+  animation:gira-sale .42s cubic-bezier(.4,0,.2,1) both;
+}
+.gira i.entra{animation:gira-entra .42s cubic-bezier(.2,.9,.25,1) both}
+.gira .hueco{visibility:hidden; height:0; overflow:hidden; display:block}
+@keyframes gira-entra{ from{opacity:0; transform:translateY(.5em)} to{opacity:1; transform:none} }
+@keyframes gira-sale{ from{opacity:1; transform:none} to{opacity:0; transform:translateY(-.4em)} }
 .accede{margin:52px 0 0 22px; font-size:clamp(17px,2.2vw,27px); font-weight:400; letter-spacing:.04em}
 
 /* ── el escritorio ── */
@@ -202,10 +213,36 @@ html.cerrado body > *:not(#portada){ display:none !important }
 }
 html.cerrado #portada{ display:flex }
 .portada-caja{ width:min(420px,calc(100vw - 56px)); text-align:left }
+/* la portada entra escalonada, es lo primero que ve cualquiera */
+.portada-caja > *{ animation:portada-entra .5s cubic-bezier(.2,.9,.25,1) both }
+.portada-caja > *:nth-child(1){ animation-delay:.05s }
+.portada-caja > *:nth-child(2){ animation-delay:.16s }
+.portada-caja > *:nth-child(3){ animation-delay:.24s }
+.portada-caja > *:nth-child(4){ animation-delay:.32s }
+.portada-caja > *:nth-child(5){ animation-delay:.38s }
+.portada-caja > *:nth-child(6){ animation-delay:.44s }
+.portada-caja > *:nth-child(7){ animation-delay:.5s }
+@keyframes portada-entra{ from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:none} }
+/* y el filete de abajo del campo se dibuja solo */
+.portada-caja input{ background-image:linear-gradient(currentColor,currentColor);
+  background-repeat:no-repeat; background-position:0 100%; background-size:0 1px;
+  transition:background-size .45s cubic-bezier(.2,.9,.25,1) }
+.portada-caja input:focus{ background-size:100% 1px }
 .portada-caja img{ display:block; width:132px; height:auto; margin-bottom:38px }
 .portada-caja h1{
   margin:0 0 10px; font-size:clamp(26px,4vw,44px); font-weight:700; letter-spacing:-.03em;
   scale:var(--anchura) 1; transform-origin:left center;
+}
+.pista{
+  font:inherit; font-size:10px; line-height:1; width:18px; height:18px; padding:0;
+  border:1px solid rgba(242,240,234,.45); color:rgba(242,240,234,.75);
+  margin-left:6px; vertical-align:baseline; transition:background .16s ease, color .16s ease;
+}
+.pista:hover{background:#F2F0EA; color:#0A0A0B}
+.pista-texto{
+  border-left:2px solid rgba(242,240,234,.4); padding-left:12px;
+  color:rgba(242,240,234,.82) !important; font-style:italic;
+  animation:asoma .3s ease both;
 }
 .portada-caja p{
   margin:0 0 26px; font-size:11.5px; line-height:1.8; color:rgba(242,240,234,.6);
@@ -346,6 +383,55 @@ html.cerrado #portada{ display:flex }
 .lec-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px}
 .lec-tag{font-size:9px; letter-spacing:.14em; text-transform:uppercase; border:1px solid var(--linea); padding:3px 8px}
 /* ── el blog ── */
+/* ── el portafolio académico ──────────────────────────────────────
+   Esta sección se lee como un documento y no como una galería, que es lo que la
+   separa del resto del sitio. Margen numerado, filete al costado, estados en
+   pastilla llena, y lo que ya está publicado se da vuelta entero, que es el
+   contraste más fuerte que tiene el sitio sin inventarle un color nuevo.
+------------------------------------------------------------------------- */
+.lec-aca .lec-bajada{
+  display:inline-block; background:var(--tinta); color:var(--campo);
+  padding:6px 13px; margin-bottom:46px; font-weight:500;
+}
+.aca-ficha{
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:0 26px;
+  border-left:1px solid var(--linea); padding-left:26px; margin-bottom:38px;
+  max-width:1733px;
+}
+.aca-n{
+  font-size:10px; letter-spacing:.14em; color:var(--tinta-baja); padding-top:5px;
+  font-variant-numeric:tabular-nums;
+}
+.aca-sello{
+  display:inline-block; font-size:9px; letter-spacing:.22em; text-transform:uppercase;
+  background:var(--tinta); color:var(--campo); padding:4px 10px; vertical-align:middle;
+}
+.aca-fecha{
+  font-size:10px; letter-spacing:.16em; color:var(--tinta-baja); margin-left:12px;
+  vertical-align:middle;
+}
+.aca-tit{
+  font-size:19px; font-weight:500; letter-spacing:-.01em; line-height:1.4;
+  margin:16px 0 20px; max-width:80ch;
+}
+.aca-cuerpo > .lec-p{ margin-top:14px }
+
+/* el artículo publicado se da vuelta entero */
+.aca-ficha.destacada{
+  border-left:0; padding:30px 32px; background:var(--tinta); color:var(--campo);
+}
+.aca-ficha.destacada .aca-n,
+.aca-ficha.destacada .aca-fecha,
+.aca-ficha.destacada .lec-campos dt{ color:inherit; opacity:.6 }
+.aca-ficha.destacada .aca-sello{ background:var(--campo); color:var(--tinta) }
+.aca-ficha.destacada .lec-tag{ border-color:currentColor }
+.aca-ficha.destacada a{ border-bottom-color:currentColor }
+@media (max-width:700px){
+  .aca-ficha{ grid-template-columns:1fr; gap:8px; padding-left:18px }
+  .aca-ficha.destacada{ padding:22px 20px }
+  .aca-n{ padding-top:0 }
+}
+
 .blog-filtros{display:flex; gap:7px; flex-wrap:wrap; margin:-26px 0 34px}
 .blog-f{font:inherit; font-size:9px; letter-spacing:.16em; text-transform:uppercase;
   padding:6px 12px; background:none; color:var(--tinta-baja); cursor:pointer;
@@ -512,8 +598,11 @@ button.blog-tit:hover{transform:translateX(5px)}
 <div id="portada">
   <div class="portada-caja">
     <img src="marca/marca-negativo.png" alt="ADRIP" width="760" height="353">
-    <h1>Todavía no</h1>
-    <p>El sitio está en obras. Si tenés la clave, pasá.</p>
+    <h1><span class="gira" id="gira-inicia">Inicia</span></h1>
+    <p>El sitio está bloqueado. Si tenés la clave, pasá.
+       <button class="pista" id="pista" aria-label="Una pista">?</button></p>
+    <p class="pista-texto" id="pista-texto" hidden>Seis veces, lo establecido como el
+       símbolo que le da inicio…</p>
     <input type="password" id="portada-clave" placeholder="CLAVE" autocomplete="off" spellcheck="false">
     <div class="portada-error" id="portada-error"></div>
     <button id="portada-entrar">Entrar</button>
@@ -540,7 +629,7 @@ button.blog-tit:hover{transform:translateX(5px)}
 <div class="marco"></div>
 
 <div class="saludo">
-  <h1 class="bienvenida">WELCOME-BIENVENIDX</h1>
+  <h1 class="bienvenida"><span class="gira" id="gira-hola">BIENVENIDX</span></h1>
   <p class="accede">ACCEDE A:</p>
 </div>
 
@@ -1280,7 +1369,7 @@ button.blog-tit:hover{transform:translateX(5px)}
       abrirLector();
       return;
     }
-    var cuerpo = '', bajada = '';
+    var cuerpo = '', bajada = '', aca = false;
 
     if (m.tipo === 'perfil' && m.que === 'bio' && hayPerfil) {
       bajada = 'Perfil · Biografía';
@@ -1344,9 +1433,25 @@ button.blog-tit:hover{transform:translateX(5px)}
         'target="_blank" rel="noopener">Descargar el CV en PDF &#8599;</a></p></div>';
 
     } else if (m.tipo === 'academico' && hayPerfil) {
+      // Lo académico se lee como un documento y no como una galería. Margen
+      // numerado, filete al costado, los estados en pastilla llena, y lo que
+      // ya está publicado se da vuelta entero. Por eso lleva su propia clase.
+      aca = true;
       bajada = 'Portafolio · Académico';
+
+      function fichaAca(n, sello, titulo, fecha, adentro, destacada) {
+        return '<div class="aca-ficha' + (destacada ? ' destacada' : '') + '">' +
+          '<span class="aca-n">' + (n < 10 ? '0' : '') + n + '</span>' +
+          '<div class="aca-cuerpo">' +
+            '<span class="aca-sello">' + esc(sello) + '</span>' +
+            (fecha ? '<span class="aca-fecha">' + esc(fecha) + '</span>' : '') +
+            (titulo ? '<h2 class="aca-tit">' + esc(titulo) + '</h2>' : '') +
+            adentro +
+          '</div></div>';
+      }
+
       if (m.que === 'articulos') {
-        cuerpo = PERFIL.investigacion.map(function (i) {
+        cuerpo = '<div class="lec-bloque">' + PERFIL.investigacion.map(function (i, n) {
           // el cuerpo viene con etiquetas en negrita, se parten en campos
           var trozos = i.cuerpo.split(/<strong>([^<]*?)<\/strong>/);
           var campos = [], resumen = '';
@@ -1356,9 +1461,7 @@ button.blog-tit:hover{transform:translateX(5px)}
             if (/resumen/i.test(et)) resumen = val;
             else campos.push([et, val]);
           }
-          return '<div class="lec-bloque"><h2 class="lec-h">' + esc(i.estado) + '</h2>' +
-            '<div class="lec-obra-tit" style="margin-bottom:20px; font-size:19px">' + esc(i.titulo) + '</div>' +
-            '<div class="lec-academico">' +
+          var adentro = '<div class="lec-academico">' +
               '<dl class="lec-campos">' + campos.map(function (c) {
                 return '<dt>' + esc(c[0]) + '</dt><dd>' + c[1] + '</dd>'; }).join('') +
               (i.tags.length ? '<dt>Etiquetas</dt><dd><div class="lec-tags" style="margin:0">' +
@@ -1366,17 +1469,19 @@ button.blog-tit:hover{transform:translateX(5px)}
                 '</div></dd>' : '') +
               '</dl>' +
               (resumen ? '<p class="lec-p">' + resumen + '</p>' : '') +
-            '</div></div>'; }).join('');
+            '</div>';
+          return fichaAca(n + 1, i.estado, i.titulo, '', adentro, /publicad/i.test(i.estado));
+        }).join('') + '</div>';
+
       } else {
         var sellos = m.que === 'voluntariado'
           ? ['Mediación','Fundador','Intercambio','Masterclass']
-          : ['Beca','Ponente','Intervención','Formación'];
+          : ['Beca','Ponente','Formación','Titulación'];
         var hay = PERFIL.extras.filter(function (e) { return sellos.indexOf(e.sello) > -1; });
-        cuerpo = '<div class="lec-bloque">' + hay.map(function (e) {
-          return '<div class="lec-obra"><div class="lec-obra-cab">' +
-            '<span class="lec-obra-tit">' + esc(e.sello) + '</span>' +
-            '<span class="lec-obra-fecha">' + esc(e.anio) + '</span></div>' +
-            '<p class="lec-p">' + velar(esc(e.texto)) + '</p></div>'; }).join('') + '</div>';
+        cuerpo = '<div class="lec-bloque">' + hay.map(function (e, n) {
+          return fichaAca(n + 1, e.sello, '', e.anio,
+                          '<p class="lec-p">' + velar(esc(e.texto)) + '</p>', false);
+        }).join('') + '</div>';
       }
 
     } else if (m.tipo === 'blog') {
@@ -1405,6 +1510,7 @@ button.blog-tit:hover{transform:translateX(5px)}
         'cargadas acá. El material existe pero falta prepararlo para la web.</p></div>';
     }
 
+    c.classList.toggle('lec-aca', !!aca);
     c.innerHTML = '<h1 class="lec-tit">' + esc(m.titulo || destino) + '</h1>' +
                   '<p class="lec-bajada">' + bajada + '</p>' + cuerpo;
     abrirLector();
@@ -1710,6 +1816,51 @@ button.blog-tit:hover{transform:translateX(5px)}
     else if ($('#lector').classList.contains('abierto')) cerrarLector();
     else cerrar();
   });
+
+  /* ── los saludos que giran ──────────────────────────────────────────────
+     La caja no se mueve nunca. La reserva el saludo más largo de la lista, en
+     un hueco invisible, así el escritorio no salta a cada vuelta. Cambiar la
+     lista es cambiar el array, nada más.
+
+     Ojo con los idiomas. El quechua está puesto para que él lo confirme, y el
+     aymara no está porque no se inventa. */
+  var SALUDOS = ['BIENVENIDX', 'WELCOME', 'BEM-VINDX', 'BIENVENUE',
+                 'BENVENUTO', 'WILLKOMMEN', 'ALLIN HAMUSQAYKI'];
+  var INICIOS = ['Inicia', 'Start', 'Começa', 'Commence',
+                 'Inizia', 'Starten', 'Qallariy'];
+
+  function girar(el, palabras, cada) {
+    if (!el || !palabras.length) return;
+    var largo = palabras.reduce(function (a, b) { return b.length > a.length ? b : a; });
+    var hueco = document.createElement('span');
+    hueco.className = 'hueco'; hueco.textContent = largo;
+    var viva = document.createElement('i');
+    viva.className = 'entra'; viva.textContent = palabras[0];
+    el.textContent = '';
+    el.appendChild(hueco); el.appendChild(viva);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var n = 0;
+    setInterval(function () {
+      viva.className = '';                       // dispara la salida
+      setTimeout(function () {
+        n = (n + 1) % palabras.length;
+        viva.textContent = palabras[n];
+        viva.className = 'entra';
+      }, 420);
+    }, cada);
+  }
+  girar($('#gira-hola'), SALUDOS, 2600);
+  girar($('#gira-inicia'), INICIOS, 2400);
+
+  /* ── la pista de la portada ── */
+  (function () {
+    var b = $('#pista'), t = $('#pista-texto');
+    if (!b || !t) return;
+    b.addEventListener('click', function () {
+      t.hidden = !t.hidden;
+      b.textContent = t.hidden ? '?' : '×';
+    });
+  })();
 
   /* ── la ficha ── */
   function fecha(d) {
