@@ -164,12 +164,11 @@ body.claro .marca-caja .marca-pos{opacity:1}
 }
 .hoja.abierta .hoja-item{opacity:1; transform:translateY(0)}
 .hoja-item:hover{padding-left:12px}
-.hoja-item.trabado{opacity:.5}
-.hoja-item.trabado::after{
-  content:'EN OBRAS'; display:inline-block; margin-left:14px; font-size:9px;
-  letter-spacing:.16em; border:1px solid var(--linea); padding:2px 7px;
-  vertical-align:middle; transform:translateY(-2px);
-}
+/* Lo trabado se ve igual que todo lo demás y no responde al clic. Sin sello,
+   sin cartel y sin atenuar, la sección no anuncia que existe algo detrás.
+   Lo único que cambia es el cursor, que deja de ser mano. */
+.hoja-item.trabado{cursor:default}
+.hoja-item.trabado:hover{padding-left:0}
 .hoja-item.espejo{transform:scaleX(-1) scaleY(-1); transform-origin:left center}
 .hoja.abierta .hoja-item.espejo{transform:scaleX(-1) scaleY(-1)}
 
@@ -737,8 +736,8 @@ button.blog-tit:hover{transform:translateX(5px)}
   // entrada aunque la carpeta esté cerrada, así destapar() y marcarTrabas() los
   // encuentran, que es donde vive el pasamontañas escondido.
   //
-  // Lo que está trabado no abre nada. Ni el lector, ni la carpeta. Se avisa con
-  // el sello EN OBRAS y se destraba desde CONTRASEÑAS, arriba a la derecha.
+  // Lo que está trabado no abre nada. Ni el lector, ni la carpeta. No lleva
+  // sello ni cartel, solo queda apagado, y se destraba desde CONTRASEÑAS.
   function botonDeItem(it, i) {
     var b = document.createElement('button');
     b.className = 'hoja-item' + (it.espejo ? ' espejo' : '');

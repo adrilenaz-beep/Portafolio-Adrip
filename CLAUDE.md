@@ -171,9 +171,14 @@ la quiso. El clic muere en dos lugares, en el oyente de la mesa si el botón
 tiene la clase `trabado`, y al principio de `leer()` para los puentes de adentro
 del lector.
 
-El aviso es el sello **EN OBRAS** que `marcarTrabas()` le pone a los `hoja-item`,
-y se destraba desde **CONTRASEÑAS**, arriba a la derecha. Al acertar la clave,
-`probar()` llama a `marcarTrabas()` y la sección queda clickeable.
+**Y no lo anuncia de ninguna manera.** Hubo un sello que decía EN OBRAS y lo
+hizo sacar el mismo día. Una sección trabada se ve **igual que las demás**, ni
+tachada ni atenuada, y lo único que cambia es el cursor, que deja de ser mano.
+La clase `trabado` que pone `marcarTrabas()` es lo que la desactiva.
+
+No agregarle nunca un cartel, un candado ni un color distinto. Ya lo pidió dos
+veces. Se destraba desde **CONTRASEÑAS**, arriba a la derecha, y al acertar la
+clave `probar()` llama a `marcarTrabas()` y la sección queda clickeable.
 
 **Trabar una sección nueva son tres líneas.** Una en `TRABAS`, una en `NOTAS`
 si querés un texto propio, y una en `CERROJOS` con la huella, que la escribe el
