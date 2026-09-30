@@ -260,6 +260,32 @@ sumarla a esa lista o la foto sale deformada.
 
 Todo sale de `--anchura` en `:root`. Cambiarla cambia el sitio entero.
 
+## La bio, la página de perfil
+
+Armada como **un perfil viejo de internet**, cajas modulares con su barra de
+título llena, columna angosta a la izquierda con la foto y los datos, ancha a la
+derecha con el contenido. Es el único lugar del sitio que se ve así y así tiene
+que quedarse.
+
+**Se entra derecho.** La rama `BIO.` del escritorio lleva `d:'bio'` y salta al
+lector sin hoja intermedia. Lo mismo `CV.`. Antes las dos abrían una hoja con un
+solo item, que era un clic de más que no llevaba a ningún lado. Cualquier rama
+con `d` hace lo mismo.
+
+**Tiene tres cosas con las que se juega.**
+
+| qué | dónde vive |
+|---|---|
+| cambio de piel | `ponerCampo()`, recordado en `adrip-piel` |
+| Top 8 | `PERFIL.top8` en `contenido.js`, cada uno con su `data-ir` |
+| cuenta de visitas | `adrip-visitas`, cuenta **las suyas** |
+
+La cuenta dice «tu visita nº N» y no un número global, porque en un sitio sin
+servidor un contador global sería mentira. No cambiarlo por uno falso.
+
+El subtítulo `Filosofía` pasó a ser **`Lema`**, y la frase subió al encabezado,
+al lado del nombre.
+
 ## El portafolio académico
 
 Se lee **como un documento y no como una galería**, y eso es a propósito, lo
@@ -272,12 +298,21 @@ Lo activa la clase `lec-aca` en `#lec-cuerpo`, que pone la bandera `aca` del
 `leer()`. Los tres destinos académicos, `articulos`, `voluntariado` y
 `distinciones`, arman sus fichas con `fichaAca()`.
 
-## Los saludos que giran
+## Los saludos
 
-El saludo del escritorio y el `Inicia` de la portada **rotan idiomas**. La caja
-no se mueve nunca, la reserva el más largo de la lista en un hueco invisible,
-así el escritorio no salta a cada vuelta. Están en `SALUDOS` e `INICIOS`,
-arriba del todo, y cambiarlos es cambiar el array.
+Dos cosas distintas, y la diferencia importa.
+
+**El saludo del escritorio es una cinta continua.** Ventana de
+`calc(18ch + 18 * .02em)`, que es exactamente lo que medía `WELCOME-BIENVENIDX`
+antes de animarse, con `overflow:hidden`. La pista lleva la lista **dos veces** y
+se corre `-50%`, por eso el ciclo no tiene costura. **Sin desvanecimiento en las
+puntas**, lo pidió así. Lo arma `encintar()`.
+
+**La portada sí gira**, aparece y se va, con `girar()`. Ahí no molesta porque es
+una sola palabra sola en la pantalla.
+
+Las listas son `SALUDOS` e `INICIOS`, arriba del todo, y cambiarlas es cambiar
+el array.
 
 **Ojo con los idiomas.** El quechua está puesto para que él lo confirme y el
 aymara no está, porque no se inventa una lengua que él estudia en serio.

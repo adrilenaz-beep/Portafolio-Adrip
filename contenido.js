@@ -39,6 +39,16 @@ const PERFIL = {
    "v": "nivel B2"
   }
  ],
+ "top8": [
+  { "t": "La Ramona",               "d": "arte:la-ramona" },
+  { "t": "Pasamontañas",            "d": "podria-ser" },
+  { "t": "Cansado",                 "d": "arte:cansado" },
+  { "t": "Stickers",                "d": "arte:stickers" },
+  { "t": "Periodismo gráfico",      "d": "periodismo-grafico" },
+  { "t": "Artículos académicos",    "d": "articulos" },
+  { "t": "Embelleciendo la ciudad", "d": "arte:rosa-embelleciendo" },
+  { "t": "Carteles / Afiches",      "d": "carteles" }
+ ],
  "enlaces": [
   {
    "url": "https://www.instagram.com/adrip.lnz/",

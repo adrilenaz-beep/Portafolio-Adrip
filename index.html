@@ -90,6 +90,22 @@ body.claro .marca-caja .marca-pos{opacity:1}
   margin:0; font-size:clamp(24px,3.4vw,42px); font-weight:400;
   letter-spacing:.02em; line-height:1;
 }
+/* El saludo es una cinta continua, no un texto que aparece y se va. La ventana
+   mide 18 caracteres, que es lo que medía WELCOME-BIENVENIDX antes de animarse,
+   así el escritorio queda exactamente igual de ancho. La pista lleva la lista
+   dos veces y se corre media pista, por eso el ciclo no tiene costura ni
+   desvanecimiento en las puntas. */
+.cinta{
+  display:inline-block; overflow:hidden; white-space:nowrap;
+  /* 18 caracteres, que son los de WELCOME-BIENVENIDX, más el interletrado que
+     suma cada uno. Así la ventana mide exactamente lo que medía el texto */
+  width:calc(18ch + 18 * .02em); vertical-align:bottom;
+}
+.cinta-pista{display:inline-block; will-change:transform; animation:cinta 22s linear infinite}
+.cinta-pista i{font-style:normal}
+@keyframes cinta{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@media (prefers-reduced-motion: reduce){ .cinta-pista{animation:none} }
+
 /* el saludo gira de idioma. La caja no se mueve, la reserva el más largo de
    todos, así el resto del escritorio no salta a cada vuelta */
 .gira{display:inline-block; position:relative; white-space:nowrap; overflow:hidden}
@@ -383,6 +399,74 @@ html.cerrado #portada{ display:flex }
 .lec-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px}
 .lec-tag{font-size:9px; letter-spacing:.14em; text-transform:uppercase; border:1px solid var(--linea); padding:3px 8px}
 /* ── el blog ── */
+/* ── la bio, la página de perfil ──────────────────────────────────
+   Esta página está armada como un perfil viejo de internet, cajas modulares con
+   su barra de título llena, columna angosta a la izquierda con la foto y los
+   datos, ancha a la derecha con el contenido. Es el único lugar del sitio que
+   se ve así, y así tiene que quedarse.
+
+   Tiene tres cosas con las que se juega, el cambio de piel, el Top 8 que salta
+   a cualquier parte del sitio, y la cuenta de visitas, que cuenta las suyas y
+   no miente con un número global que no existe.
+------------------------------------------------------------------------- */
+.ms{ max-width:1733px }
+.ms-cabeza{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:18px 24px;
+  align-items:start; border:1px solid var(--linea); padding:20px 22px; margin-bottom:16px;
+}
+.ms-nombre{ margin:0; font-size:clamp(22px,2.6vw,32px); font-weight:700; letter-spacing:-.03em }
+.ms-sub{
+  margin:5px 0 0; font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--tinta-baja);
+}
+.ms-lema{ margin:20px 0 0; font-size:15px; font-weight:300; line-height:1.65; max-width:80ch }
+.ms-lema b{
+  display:block; font-size:9px; letter-spacing:.22em; text-transform:uppercase;
+  font-weight:500; color:var(--tinta-baja); margin-bottom:7px;
+}
+.ms-pieles{ display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end }
+.ms-pieles b{
+  font-size:9px; letter-spacing:.2em; text-transform:uppercase; font-weight:400;
+  color:var(--tinta-baja); margin-right:4px;
+}
+.ms-piel{ width:19px; height:19px; padding:0; border:1px solid var(--linea); cursor:pointer }
+.ms-piel:hover{ outline:1px solid var(--tinta); outline-offset:2px }
+.ms-piel.viva{ outline:2px solid var(--tinta); outline-offset:2px }
+
+.ms-cols{ display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr); gap:16px; align-items:start }
+.ms-caja{ border:1px solid var(--linea); margin-bottom:16px }
+.ms-caja h3{
+  margin:0; background:var(--tinta); color:var(--campo); font-size:9px;
+  letter-spacing:.22em; text-transform:uppercase; padding:7px 13px; font-weight:500;
+}
+.ms-dentro{ padding:16px 14px }
+.ms-dentro .lec-p{ margin:0; max-width:none }
+.ms-dentro .lec-dl{ max-width:none; gap:6px 16px }
+.ms-foto{ display:block; margin:0; padding:14px; background:var(--tinta) }
+.ms-foto img{ display:block; width:100%; height:auto }
+.ms-visitas{ font-size:13px; letter-spacing:.06em; font-variant-numeric:tabular-nums }
+.ms-visitas b{ font-size:26px; font-weight:700; display:block; margin-bottom:4px; letter-spacing:-.02em }
+
+/* cuatro y cuatro, no ocho en fila, que es una tira y no un Top 8 */
+.ms-top8{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:var(--linea) }
+.ms-top8 button{
+  display:block; width:100%; text-align:left; padding:14px 13px; font:inherit;
+  font-size:12.5px; background:var(--campo); color:var(--tinta);
+  transition:background .14s ease, color .14s ease;
+}
+.ms-top8 button:hover{ background:var(--tinta); color:var(--campo) }
+.ms-top8 button span{
+  display:block; font-size:9px; letter-spacing:.16em; color:var(--tinta-baja); margin-bottom:6px;
+  font-variant-numeric:tabular-nums;
+}
+.ms-top8 button:hover span{ color:inherit; opacity:.6 }
+@media (max-width:820px){
+  .ms-cols{ grid-template-columns:1fr }
+  .ms-cabeza{ grid-template-columns:1fr }
+  .ms-pieles{ justify-content:flex-start }
+  .ms-top8{ grid-template-columns:repeat(2,minmax(0,1fr)) }
+}
+
 /* ── el portafolio académico ──────────────────────────────────────
    Esta sección se lee como un documento y no como una galería, que es lo que la
    separa del resto del sitio. Margen numerado, filete al costado, estados en
@@ -551,7 +635,7 @@ button.blog-tit:hover{transform:translateX(5px)}
 
 /* y acá se desaplasta todo lo que lleva imagen adentro */
 .lec-grande, .lec-hojas, .lec-imgs, .lec-piezas, .lec-contacto,
-.blog-img, .blog-media, .blog-audio{
+.blog-img, .blog-media, .blog-audio, .ms-foto{
   scale:var(--desanchura) 1; transform-origin:left top; width:var(--caja-angosta);
 }
 /* los pies de foto sí son texto, vuelven a aplastarse */
@@ -629,7 +713,7 @@ button.blog-tit:hover{transform:translateX(5px)}
 <div class="marco"></div>
 
 <div class="saludo">
-  <h1 class="bienvenida"><span class="gira" id="gira-hola">BIENVENIDX</span></h1>
+  <h1 class="bienvenida"><span class="cinta" id="cinta-hola"></span></h1>
   <p class="accede">ACCEDE A:</p>
 </div>
 
@@ -731,9 +815,11 @@ button.blog-tit:hover{transform:translateX(5px)}
   alBase();
 
   var PANELES = [
+    // una rama con d salta derecho al lector, sin hoja intermedia. Las hojas de
+    // un solo item eran un clic de más que no llevaba a ningún lado
     { id:'perfil', titulo:'PERFIL', x:19, y:56, ramas:[
-        { id:'bio', et:'BIO.' },
-        { id:'cv',  et:'CV.'  }
+        { id:'bio', et:'BIO.', d:'bio' },
+        { id:'cv',  et:'CV.',  d:'cv'  }
       ]},
     { id:'portafolio', titulo:'PORTAFOLIO', x:38, y:56, ramas:[
         { id:'corp', et:'CORP.' },
@@ -767,8 +853,6 @@ button.blog-tit:hover{transform:translateX(5px)}
       {t:'ARTÍCULOS ACADÉMICOS', d:'articulos'},
       {t:'VOLUNTARIADO',         d:'voluntariado'},
       {t:'DISTINCIONES',         d:'distinciones'}] },
-    bio:{ pag:'001', x:37, y:33, items:[{t:'VER BIOGRAFÍA', d:'bio'}] },
-    cv:{ pag:'001', x:37, y:33, items:[{t:'VER TRAYECTORIA', d:'cv'}] },
     lecturas:{     pag:'005', x:37, y:33, items:[{t:'VER LAS LECTURAS',     d:'blog-lectura'}] },
     ideas:{        pag:'006', x:37, y:33, items:[{t:'VER LAS IDEAS',        d:'blog-idea'}] },
     experimentos:{ pag:'007', x:37, y:33, items:[{t:'VER LOS EXPERIMENTOS', d:'blog-experimento'}] }
@@ -829,6 +913,7 @@ button.blog-tit:hover{transform:translateX(5px)}
           b.addEventListener('click', function (e) {
           e.stopPropagation();
           if (t.classList.contains('trabado')) { pedirLaClave(t); return; }
+          if (r.d) { cerrar(); leer(r.d); return; }
           alternar(r.id, d);
         });
         caja.appendChild(b);
@@ -1369,28 +1454,61 @@ button.blog-tit:hover{transform:translateX(5px)}
       abrirLector();
       return;
     }
-    var cuerpo = '', bajada = '', aca = false;
+    var cuerpo = '', bajada = '', aca = false, perfil = false;
 
     if (m.tipo === 'perfil' && m.que === 'bio' && hayPerfil) {
-      bajada = 'Perfil · Biografía';
-      cuerpo =
-        '<div class="lec-bloque"><h2 class="lec-h">Quién soy</h2>' +
-          '<p class="lec-p">' + velar(PERFIL.bio) + '</p></div>' +
-        '<div class="lec-bloque"><h2 class="lec-h">Filosofía</h2>' +
-          '<p class="lec-p">' + esc(PERFIL.filosofia) + '</p></div>' +
-        '<div class="lec-bloque"><h2 class="lec-h">Ficha</h2><dl class="lec-dl">' +
-          PERFIL.ficha.map(function (f) {
-            return '<dt>' + esc(f.k) + '</dt><dd>' + velar(esc(f.v)) + '</dd>'; }).join('') +
-        '</dl></div>' +
-        '<div class="lec-bloque"><h2 class="lec-h">Contacto</h2><dl class="lec-dl">' +
-          PERFIL.enlaces.map(function (e) {
-            var url = resolver(e.url);
-            if (sinResolver(url)) {
-              return '<dt>' + esc(e.plataforma) + '</dt><dd>' + velar(esc(e.handle)) + '</dd>';
-            }
-            return '<dt>' + esc(e.plataforma) + '</dt><dd><a class="lec-vinculo" href="' +
-              esc(url) + '" target="_blank" rel="noopener">' + velar(esc(e.handle)) + ' ↗</a></dd>'; }).join('') +
-        '</dl></div>';
+      bajada = 'Perfil';
+      perfil = true;
+
+      function caja(titulo, dentro, suelto) {
+        return '<section class="ms-caja"><h3>' + esc(titulo) + '</h3>' +
+               (suelto ? dentro : '<div class="ms-dentro">' + dentro + '</div>') + '</section>';
+      }
+
+      var ficha = '<dl class="lec-dl">' + PERFIL.ficha.map(function (f) {
+        return '<dt>' + esc(f.k) + '</dt><dd>' + velar(esc(f.v)) + '</dd>'; }).join('') + '</dl>';
+
+      var contacto = '<dl class="lec-dl">' + PERFIL.enlaces.map(function (e) {
+        var url = resolver(e.url);
+        if (sinResolver(url)) {
+          return '<dt>' + esc(e.plataforma) + '</dt><dd>' + velar(esc(e.handle)) + '</dd>';
+        }
+        return '<dt>' + esc(e.plataforma) + '</dt><dd><a class="lec-vinculo" href="' +
+          esc(url) + '" target="_blank" rel="noopener">' + velar(esc(e.handle)) + ' \u2197</a></dd>';
+      }).join('') + '</dl>';
+
+      var top = (PERFIL.top8 || []).map(function (x, n) {
+        return '<button data-ir="' + esc(x.d) + '"><span>' +
+               (n < 9 ? '0' : '') + (n + 1) + '</span>' + esc(x.t) + '</button>';
+      }).join('');
+
+      var pieles = Object.keys(CAMPOS).map(function (k) {
+        return '<button class="ms-piel" data-piel="' + k + '" title="' + k + '" ' +
+               'aria-label="Piel ' + k + '" style="background:' + CAMPOS[k] + '"></button>';
+      }).join('');
+
+      cuerpo = '<div class="ms">' +
+        '<div class="ms-cabeza">' +
+          '<div>' +
+            '<h2 class="ms-nombre">ADRIP</h2>' +
+            '<p class="ms-sub">Adriano Lenaz Zenteno \u00b7 Cochabamba, Bolivia</p>' +
+            '<p class="ms-lema"><b>Lema</b>' + esc(PERFIL.filosofia) + '</p>' +
+          '</div>' +
+          '<div class="ms-pieles"><b>Piel</b>' + pieles + '</div>' +
+        '</div>' +
+        '<div class="ms-cols">' +
+          '<aside>' +
+            '<figure class="ms-foto"><img src="marca/marca-negativo.png" ' +
+              'alt="ADRIP" width="760" height="353" decoding="async"></figure>' +
+            caja('Ficha', ficha) +
+            caja('Contacto', contacto) +
+            caja('Visitas', '<p class="ms-visitas" id="ms-visitas">\u2014</p>') +
+          '</aside>' +
+          '<div>' +
+            caja('Sobre m\u00ed', '<p class="lec-p">' + velar(PERFIL.bio) + '</p>') +
+            caja('Top 8', '<div class="ms-top8">' + top + '</div>', true) +
+          '</div>' +
+        '</div></div>';
 
     } else if (m.tipo === 'perfil' && m.que === 'cv' && hayPerfil) {
       bajada = 'Perfil · Trayectoria';
@@ -1513,7 +1631,33 @@ button.blog-tit:hover{transform:translateX(5px)}
     c.classList.toggle('lec-aca', !!aca);
     c.innerHTML = '<h1 class="lec-tit">' + esc(m.titulo || destino) + '</h1>' +
                   '<p class="lec-bajada">' + bajada + '</p>' + cuerpo;
+    if (perfil) armarPerfil();
     abrirLector();
+  }
+
+  /* ── lo que se puede tocar en la bio ──
+     Tres cosas. La piel, que cambia el campo y queda anotada en este navegador.
+     El Top 8, que ya funciona solo porque cada botón lleva data-ir. Y la cuenta
+     de visitas, que cuenta **las suyas**, no un número global, que en un sitio
+     sin servidor sería mentira. */
+  function armarPerfil() {
+    var piel = null;
+    try { piel = localStorage.getItem('adrip-piel'); } catch (e) {}
+    if (piel && CAMPOS[piel]) ponerCampo(piel);
+    document.querySelectorAll('.ms-piel').forEach(function (b) {
+      b.classList.toggle('viva', b.dataset.piel === piel);
+    });
+
+    var n = 1;
+    try {
+      n = (parseInt(localStorage.getItem('adrip-visitas'), 10) || 0) + 1;
+      localStorage.setItem('adrip-visitas', n);
+    } catch (e) {}
+    var v = $('#ms-visitas');
+    if (v) {
+      v.innerHTML = '<b>' + n + '</b>' +
+        (n === 1 ? 'Es tu primera vez ac\u00e1.' : 'Ac\u00e1 y contando, ' + n + ' veces.');
+    }
   }
 
   function abrirLector() {
@@ -1533,6 +1677,15 @@ button.blog-tit:hover{transform:translateX(5px)}
 
   // los puentes entre secciones se resuelven sin cerrar el lector
   $('#lec-cuerpo').addEventListener('click', function (ev) {
+    var piel = ev.target.closest('[data-piel]');
+    if (piel) {
+      ponerCampo(piel.dataset.piel);
+      try { localStorage.setItem('adrip-piel', piel.dataset.piel); } catch (e) {}
+      document.querySelectorAll('.ms-piel').forEach(function (x) {
+        x.classList.toggle('viva', x === piel);
+      });
+      return;
+    }
     var b = ev.target.closest('[data-ir]');
     if (b) leer(b.dataset.ir);
   });
@@ -1849,7 +2002,19 @@ button.blog-tit:hover{transform:translateX(5px)}
       }, 420);
     }, cada);
   }
-  girar($('#gira-hola'), SALUDOS, 2600);
+  // el saludo del escritorio es una cinta, la portada sigue girando
+  function encintar(el, palabras) {
+    if (!el || !palabras.length) return;
+    var vuelta = palabras.join('\u2002\u00b7\u2002') + '\u2002\u00b7\u2002';
+    var pista = document.createElement('span');
+    pista.className = 'cinta-pista';
+    // la lista va dos veces, así correr media pista vuelve al mismo lugar
+    pista.appendChild(Object.assign(document.createElement('i'), { textContent: vuelta }));
+    pista.appendChild(Object.assign(document.createElement('i'), { textContent: vuelta }));
+    el.textContent = '';
+    el.appendChild(pista);
+  }
+  encintar($('#cinta-hola'), SALUDOS);
   girar($('#gira-inicia'), INICIOS, 2400);
 
   /* ── la pista de la portada ── */
