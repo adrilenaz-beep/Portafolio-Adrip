@@ -340,14 +340,36 @@ textarea{font-family:var(--mono); min-height:340px; resize:vertical; line-height
     for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]);
     return btoa(s);
   }
+  function bytes(b64txt) {
+    var t = atob(b64txt), a = new Uint8Array(t.length);
+    for (var i = 0; i < t.length; i++) a[i] = t.charCodeAt(i);
+    return a;
+  }
   function llave(clave, sal) {
     return crypto.subtle.importKey('raw', new TextEncoder().encode(clave.normalize('NFC')),
                                    'PBKDF2', false, ['deriveKey'])
       .then(function (base) {
         return crypto.subtle.deriveKey(
           { name: 'PBKDF2', salt: sal, iterations: VUELTAS, hash: 'SHA-256' },
-          base, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+          base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
       });
+  }
+
+  // Adentro de reservado.enc conviven las entradas con clave del blog, que son
+  // de acá, y los datos sueltos y el texto de lo reservado, que son de la otra
+  // herramienta. El archivo se reemplaza entero, así que antes de escribirlo hay
+  // que abrir el que ya está y llevarse lo ajeno tal cual.
+  async function loQueYaEstaba(clave) {
+    var crudo = null;
+    try {
+      var r = await fetch('/reservado.enc', { cache: 'no-store' });
+      if (r.ok) crudo = await r.text();
+    } catch (e) { return null; }
+    if (!crudo) return null;
+    var s = JSON.parse(crudo);
+    var k = await llave(clave, bytes(s.sal));
+    var claro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes(s.iv) }, k, bytes(s.datos));
+    return JSON.parse(new TextDecoder().decode(claro));
   }
 
   /* ── guardar ── */
@@ -384,12 +406,26 @@ textarea{font-family:var(--mono); min-height:340px; resize:vertical; line-height
         $('aviso').textContent = 'clave vacía, no guardé nada'; return; }
 
       $('aviso').className = ''; $('aviso').textContent = 'cifrando…';
+
+      var previo;
+      try {
+        previo = await loQueYaEstaba(clave);
+      } catch (err) {
+        $('aviso').className = 'mal';
+        $('aviso').textContent = 'esa clave no abre el reservado.enc que ya está, no guardé nada';
+        return;
+      }
+
       try {
         var entradas = {};
         conClave.forEach(function (e) {
           entradas[e.id] = { titulo: e.titulo, bajada: e.bajada, piezas: e.piezas };
         });
-        var claro = { v: 3, hecho: hoy(), datos: {}, bloques: [], entradas: entradas };
+        // los datos sueltos y el texto de lo reservado no son de acá, se llevan igual
+        var claro = { v: 3, hecho: hoy(),
+                      datos: (previo && previo.datos) || {},
+                      bloques: (previo && previo.bloques) || [],
+                      entradas: entradas };
         var sal = crypto.getRandomValues(new Uint8Array(16));
         var iv  = crypto.getRandomValues(new Uint8Array(12));
         var k   = await llave(clave, sal);

@@ -36,8 +36,10 @@ code{background:rgba(242,240,234,.1); padding:1px 5px}
   <p class="sub">Herramienta local · no sube nada a ningún lado</p>
 
   <p>Lo que escribas acá se cifra en este navegador, en tu máquina, con AES de 256 bits.
-     El archivo que sale es ilegible sin la clave. Lo subís al repositorio y solo quien
-     tenga la clave puede leerlo. Ni la clave ni el texto salen de esta página.</p>
+     El archivo que sale es ilegible sin la clave. Solo quien tenga la clave puede leerlo.
+     Ni la clave ni el texto salen de esta página.</p>
+
+  <div id="yahay"></div>
 
   <h2>Los datos sueltos</h2>
   <p>Acá van los datos que en la página aparecen como <code>{{nombre}}</code>. El valor real
@@ -67,22 +69,35 @@ Escritura como salga."></textarea>
   <input type="password" id="c1" placeholder="CLAVE" autocomplete="new-password" spellcheck="false">
   <input type="password" id="c2" placeholder="REPETILA" autocomplete="new-password" spellcheck="false">
   <p class="pista" id="fuerza"></p>
+  <div class="fila" id="filaAbrir" style="display:none">
+    <button id="abrir" style="background:transparent;color:var(--tinta);border:1px solid var(--linea)">Abrir lo que ya está guardado</button>
+  </div>
 
   <div id="estado"></div>
   <div class="fila">
-    <button id="cifrar" disabled>Cifrar y descargar</button>
+    <button id="cifrar" disabled>Cifrar y guardar</button>
     <button id="probar" disabled style="background:transparent;color:var(--tinta);border:1px solid var(--linea)">Probar el resultado</button>
   </div>
 
   <h2>Después</h2>
-  <p>Poné el archivo <code>reservado.enc</code> en la raíz del repositorio, al lado de
-     <code>index.html</code>, y subilo con GitHub Desktop. Para cambiar el contenido más
-     adelante volvé acá, escribilo de nuevo y generá otro archivo.</p>
+  <p>El archivo <code>reservado.enc</code> queda guardado solo, en la carpeta del sitio.
+     No hay nada que arrastrar. Cuando termines, cerrá la ventana negra, abrí GitHub
+     Desktop y apretá <strong>Push origin</strong>.</p>
+  <p>Para cambiarlo más adelante volvé acá, escribí la clave, apretá <strong>Abrir lo
+     que ya está guardado</strong> y editá lo que aparezca.</p>
 </div>
 
 <script>
 var $ = function (s) { return document.querySelector(s); };
 var ultimo = null;
+
+// Adentro de reservado.enc conviven tres cosas, los datos sueltos, el texto de
+// lo reservado y las entradas con clave del blog, que las escribe la otra
+// herramienta. Este archivo se reemplaza entero, así que antes de escribirlo
+// hay que abrir el que ya está y respetar lo que no es nuestro. Si no, guardar
+// acá borraría las entradas del blog sin avisar.
+var yaHay = null;    // el sobre cifrado que ya estaba, tal cual vino
+var traido = null;   // lo que había adentro, una vez abierto con su clave
 
 function porDatos(t) {
   var d = {};
@@ -133,7 +148,44 @@ function repintar() {
     $('#fuerza').textContent = 'Fuerza, ' + f[0] + '. ' + f[1] +
       (c2 && c1 !== c2 ? '  Las dos no coinciden todavía.' : '');
   } else { $('#fuerza').textContent = ''; }
-  $('#cifrar').disabled = !((b.length || nd.length) && c1 && c1 === c2);
+  $('#cifrar').disabled = !((b.length || nd.length) && c1 && c1 === c2) ||
+                          (!!yaHay && !traido);
+  $('#filaAbrir').style.display = (yaHay && !traido) ? 'flex' : 'none';
+  $('#abrir').disabled = !c1;
+  avisarDeLoQueHay();
+}
+
+function avisarDeLoQueHay() {
+  var c = $('#yahay');
+  if (!yaHay) { c.innerHTML = ''; return; }
+  if (traido) {
+    var n = Object.keys(traido.entradas || {}).length;
+    c.innerHTML = '<div class="aviso ok">Abrí lo que ya estaba guardado. ' +
+      (n ? 'Adentro hay también ' + n + ' entrada' + (n > 1 ? 's' : '') +
+           ' con clave del blog, que se conservan solas.'
+         : 'No había entradas del blog adentro.') + '</div>';
+    return;
+  }
+  c.innerHTML = '<div class="aviso">Ya hay un <strong>reservado.enc</strong> guardado. ' +
+    'Escribí la clave más abajo y apretá <strong>Abrir lo que ya está guardado</strong> ' +
+    'antes de tocar nada. Si guardás sin abrirlo se pierde lo que tiene adentro, ' +
+    'incluidas las entradas con clave del blog.</div>';
+}
+
+function textoDeBloques(bs) {
+  return (bs || []).map(function (b) {
+    return (b.titulo ? '## ' + b.titulo + '\n' : '') + (b.parrafos || []).join('\n\n');
+  }).join('\n\n');
+}
+function textoDeDatos(d) {
+  return Object.keys(d || {}).map(function (k) { return k + ' = ' + d[k]; }).join('\n');
+}
+
+async function abrirSobre(sobreTexto, clave) {
+  var s = JSON.parse(sobreTexto);
+  var k = await llave(clave, bytes(s.sal));
+  var claro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes(s.iv) }, k, bytes(s.datos));
+  return JSON.parse(new TextDecoder().decode(claro));
 }
 
 function bytes(b64) {
@@ -156,30 +208,76 @@ async function llave(clave, sal) {
     base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
 }
 
+$('#abrir').addEventListener('click', async function () {
+  if (!yaHay) return;
+  $('#estado').innerHTML = '<div class="aviso">Abriendo, esperá un momento.</div>';
+  try {
+    var d = await abrirSobre(yaHay, $('#c1').value);
+    traido = d;
+    $('#datos').value = textoDeDatos(d.datos);
+    $('#texto').value = textoDeBloques(d.bloques);
+    // ya demostró que sabe la clave, no tiene sentido pedirle que la repita
+    $('#c2').value = $('#c1').value;
+    $('#estado').innerHTML = '';
+    repintar();
+  } catch (e) {
+    $('#estado').innerHTML = '<div class="aviso mal">Esa clave no abre el archivo que ya está. ' +
+      'Si te equivocaste al escribirla, probá de nuevo.</div>';
+  }
+});
+
 $('#cifrar').addEventListener('click', async function () {
+  if (yaHay && !traido) return;
   $('#estado').innerHTML = '<div class="aviso">Cifrando, esperá un momento.</div>';
   try {
-    var datos = { v: 2, hecho: new Date().toISOString().slice(0, 10),
+    // las entradas con clave del blog no son nuestras, se llevan tal cual
+    var claro = { v: 3, hecho: new Date().toISOString().slice(0, 10),
                   datos: porDatos($('#datos').value),
-                  bloques: porBloques($('#texto').value) };
+                  bloques: porBloques($('#texto').value),
+                  entradas: (traido && traido.entradas) || {} };
     var sal = crypto.getRandomValues(new Uint8Array(16));
     var iv  = crypto.getRandomValues(new Uint8Array(12));
     var k   = await llave($('#c1').value, sal);
     var cif = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, k,
-                                          new TextEncoder().encode(JSON.stringify(datos)));
+                                          new TextEncoder().encode(JSON.stringify(claro)));
     var sobre = JSON.stringify({ v: 1, kdf: 'PBKDF2-SHA256', vueltas: VUELTAS,
                                  sal: b64(sal), iv: b64(iv), datos: b64(cif) });
     ultimo = sobre;
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([sobre], { type: 'application/json' }));
-    a.download = 'reservado.enc';
-    a.click();
-    URL.revokeObjectURL(a.href);
+
+    var nEnt = Object.keys(claro.entradas).length;
+    var resumen = Object.keys(claro.datos).length + ' datos y ' + claro.bloques.length +
+                  ' secciones' + (nEnt ? ', más ' + nEnt + ' entrada' + (nEnt > 1 ? 's' : '') +
+                  ' del blog que ya estaban' : '');
+
+    // se guarda solo, sin descargar nada. Si esta página se abrió a mano en vez
+    // de con el lanzador no hay servidor del otro lado, y ahí sí se descarga.
+    var guardado = false;
+    try {
+      var r = await fetch('/reservado', { method: 'POST',
+        headers: { 'Content-Type': 'application/json' }, body: sobre });
+      var j = await r.json();
+      guardado = !!j.ok;
+      if (!guardado) throw new Error(j.error || 'el servidor no lo aceptó');
+    } catch (err) {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([sobre], { type: 'application/json' }));
+      a.download = 'reservado.enc';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    yaHay = sobre;
+    traido = claro;
     $('#probar').disabled = false;
-    $('#estado').innerHTML = '<div class="aviso ok">Listo. Se descargó <strong>reservado.enc</strong>, ' +
-      (sobre.length / 1024).toFixed(1) + ' KB, con ' + Object.keys(datos.datos).length +
-      ' datos y ' + datos.bloques.length +
-      ' secciones adentro. Ponelo en la raíz del repositorio y subilo.</div>';
+    $('#estado').innerHTML = guardado
+      ? '<div class="aviso ok">Guardado. <strong>reservado.enc</strong> quedó en la carpeta ' +
+        'del sitio, ' + (sobre.length / 1024).toFixed(1) + ' KB, con ' + resumen + ' adentro. ' +
+        'Ahora abrí GitHub Desktop y apretá Push origin.</div>'
+      : '<div class="aviso">No encontré el servidor, así que lo descargué en vez de guardarlo. ' +
+        'Poné <strong>reservado.enc</strong> en la carpeta del sitio, al lado de index.html. ' +
+        'Para que guarde solo, abrí esta herramienta con el lanzador ' +
+        '<strong>5 GUARDAR LO RESERVADO</strong>.</div>';
+    repintar();
   } catch (e) {
     $('#estado').innerHTML = '<div class="aviso mal">No se pudo cifrar. ' + e.message + '</div>';
   }
@@ -207,5 +305,10 @@ $('#probar').addEventListener('click', async function () {
   $(s).addEventListener('input', repintar);
 });
 repintar();
+
+fetch('/reservado.enc', { cache: 'no-store' })
+  .then(function (r) { return r.ok ? r.text() : null; })
+  .then(function (t) { if (t) { yaHay = t; repintar(); } })
+  .catch(function () {});
 </script>
 </body></html>

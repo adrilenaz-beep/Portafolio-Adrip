@@ -8,12 +8,19 @@ datos. No sale a internet, solo escucha en esta computadora.
   /guardar    reescribe portafolio-datos.js
   /blog       reescribe blog.js
   /reservado  escribe reservado.enc, que llega ya cifrado desde el navegador
+
+Ojo con reservado.enc. Adentro conviven tres cosas, los datos sueltos, el texto
+de lo reservado y las entradas con clave del blog. Las dos herramientas que lo
+escriben tienen que abrir primero lo que ya hay y respetar lo que no es suyo,
+porque este endpoint reemplaza el archivo entero.
   /subir      recibe una imagen, audio o video, lo guarda en blog/ y le genera
               las versiones chicas
 
-Se arranca de dos maneras
-  python3 herramienta/servidor.py         abre el ordenador de obra
-  python3 herramienta/servidor.py blog    abre el editor del blog
+Se arranca de varias maneras
+  python3 herramienta/servidor.py           abre el ordenador de obra
+  python3 herramienta/servidor.py blog      abre el editor del blog
+  python3 herramienta/servidor.py reservar  abre el cifrador de lo reservado
+  python3 herramienta/servidor.py ver       solo sirve el sitio
 """
 import http.server, socketserver, json, os, io, re, shutil, datetime, webbrowser, threading, sys, unicodedata
 import mimetypes
@@ -324,10 +331,12 @@ if __name__ == '__main__':
     io.open(os.path.join(RAIZ, 'herramienta', 'sueltas.json'), 'w', encoding='utf-8').write(
         json.dumps(sueltas(), ensure_ascii=False))
     cual = sys.argv[1] if len(sys.argv) > 1 else 'obra'
-    pagina = {'blog': 'herramienta/escribir.html',
-              'ver':  ''}.get(cual, 'herramienta/ordenar.html')
-    titulo = {'blog': 'Editor del blog',
-              'ver':  'El sitio, como se vería publicado'}.get(cual, 'Ordenador de obra')
+    pagina = {'blog':     'herramienta/escribir.html',
+              'reservar': 'herramienta/reservar.html',
+              'ver':      ''}.get(cual, 'herramienta/ordenar.html')
+    titulo = {'blog':     'Editor del blog',
+              'reservar': 'Guardar lo reservado',
+              'ver':      'El sitio, como se vería publicado'}.get(cual, 'Ordenador de obra')
 
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(('127.0.0.1', PUERTO), Manejador) as srv:

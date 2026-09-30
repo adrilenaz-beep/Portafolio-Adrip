@@ -3,6 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+/* ── la cortina de la portada ─────────────────────────────────────────────
+   Esto es una CORTINA, no una cerradura. Tapa la página antes de que se
+   pinte, pero todo el contenido del sitio viaja igual en contenido.js,
+   arte.js y las imágenes, así que quien mire el código lo encuentra. Sirve
+   para que nadie entre de casualidad antes del lanzamiento, nada más.
+   Lo que de verdad no puede verse va cifrado, en reservado.enc.
+
+   PORTADA guarda la huella SHA-256 de la clave. Vacío quiere decir sitio
+   abierto. No se escribe a mano, la pone el lanzador
+   «7 PONER LA CLAVE DEL SITIO», que nunca deja salir la clave de tu Mac.
+--------------------------------------------------------------------------- */
+window.PORTADA = '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230';
+(function () {
+  if (!window.PORTADA) return;
+  var pasado = null;
+  try { pasado = localStorage.getItem('adrip-portada'); } catch (e) {}
+  if (pasado !== window.PORTADA) document.documentElement.className = 'cerrado';
+})();
+</script>
 <meta name="description" content="Adriano Lenaz Zenteno, ADRIP. Diseño gráfico, obra y escritura desde Cochabamba, Bolivia.">
 <title>ADRIP — ADRIANO LENAZ ZENTENO</title>
 <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dmvmqykud/image/upload/v1775351852/1AdripSVG_oijqbk.svg">
@@ -140,6 +160,42 @@ body.claro .marca-caja .marca-pos{opacity:1}
 .hoja-item:hover{padding-left:12px}
 .hoja-item.espejo{transform:scaleX(-1) scaleY(-1); transform-origin:left center}
 .hoja.abierta .hoja-item.espejo{transform:scaleX(-1) scaleY(-1)}
+
+/* ── la cortina de la portada ── */
+html.cerrado, html.cerrado body{ overflow:hidden }
+html.cerrado body > *:not(#portada){ display:none !important }
+#portada{
+  position:fixed; inset:0; z-index:200; display:none;
+  align-items:center; justify-content:center; background:#0A0A0B; color:#F2F0EA;
+}
+html.cerrado #portada{ display:flex }
+.portada-caja{ width:min(420px,calc(100vw - 56px)); text-align:left }
+.portada-caja img{ display:block; width:132px; height:auto; margin-bottom:38px }
+.portada-caja h1{
+  margin:0 0 10px; font-size:clamp(26px,4vw,44px); font-weight:700; letter-spacing:-.03em;
+  scale:var(--anchura) 1; transform-origin:left center;
+}
+.portada-caja p{
+  margin:0 0 26px; font-size:11.5px; line-height:1.8; color:rgba(242,240,234,.6);
+  scale:var(--anchura) 1; transform-origin:left center; width:var(--caja-ancha);
+}
+.portada-caja input{
+  width:var(--caja-ancha); background:transparent; border:0;
+  border-bottom:1px solid rgba(242,240,234,.4); color:#F2F0EA;
+  font-family:var(--mono); font-size:15px; padding:9px 0; letter-spacing:.2em;
+  scale:var(--anchura) 1; transform-origin:left center;
+}
+.portada-caja input:focus{ outline:none; border-bottom-color:#F2F0EA }
+.portada-error{
+  color:#E8428E; font-size:10.5px; letter-spacing:.1em; margin-top:12px; min-height:14px;
+  scale:var(--anchura) 1; transform-origin:left center; width:var(--caja-ancha);
+}
+#portada-entrar{
+  margin-top:22px; font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  border-bottom:1px solid transparent; padding-bottom:3px;
+  scale:var(--anchura) 1; transform-origin:left center;
+}
+#portada-entrar:hover{ border-bottom-color:#F2F0EA }
 
 /* ── el pedido de contraseña ── */
 #puerta{
@@ -326,6 +382,71 @@ button.blog-tit:hover{transform:translateX(5px)}
 .pie .crece{flex:1}
 .pie a:hover{color:var(--tinta)}
 
+/* ── la anchura de la letra, al 75% ──────────────────────────────────────
+   IBM Plex Mono no trae eje de anchura, así que la letra se aplasta al 75%,
+   igual que el campo Anchura del panel Carácter de Illustrator. Se usa la
+   propiedad `scale`, que es independiente de `transform`, y por eso no pisa
+   los arrastres del escritorio, los espejos ni las animaciones que ya había.
+
+   La regla de oro. Cada caja de texto se dibuja un tercio más ancha, 100/75,
+   para que al aplastarse ocupe justo el ancho que ocupaba antes. Las cajas
+   con imagen, video o audio se desaplastan y sus pies vuelven a aplastarse,
+   porque una foto aplastada es una foto rota.
+
+   Tocar --anchura cambia todo el sitio de una sola vez.
+--------------------------------------------------------------------------- */
+:root{
+  --anchura:.75;          /* lo que se aplasta la letra */
+  --caja-ancha:133.3333%; /* 100 / 75, lo que se ensancha la caja para compensar */
+  --desanchura:1.333333;  /* 1 / .75, lo que devuelve a su forma una imagen */
+  --caja-angosta:75%;
+}
+
+/* escritorio y marco. Son etiquetas cortas, no hace falta compensar el ancho */
+.marca-est,
+.bienvenida, .accede,
+.panel-tit,
+.rama-txt, .rama::after,
+.hoja-item,
+#pie-estado{ scale:var(--anchura) 1; transform-origin:left center }
+
+/* lo que está pegado al margen derecho se aplasta desde la derecha */
+.acceso, .ficha dl, .pie > span:last-child, .lec-cerrar{
+  scale:var(--anchura) 1; transform-origin:right center;
+}
+
+/* la puerta de la clave */
+.puerta-caja h2, .puerta-caja p, .puerta-caja input,
+.puerta-error, .puerta-pie{
+  scale:var(--anchura) 1; transform-origin:left center; width:var(--caja-ancha);
+}
+
+/* el lector entero, de una sola vez */
+#lector{ overflow-x:hidden }
+#lec-cuerpo{ scale:var(--anchura) 1; transform-origin:left top; width:var(--caja-ancha) }
+
+/* y acá se desaplasta todo lo que lleva imagen adentro */
+.lec-grande, .lec-hojas, .lec-imgs, .lec-piezas, .lec-contacto,
+.blog-img, .blog-media, .blog-audio{
+  scale:var(--desanchura) 1; transform-origin:left top; width:var(--caja-angosta);
+}
+/* los pies de foto sí son texto, vuelven a aplastarse */
+.lec-hoja figcaption, .lec-ficha figcaption, .lec-pieza figcaption,
+.blog-img figcaption, .au-tit, .au-tiempo{
+  scale:var(--anchura) 1; transform-origin:left center; width:var(--caja-ancha);
+}
+
+/* las medidas de columna, un tercio más anchas, para que al aplastarse
+   la mancha de texto caiga donde caía antes */
+.lec-bloque{ max-width:1733px }
+.lec-academico{ max-width:1573px }
+.blog-indice{ max-width:1333px }
+.lec-p{ max-width:93ch }
+.lec-dl{ max-width:80ch }
+.blog-entrada{ max-width:93ch }
+.blog-bajada, .blog-sub{ max-width:88ch }
+.blog-cita{ max-width:83ch }
+
 @media (prefers-reduced-motion: reduce){
   *{transition:none !important; animation:none !important}
   #lector.abierto{opacity:1; transform:none}
@@ -347,6 +468,17 @@ button.blog-tit:hover{transform:translateX(5px)}
 </style>
 </head>
 <body>
+
+<div id="portada">
+  <div class="portada-caja">
+    <img src="marca/marca-negativo.png" alt="ADRIP" width="760" height="353">
+    <h1>Todavía no</h1>
+    <p>El sitio está en obras. Si tenés la clave, pasá.</p>
+    <input type="password" id="portada-clave" placeholder="CLAVE" autocomplete="off" spellcheck="false">
+    <div class="portada-error" id="portada-error"></div>
+    <button id="portada-entrar">Entrar</button>
+  </div>
+</div>
 
 <div class="marca">
   <span class="marca-caja">
@@ -415,6 +547,13 @@ button.blog-tit:hover{transform:translateX(5px)}
   var hayPerfil = typeof PERFIL  !== 'undefined';
   var hayObras  = typeof OBRAS   !== 'undefined';
   var hayBlog   = typeof BLOG    !== 'undefined';
+
+  // El blog todavía no está listo, así que está bloqueado. Mientras esto sea
+  // true, los tres destinos de blog y cualquier entrada abren la nota de en
+  // obras en lugar del índice. No hay nada tapado ni cifrado acá, el blog se
+  // lee entero, simplemente todavía no hay qué leer. Para abrirlo, poner
+  // false y listo, blog.js y el lanzador 6 quedaron intactos.
+  var BLOG_EN_OBRAS = true;
 
   /* ── el contenido del escritorio ── */
   var CAMPOS = { negro:'#0A0A0B', papel:'#F2F0EA', corp:'#28B8EA', art:'#E8428E', aca:'#E49F37' };
@@ -927,6 +1066,17 @@ button.blog-tit:hover{transform:translateX(5px)}
   }
 
   function leer(destino) {
+    if (BLOG_EN_OBRAS && (destino === 'blog' ||
+        destino.indexOf('blog-') === 0 || destino.indexOf('blog:') === 0)) {
+      var tit = (hayMapa && MAPA[destino] && MAPA[destino].titulo) || 'Blog';
+      $('#lec-cuerpo').innerHTML =
+        '<h1 class="lec-tit">' + esc(tit) + '</h1>' +
+        '<p class="lec-bajada">Blog · en obras</p>' +
+        '<div class="lec-bloque"><p class="lec-p">Todavía no hay nada acá. ' +
+        'Lecturas, ideas y experimentos de audio y video, pronto.</p></div>';
+      abrirLector();
+      return;
+    }
     if (destino.indexOf('blog:') === 0) {
       var id = destino.slice(5);
       var e = (hayBlog ? BLOG : []).find(function (x) { return x.id === id; });
@@ -1067,7 +1217,7 @@ button.blog-tit:hover{transform:translateX(5px)}
           return '<div class="lec-obra"><div class="lec-obra-cab">' +
             '<span class="lec-obra-tit">' + esc(e.sello) + '</span>' +
             '<span class="lec-obra-fecha">' + esc(e.anio) + '</span></div>' +
-            '<p class="lec-p">' + esc(e.texto) + '</p></div>'; }).join('') + '</div>';
+            '<p class="lec-p">' + velar(esc(e.texto)) + '</p></div>'; }).join('') + '</div>';
       }
 
     } else if (m.tipo === 'blog') {
@@ -1121,6 +1271,38 @@ button.blog-tit:hover{transform:translateX(5px)}
     var b = ev.target.closest('[data-ir]');
     if (b) leer(b.dataset.ir);
   });
+
+  /* ── la cortina de la portada ──
+     La decisión de taparla ya se tomó arriba, en el guión de cabecera, antes
+     de que la página se pintara. Acá solo se resuelve el paso. Una vez que
+     pasás queda anotado en este navegador, así no te la pide de nuevo. Si
+     cambia la clave, la huella cambia y vuelve a pedirla sola. */
+  (function () {
+    var raiz = document.documentElement;
+    if (!raiz.classList.contains('cerrado')) return;
+    var campo = $('#portada-clave'), aviso = $('#portada-error'), yendo = false;
+
+    async function pasar() {
+      if (yendo) return;
+      var c = campo.value;
+      if (!c) { aviso.textContent = 'Escribí la clave.'; return; }
+      yendo = true; aviso.textContent = 'Probando…';
+      var h = await huella(c.normalize('NFC'));
+      if (h === window.PORTADA) {
+        try { localStorage.setItem('adrip-portada', h); } catch (e) {}
+        campo.value = '';
+        aviso.textContent = '';
+        raiz.classList.remove('cerrado');
+      } else {
+        aviso.textContent = 'Esa clave no abre.';
+      }
+      yendo = false;
+    }
+
+    $('#portada-entrar').addEventListener('click', pasar);
+    campo.addEventListener('keydown', function (e) { if (e.key === 'Enter') pasar(); });
+    campo.focus();
+  })();
 
   /* ── la puerta ── */
   $('#acceso').addEventListener('click', function () {

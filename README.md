@@ -15,6 +15,7 @@ Doble clic, no hace falta terminal.
 | **4 PROTEGER LOS PDF** | le pone clave a los documentos de la PBFCC |
 | **5 GUARDAR LO RESERVADO** | cifra el material que no se publica |
 | **6 ESCRIBIR EN EL BLOG** | escribe, ordena y publica las entradas |
+| **7 LA CLAVE DEL SITIO** | pone o saca la clave de entrada a toda la página |
 
 Después de cualquiera de ellos, abrir GitHub Desktop y apretar **Push origin**.
 
@@ -46,6 +47,11 @@ Hay dos cosas distintas y conviene no confundirlas.
 - `{{clave}}` y las entradas con clave del blog **sí se esconden**. Viven
   cifradas en `reservado.enc`, con AES de 256 bits, y sin la clave no hay
   nada que leer.
+
+La clave de entrada al sitio, la del lanzador 7, es una tercera cosa y también
+es un gesto. Tapa la página antes de que se pinte, pero el contenido viaja
+igual en los archivos. Sirve para que nadie entre de casualidad antes del
+lanzamiento.
 
 ## Nota sobre el audio y el video
 

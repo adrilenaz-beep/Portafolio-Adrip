@@ -1,4 +1,6 @@
 #!/bin/bash
-# Abre la herramienta para cifrar el material reservado. Todo pasa en tu navegador.
+# Cifra el material que no se publica. Guarda solo, no hay que arrastrar nada.
 cd "$(dirname "$0")"
-open "herramienta/reservar.html"
+echo ""
+echo "  Abriendo el cifrador de lo reservado..."
+python3 herramienta/servidor.py reservar

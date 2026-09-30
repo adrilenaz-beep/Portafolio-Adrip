@@ -177,7 +177,7 @@ const PERFIL = {
   },
   {
    "anio": "2024 octubre",
-   "texto": "Coordinación entre Club de Diseño CBBA y la sociedad estudiantil de la Universidad Privada Boliviana (La Paz). Actividad de intercambio creativo entre La Paz y Cochabamba.",
+   "texto": "Coordinación entre [[Club de Diseño CBBA]] y la sociedad estudiantil de la Universidad Privada Boliviana (La Paz). Actividad de intercambio creativo entre La Paz y Cochabamba.",
    "sello": "Intercambio"
   },
   {

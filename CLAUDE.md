@@ -21,8 +21,9 @@ lanzador, no se le documenta un comando.
 | 2 VER LA WEB | abre el sitio publicado |
 | 3 VER LA WEB EN MI MAC | vista local, con rangos y tipos MIME correctos |
 | 4 PROTEGER LOS PDF | cifra los PDF de la PBFCC con AES-256 |
-| 5 GUARDAR LO RESERVADO | cifra el material que no se publica |
+| 5 GUARDAR LO RESERVADO | cifra el material que no se publica, guarda solo |
 | 6 ESCRIBIR EN EL BLOG | escribe, ordena y publica entradas |
+| 7 LA CLAVE DEL SITIO | pone o saca la cortina de entrada a toda la página |
 
 **Publica con GitHub Desktop**, apretando Push origin. Desde acá se puede
 commitear pero conviene avisarle cuántos commits quedan sin subir.
@@ -90,6 +91,19 @@ Hay **dos cosas distintas** y confundirlas sería grave.
 Lo mismo con las entradas del blog. Una entrada con `clave: true` **no lleva su
 cuerpo en `blog.js`**, solo su fecha y su clase.
 
+**`reservado.enc` lo escriben dos herramientas y el archivo se reemplaza entero.**
+Adentro conviven tres cosas, `datos` y `bloques`, que son de la 5, y `entradas`,
+que son las del blog con clave y las escribe la 6. Hasta el 2026-09-30 cada una
+pisaba lo de la otra sin avisar. Ahora las dos abren primero lo que ya hay con la
+misma clave y se llevan lo ajeno tal cual. La 5 además **traba el botón de
+guardar** hasta que abras el archivo existente. Si alguna vez se toca una de las
+dos, hay que mantener eso o se pierde material cifrado, que no tiene vuelta.
+
+Las dos pasan por el POST `/reservado` de `servidor.py` y el archivo queda solo
+en la raíz, no se descarga nada. `reservar.html` conserva una salida de
+emergencia, si la abrís a mano en vez de con el lanzador no hay servidor del otro
+lado y entonces sí descarga.
+
 `CERROJOS` en `index.html` guarda una huella SHA-256 por cerrojo, así una clave
 puede abrir una cosa y otra clave otra distinta. El cerrojo `secreto` destapa el
 pasamontañas y es **un juego, no protección**.
@@ -99,7 +113,66 @@ ofrecerle una contraseña en JavaScript como si fuera seguridad. Y **nunca pedir
 ni aceptar una clave suya**, las herramientas se la piden con `getpass` o en su
 navegador y nunca sale de su máquina.
 
+### La cortina de la portada
+
+Desde el 2026-09-30 el sitio entero puede quedar detrás de una pantalla negra
+que pide la clave, antes del escritorio. Es **una cortina, no una cerradura**,
+y así hay que nombrarla siempre. El contenido viaja igual dentro de
+`contenido.js`, `arte.js` y las imágenes, así que quien mire el código lo
+encuentra sin la clave. Sirve para que nadie entre de casualidad antes del
+lanzamiento.
+
+`window.PORTADA` vive en un guión de cabecera, arriba de todo en `index.html`,
+y guarda la **huella SHA-256** de la clave. Vacío quiere decir sitio abierto.
+Se decide antes de que la página se pinte, por eso el guión va en el `<head>`
+y no dentro del IIFE, y lo único que hace es ponerle `class="cerrado"` al
+`<html>`. El CSS esconde todo lo que no sea `#portada`.
+
+**No editar esa línea a mano.** La escribe el lanzador 7, que pide la clave con
+`getpass` y nunca la deja salir de su máquina. Quien pasa queda anotado en
+`localStorage` con la propia huella, así que cambiar la clave vuelve a pedirla
+a todos.
+
+Si alguna vez quiere protección de verdad, no hay forma en GitHub Pages con
+repositorio público. Eso es mudar el sitio a algo que tenga autenticación
+propia, tipo Cloudflare Access.
+
+### El blog bloqueado
+
+`BLOG_EN_OBRAS` arriba del IIFE. Mientras sea `true`, los destinos `blog`,
+`blog-*` y `blog:<id>` abren una nota corta de en obras en lugar del índice.
+**No está censurado ni cifrado**, el texto se lee entero, simplemente todavía
+no hay qué leer. `blog.js`, el lanzador 6 y todo el resto quedaron intactos,
+abrirlo es poner `false`.
+
 ---
+
+## La anchura de la letra
+
+Todo el texto del sitio va **aplastado al 75%**, que es lo que en Illustrator
+es el campo Anchura del panel Carácter. IBM Plex Mono no trae eje de anchura y
+no existe una versión condensada, así que no hay `font-stretch` que sirva, hay
+que escalarla.
+
+Se hace con la propiedad **`scale`, no con `transform`**. Son propiedades
+distintas y se componen, así que los arrastres del escritorio, los espejos y
+las animaciones que ya estaban siguen funcionando sin tocarlas. Si alguna vez
+se cambia a `transform`, todo eso se pisa.
+
+La regla de oro. **Cada caja de texto se dibuja un tercio más ancha**,
+`width:133.3333%`, para que al aplastarse ocupe justo el ancho que ocupaba
+antes. Por eso las medidas de columna están multiplicadas por 1.3333, `70ch`
+quedó en `93ch` y `1300px` en `1733px`. Y `transform-origin` va `left` para lo
+alineado a la izquierda y `right` para la ficha, el acceso y el pie derecho.
+
+**Las imágenes no se aplastan.** El lector entero se aplasta de una sola vez
+en `#lec-cuerpo`, y después las cajas que llevan imagen, video o audio se
+desaplastan con `scale:1.333333` y `width:75%`. La cuenta da 1 exacto, así que
+adentro todo vuelve a medir lo que medía. Sus pies de foto vuelven a
+aplastarse, porque son texto. Si aparece una caja con imagen nueva, hay que
+sumarla a esa lista o la foto sale deformada.
+
+Todo sale de `--anchura` en `:root`. Cambiarla cambia el sitio entero.
 
 ## Las imágenes
 
