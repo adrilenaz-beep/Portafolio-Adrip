@@ -1654,26 +1654,6 @@ const DERIVADAS = {
 1600
 ]
 },
-"obra/pasa-05-detalle-ojos.jpg": {
-"a": [
-320,
-640
-],
-"m": [
-1130,
-1600
-]
-},
-"obra/pasa-06-detalle-boca.jpg": {
-"a": [
-320,
-640
-],
-"m": [
-1130,
-1600
-]
-},
 "obra/pasa-07-figura-01.jpg": {
 "a": [
 320,

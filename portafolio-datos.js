@@ -130,12 +130,14 @@ const OBRAS = [
   "seccion": "pasamontanas",
   "fecha": "2022 → 2024",
   "titulo": "El personaje",
-  "nota": "El pasamontañas rosa nace como cara de ADRIP. Un rostro que tapa el rostro, una identidad que se afirma escondiéndose. Aparece dibujado, se cruza con la gota de La Gotera y termina siendo una figura que se repite hasta volverse signo.",
+  "nota": "El pasamontañas rosa nace como cara de ADRIP. Un rostro que tapa el rostro, una identidad que se afirma escondiéndose. Aparece dibujado, se cruza con la gota de La Gotera y termina siendo una figura que se repite hasta volverse signo.<br><br>El cuerpo que lleva la máscara sale a alto contraste hasta quedar en mancha. Sin rostro y sin fondo, la figura deja de ser alguien y pasa a ser cualquiera, que es exactamente lo que el cartel propone.",
   "layout": "3col",
   "tags": [
    "Personaje",
    "Identidad",
-   "ADRIP"
+   "ADRIP",
+   "Figura",
+   "Alto contraste"
   ],
   "imgs": [
    {
@@ -149,6 +151,22 @@ const OBRAS = [
    {
     "src": "obra/pasa-16-masks-rev.jpg",
     "alt": "Hoja de máscaras"
+   },
+   {
+    "src": "obra/pasa-07-figura-01.jpg",
+    "alt": "Figura 01"
+   },
+   {
+    "src": "obra/pasa-08-figura-02.jpg",
+    "alt": "Figura 02"
+   },
+   {
+    "src": "obra/pasa-09-figura-03.jpg",
+    "alt": "Figura 03"
+   },
+   {
+    "src": "obra/pasa-10-en-la-calle.jpg",
+    "alt": "La figura en la calle"
    }
   ]
  },
@@ -172,45 +190,6 @@ const OBRAS = [
    {
     "src": "obra/pasa-04-detalle-cara.jpg",
     "alt": "Detalle del rostro"
-   },
-   {
-    "src": "obra/pasa-05-detalle-ojos.jpg",
-    "alt": "Detalle de los ojos"
-   },
-   {
-    "src": "obra/pasa-06-detalle-boca.jpg",
-    "alt": "Detalle de la boca"
-   }
-  ]
- },
- {
-  "id": "la-figura",
-  "seccion": "pasamontanas",
-  "fecha": "2023",
-  "titulo": "La figura",
-  "nota": "El cuerpo que lleva la máscara, sacado a alto contraste hasta dejarlo en mancha. Sin rostro y sin fondo, la figura deja de ser alguien y pasa a ser cualquiera, que es exactamente lo que el cartel propone.",
-  "layout": "3col",
-  "tags": [
-   "Fotografía",
-   "Alto contraste",
-   "Serie"
-  ],
-  "imgs": [
-   {
-    "src": "obra/pasa-07-figura-01.jpg",
-    "alt": "Figura 01"
-   },
-   {
-    "src": "obra/pasa-08-figura-02.jpg",
-    "alt": "Figura 02"
-   },
-   {
-    "src": "obra/pasa-09-figura-03.jpg",
-    "alt": "Figura 03"
-   },
-   {
-    "src": "obra/pasa-10-en-la-calle.jpg",
-    "alt": "La figura en la calle"
    }
   ]
  },
@@ -252,7 +231,7 @@ const OBRAS = [
  },
  {
   "id": "me-when",
-  "seccion": "pasamontanas",
+  "seccion": "ilustracion",
   "fecha": "2023",
   "titulo": "Me when",
   "nota": "Una pieza aparte dentro de la misma familia. Texto de internet y estampa dura, el ciclo del odio dicho en la lengua del meme.",

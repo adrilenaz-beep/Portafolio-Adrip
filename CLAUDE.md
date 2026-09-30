@@ -47,16 +47,21 @@ demás se corren para hacerle lugar.
 
 ### Las carpetas de una hoja
 
-Una hoja puede tener **carpetas adentro**, que son otro nivel de la misma hoja y
-no una hoja nueva, así que no llevan posición propia. Un item con `carpeta:'x'`
-en vez de `d:'...'` abre el nivel `x`, que sale de `CARPETAS`.
+Una hoja puede tener **carpetas adentro**. Un item con `carpeta:'x'` en vez de
+`d:'...'` **se despliega en su propio lugar**, abajo del título y sangrado,
+igual que los títulos del escritorio con sus ramas. Sus items salen de
+`CARPETAS`. Hoy hay dos, `fotos` y `pasamontanas`.
 
-**Todos los niveles se dibujan de entrada** y se muestra uno solo, con la clase
-`oculta`. Es a propósito. Si se dibujaran recién al abrirlos, `destapar()` y
-`marcarTrabas()` no encontrarían los botones que todavía no se mostraron, y el
-pasamontañas escondido vive justamente adentro de una carpeta.
+**Se abre una carpeta a la vez.** No es capricho, con las dos abiertas la lista
+se pasa del alto de la pantalla.
 
-Hoy hay dos, `fotos` y `pasamontanas`. Una carpeta se traba con el prefijo
+**Los items de una carpeta cerrada igual se dibujan**, solo están en
+`display:none`. Es a propósito. Si se dibujaran recién al abrirla, `destapar()`
+y `marcarTrabas()` no encontrarían los botones, y el pasamontañas escondido vive
+justamente adentro de una carpeta.
+
+Los clics de toda la mesa los toma **un solo oyente** en `#escritorio`, así da
+lo mismo cuándo se dibujó el botón. Una carpeta se traba con el prefijo
 `carpeta:` en `TRABAS`.
 
 ### Los archivos de datos
@@ -160,12 +165,15 @@ TRABAS   destino → con qué cerrojo se abre
 NOTAS    cerrojo → qué se lee mientras esté cerrado
 ```
 
-`leer(destino)` corta al principio, y si el cerrojo no está abierto muestra la
-pantalla de `pedirLaClave()` con el botón que abre la puerta. Queda anotado a
-dónde quería ir en `pendiente`, así que al acertar la clave `probar()` lo lleva
-solo, sin que tenga que volver a buscarlo. `marcarTrabas()` le pone el sello
-**EN OBRAS** a los `hoja-item` del escritorio, así se avisa antes de entrar y no
-al chocarse.
+**Lo trabado no abre nada.** Ni el lector, ni la carpeta. Lo pidió así el
+2026-09-30, antes había una pantalla genérica que decía hace falta la clave y no
+la quiso. El clic muere en dos lugares, en el oyente de la mesa si el botón
+tiene la clase `trabado`, y al principio de `leer()` para los puentes de adentro
+del lector.
+
+El aviso es el sello **EN OBRAS** que `marcarTrabas()` le pone a los `hoja-item`,
+y se destraba desde **CONTRASEÑAS**, arriba a la derecha. Al acertar la clave,
+`probar()` llama a `marcarTrabas()` y la sección queda clickeable.
 
 **Trabar una sección nueva son tres líneas.** Una en `TRABAS`, una en `NOTAS`
 si querés un texto propio, y una en `CERROJOS` con la huella, que la escribe el

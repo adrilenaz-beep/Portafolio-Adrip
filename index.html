@@ -15,7 +15,7 @@
    abierto. No se escribe a mano, la pone el lanzador
    «7 PONER LA CLAVE DEL SITIO», que nunca deja salir la clave de tu Mac.
 --------------------------------------------------------------------------- */
-window.PORTADA = '712dca40936b39ce670dc803736fe3735cf99311030a928de039a36f77926230';
+window.PORTADA = 'ed02457b5c41d964dbd2f2a609d63fe1bb7528dbe55e1abf5b52c249cd735797';
 (function () {
   if (!window.PORTADA) return;
   var pasado = null;
@@ -151,9 +151,12 @@ body.claro .marca-caja .marca-pos{opacity:1}
 }
 .hoja.abierta{opacity:1; pointer-events:auto; transform:translateY(0)}
 .hoja-lista{display:flex; flex-direction:column; gap:clamp(14px,2.4vh,30px)}
-.hoja-lista.oculta{display:none}
-.hoja-item.volver{font-size:clamp(11px,1.2vw,14px); letter-spacing:.16em; opacity:.55}
-.hoja-item.volver:hover{opacity:1}
+/* una carpeta se despliega acá mismo, abajo de su título y sangrada */
+.es-carpeta::before{content:'▸ '; display:inline-block; transition:transform .22s cubic-bezier(.2,.9,.25,1)}
+.es-carpeta.desplegada::before{transform:rotate(90deg)}
+.hoja-sub{display:none; flex-direction:column; gap:clamp(12px,2vh,24px); padding-left:30px}
+.hoja-sub.abierta{display:flex; animation:asoma .3s ease both}
+.hoja-sub .hoja-item{font-size:clamp(13px,1.6vw,20px)}
 .hoja-item{
   font-size:clamp(15px,2vw,25px); font-weight:400; letter-spacing:.02em;
   opacity:0; transform:translateY(10px); text-align:left;
@@ -292,7 +295,6 @@ html.cerrado #portada{ display:flex }
   color:var(--tinta); background:none; border:1px solid var(--linea); border-radius:0;
   transition:background .18s ease, border-color .18s ease}
 .lec-enlace::after{content:'↗'; font-size:11px}
-.lec-llave::after{content:none}
 .lec-enlace:hover{background:var(--tinta); color:var(--campo); border-color:var(--tinta)}
 .lec-obra-cab{display:flex; gap:16px; align-items:baseline; flex-wrap:wrap}
 .lec-obra-tit{font-size:16px; font-weight:500; letter-spacing:-.01em}
@@ -587,25 +589,6 @@ button.blog-tit:hover{transform:translateX(5px)}
     'blog-idea':        'blog',
     'blog-experimento': 'blog'
   };
-  // cerrojo → qué se lee mientras esté cerrado
-  var NOTAS = {
-    blog: 'Todavía no hay nada acá. Lecturas, ideas y experimentos de audio y video, pronto.'
-  };
-  var NOTA_POR_DEFECTO = 'Esta parte todavía no está lista para mostrarse.';
-
-  function tituloDe(destino) {
-    if (destino.indexOf('carpeta:') === 0) {
-      var c = CARPETAS[destino.slice(8)];
-      return c ? c.titulo : 'Con clave';
-    }
-    if (destino.indexOf('arte:') === 0) {
-      var a = (typeof ARTE !== 'undefined' ? ARTE : []).filter(function (x) {
-        return x.id === destino.slice(5); })[0];
-      if (a) return a.titulo;
-    }
-    var m = (hayMapa && MAPA[destino]) || {};
-    return m.titulo || 'Con clave';
-  }
 
   function cerrojoDe(destino) {
     // las entradas sueltas del blog siguen el cerrojo de su índice
@@ -749,49 +732,49 @@ button.blog-tit:hover{transform:translateX(5px)}
   // Cada nivel de una hoja es su propia lista y se ve una sola a la vez. Todas
   // se dibujan de entrada, aunque su carpeta esté cerrada, así destapar() y
   // marcarTrabas() encuentran los botones que todavía no se mostraron.
-  function botonDeItem(it, i, hoja) {
+  // Una carpeta se despliega en su propio lugar, abajo del título y sangrada,
+  // igual que los títulos del escritorio con sus ramas. Sus items se dibujan de
+  // entrada aunque la carpeta esté cerrada, así destapar() y marcarTrabas() los
+  // encuentran, que es donde vive el pasamontañas escondido.
+  //
+  // Lo que está trabado no abre nada. Ni el lector, ni la carpeta. Se avisa con
+  // el sello EN OBRAS y se destraba desde CONTRASEÑAS, arriba a la derecha.
+  function botonDeItem(it, i) {
     var b = document.createElement('button');
     b.className = 'hoja-item' + (it.espejo ? ' espejo' : '');
-    b.textContent = (it.t || it) + (it.carpeta ? '  ▸' : '');
+    b.textContent = it.t || it;
     b.style.transitionDelay = (0.28 + i * 0.055) + 's';
     if (it.oculto) { b.dataset.oculto = '1'; b.style.display = 'none'; }
 
     if (it.carpeta) {
       var puerta = 'carpeta:' + it.carpeta;
+      b.classList.add('es-carpeta');
+      b.dataset.carpeta = it.carpeta;
       if (TRABAS[puerta]) b.dataset.traba = TRABAS[puerta];
-      b.addEventListener('click', function () {
-        var cer = TRABAS[puerta];
-        if (cer && !abiertos[cer]) { pedirLaClave(puerta, cer); return; }
-        verNivel(hoja, it.carpeta);
-      });
       return b;
     }
 
-    // lo que pide clave se avisa desde el escritorio, no se descubre al entrar
     if (it.d && TRABAS[it.d]) b.dataset.traba = TRABAS[it.d];
-    if (it.d) b.addEventListener('click', function () { leer(it.d); });
+    if (it.d) b.dataset.ir = it.d;
     return b;
   }
 
-  function listaDe(items, hoja, nivel) {
+  function listaDe(items) {
     var l = document.createElement('div');
-    l.className = 'hoja-lista' + (nivel === 'raiz' ? '' : ' oculta');
-    l.dataset.nivel = nivel;
-    if (nivel !== 'raiz') {
-      var v = document.createElement('button');
-      v.className = 'hoja-item volver';
-      v.textContent = '← VOLVER';
-      v.addEventListener('click', function () { verNivel(hoja, 'raiz'); });
-      l.appendChild(v);
-    }
-    items.forEach(function (it, i) { l.appendChild(botonDeItem(it, i, hoja)); });
-    return l;
-  }
-
-  function verNivel(hoja, nivel) {
-    hoja.querySelectorAll('.hoja-lista').forEach(function (l) {
-      l.classList.toggle('oculta', l.dataset.nivel !== nivel);
+    l.className = 'hoja-lista';
+    items.forEach(function (it, i) {
+      l.appendChild(botonDeItem(it, i));
+      if (it.carpeta && CARPETAS[it.carpeta]) {
+        var sub = document.createElement('div');
+        sub.className = 'hoja-sub';
+        sub.dataset.de = it.carpeta;
+        CARPETAS[it.carpeta].items.forEach(function (x, j) {
+          sub.appendChild(botonDeItem(x, j));
+        });
+        l.appendChild(sub);
+      }
     });
+    return l;
   }
 
   Object.keys(HOJAS).forEach(function (k) {
@@ -799,14 +782,34 @@ button.blog-tit:hover{transform:translateX(5px)}
     var d = document.createElement('div');
     d.className = 'hoja'; d.id = 'hoja-' + k;
     d.style.left = h.x + '%'; d.style.top = h.y + '%';
-    d.appendChild(listaDe(h.items, d, 'raiz'));
-    h.items.forEach(function (it) {
-      if (it.carpeta && CARPETAS[it.carpeta]) {
-        d.appendChild(listaDe(CARPETAS[it.carpeta].items, d, it.carpeta));
-      }
-    });
+    d.appendChild(listaDe(h.items));
     mesa.appendChild(d);
   });
+
+  // un solo oyente para toda la mesa, así da lo mismo cuándo se dibujó el botón
+  mesa.addEventListener('click', function (ev) {
+    var b = ev.target.closest('.hoja-item');
+    if (!b || b.classList.contains('trabado')) return;   // trabado no abre nada
+    if (b.dataset.carpeta) {
+      var sub = b.parentNode.querySelector('.hoja-sub[data-de="' + b.dataset.carpeta + '"]');
+      if (!sub) return;
+      // una carpeta a la vez, si no la lista se pasa de la pantalla
+      var abrir = !sub.classList.contains('abierta');
+      cerrarCarpetas();
+      if (abrir) { sub.classList.add('abierta'); b.classList.add('desplegada'); }
+      return;
+    }
+    if (b.dataset.ir) leer(b.dataset.ir);
+  });
+
+  function cerrarCarpetas() {
+    document.querySelectorAll('.hoja-sub.abierta').forEach(function (s) {
+      s.classList.remove('abierta');
+    });
+    document.querySelectorAll('.hoja-item.desplegada').forEach(function (b) {
+      b.classList.remove('desplegada');
+    });
+  }
 
   // ojo, se llama al final del todo, `abiertos` se declara mucho más abajo
   function marcarTrabas() {
@@ -847,13 +850,14 @@ button.blog-tit:hover{transform:translateX(5px)}
     document.querySelectorAll('.rama').forEach(function (r) {
       r.classList.toggle('viva', r.dataset.rama === id);
     });
-    $('#pie-estado').textContent = 'Página ' + h.pag + ' · tocá de nuevo para volver';
+    $('#pie-estado').textContent = 'Página ' + h.pag;
   }
 
   function cerrar(silencioso) {
     if (!abierta) return;
     var hoja = $('#hoja-' + abierta);
-    if (hoja) { hoja.classList.remove('abierta'); verNivel(hoja, 'raiz'); }
+    if (hoja) hoja.classList.remove('abierta');
+    cerrarCarpetas();
     abierta = null;
     if (!silencioso) {
       alBase();
@@ -1188,8 +1192,9 @@ button.blog-tit:hover{transform:translateX(5px)}
   }
 
   function leer(destino) {
+    // trabado no abre nada, ni desde un puente de adentro del lector
     var cerrojo = cerrojoDe(destino);
-    if (cerrojo && !abiertos[cerrojo]) { pedirLaClave(destino, cerrojo); return; }
+    if (cerrojo && !abiertos[cerrojo]) return;
     if (destino.indexOf('blog:') === 0) {
       var id = destino.slice(5);
       var e = (hayBlog ? BLOG : []).find(function (x) { return x.id === id; });
@@ -1364,21 +1369,6 @@ button.blog-tit:hover{transform:translateX(5px)}
     abrirLector();
   }
 
-  // La pantalla que aparece cuando el destino está trabado. Queda anotado a
-  // dónde quería ir, así que al acertar la clave entra solo, sin volver a
-  // buscarlo a mano.
-  var pendiente = null;
-  function pedirLaClave(destino, cerrojo) {
-    pendiente = destino;
-    $('#lec-cuerpo').innerHTML =
-      '<h1 class="lec-tit">' + esc(tituloDe(destino)) + '</h1>' +
-      '<p class="lec-bajada">En obras · hace falta la clave</p>' +
-      '<div class="lec-bloque"><p class="lec-p">' +
-      esc(NOTAS[cerrojo] || NOTA_POR_DEFECTO) + '</p>' +
-      '<button class="lec-enlace lec-llave" data-clave="1">Escribir la clave</button></div>';
-    abrirLector();
-  }
-
   function abrirLector() {
     $('#lector').classList.add('abierto');
     $('#lector').setAttribute('aria-hidden', 'false');
@@ -1396,10 +1386,6 @@ button.blog-tit:hover{transform:translateX(5px)}
 
   // los puentes entre secciones se resuelven sin cerrar el lector
   $('#lec-cuerpo').addEventListener('click', function (ev) {
-    if (ev.target.closest('[data-clave]')) {
-      $('#puerta').classList.add('abierta'); $('#clave').focus();
-      return;
-    }
     var b = ev.target.closest('[data-ir]');
     if (b) leer(b.dataset.ir);
   });
@@ -1631,16 +1617,7 @@ button.blog-tit:hover{transform:translateX(5px)}
       $('#puerta-error').textContent = '';
       if (abiertos.secreto) destapar();
       marcarTrabas();
-      var aDonde = pendiente, c = aDonde ? cerrojoDe(aDonde) : null;
-      if (c && abiertos[c]) {
-        pendiente = null;
-        if (aDonde.indexOf('carpeta:') === 0) {
-          cerrarLector();
-          var hj = abierta ? $('#hoja-' + abierta) : null;
-          if (hj) verNivel(hj, aDonde.slice(8));
-        } else { leer(aDonde); }
-      }
-      else if (abiertos.velado && $('#lector').classList.contains('abierto')) leer('bio');
+      if (abiertos.velado && $('#lector').classList.contains('abierto')) leer('bio');
       probando = false;
       return;
     }
