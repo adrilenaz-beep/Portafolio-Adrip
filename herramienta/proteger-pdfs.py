@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Le pone clave a los PDF de la PBFCC, con cifrado AES de 256 bits.
+Le pone clave a los PDF de encargos, con cifrado AES de 256 bits. Hoy son los
+de la PBFCC y los de ICE Ingenieros, cada uno en su carpeta dentro de obra/.
 
 El archivo que queda en el servidor es ilegible sin la clave. No es una
 pantalla que tape el contenido, es el contenido cifrado, así que da lo mismo
@@ -24,7 +25,8 @@ except ImportError:
 
 SUFIJO = '-protegido.pdf'
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CARPETA = os.path.join(RAIZ, 'obra', 'pbfcc')
+# cada carpeta guarda los documentos de un encargo
+CARPETAS = [os.path.join(RAIZ, 'obra', c) for c in ('pbfcc', 'ice')]
 
 
 def normal(t):
@@ -45,19 +47,17 @@ def fuerza(c):
 
 
 def main():
-    print('\n  PROTEGER LOS PDF DE LA PBFCC')
+    print('\n  PROTEGER LOS PDF DE LOS ENCARGOS')
     print('  ' + '-' * 46)
 
-    if not os.path.isdir(CARPETA):
-        print('\n  No encuentro la carpeta\n     %s\n' % CARPETA); sys.exit(1)
-
-    todos = [r for r in sorted(glob.glob(os.path.join(CARPETA, '*.pdf')))
+    todos = [r for c in CARPETAS if os.path.isdir(c)
+             for r in sorted(glob.glob(os.path.join(c, '*.pdf')))
              if not r.endswith(SUFIJO)]
     if not todos:
-        print('\n  No hay ningún PDF original en obra/pbfcc\n'); sys.exit(1)
+        print('\n  No hay ningún PDF original en obra/pbfcc ni en obra/ice\n'); sys.exit(1)
 
     for r in todos:
-        print('  a proteger   %s' % os.path.basename(r))
+        print('  a proteger   %s/%s' % (os.path.basename(os.path.dirname(r)), os.path.basename(r)))
     abiertos = todos
 
     print('\n  Elegí una clave para abrirlos. No se guarda en ningún lado,')

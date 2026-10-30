@@ -20,7 +20,7 @@ lanzador, no se le documenta un comando.
 | 1 ORDENAR LA OBRA | secciones y piezas del portafolio |
 | 2 VER LA WEB | abre el sitio publicado |
 | 3 VER LA WEB EN MI MAC | vista local, con rangos y tipos MIME correctos |
-| 4 PROTEGER LOS PDF | cifra los PDF de la PBFCC con AES-256 |
+| 4 PROTEGER LOS PDF | cifra los PDF de los encargos, PBFCC e ICE, con AES-256 |
 | 5 GUARDAR LO RESERVADO | cifra el material que no se publica, guarda solo |
 | 6 ESCRIBIR EN EL BLOG | escribe, ordena y publica entradas |
 | 7 LA CLAVE DEL SITIO | la cortina de entrada y las claves de cada sección trabada |
@@ -74,6 +74,7 @@ cualquiera (`hayMapa`, `hayPerfil`, `hayObras`, `hayBlog`).
 | `portafolio-datos.js` | `GRUPOS`, `SECCIONES`, `OBRAS` | lanzador 1 |
 | `contenido.js` | `PERFIL` y `MAPA` | a mano |
 | `arte.js` | `ARTE`, los proyectos artísticos | a mano |
+| `hilos.js` | `HILOS`, los temas que cruzan el sitio | a mano |
 | `blog.js` | `BLOG` | lanzador 6 |
 | `proyectos.js` | `PROYECTOS`, solo lo usa `obra.html` | a mano |
 | `derivadas.js` | medida real y versiones chicas de cada imagen | solo |
@@ -92,6 +93,38 @@ tres formas, el prefijo `arte:<id>`, el prefijo `blog:<id>`, y todo lo demás po
 Cualquier elemento con `data-ir="<destino>"` dentro del lector salta a ese
 destino sin cerrarlo. Así funcionan los puentes entre secciones que comparten una
 obra, por ejemplo La Ramona con Periodismo gráfico.
+
+Desde el 2026-10-30 hay dos formas más. `hilo:<id>` abre la página de un hilo, y
+cualquier destino puede llevar **ancla**, `cv#e-ice`, que baja hasta esa entrada
+y la marca un instante. Las anclas que existen son `o-<obra>` en las páginas del
+portafolio, `e-<experiencia>` y `f-<formación>` en `cv`, `a-<id>` en `articulos`
+y `x-<id>` en `voluntariado` y `distinciones`. Por eso las entradas de
+`contenido.js` llevan `id`.
+
+### Los hilos
+
+Reemplazan a las etiquetas, que se veían en cajitas y no llevaban a ningún lado.
+Él las sacó por eso, dijo que se veían de plantilla. **Las etiquetas siguen en
+`OBRAS`** porque el lanzador 1 las usa para ordenar, pero el sitio ya no las
+muestra. No volver a dibujarlas.
+
+Un hilo junta lo que vive en lugares distintos, una obra del portafolio, una
+entrada de la trayectoria, una ponencia. Se arman a mano en `hilos.js`, que
+explica arriba cómo se nombra cada cosa. Aparecen en tres lugares, la rama
+`HILOS.` del portafolio en el escritorio, una línea «Hilos» al pie de cada obra
+y entrada, y arriba de cada página de sección.
+
+Dos reglas. **Lo trabado o escondido no aparece en ningún hilo** hasta que se
+abra, así un hilo nunca es la puerta trasera de una traba. Y **un hilo con menos
+de dos cosas visibles no se muestra**, porque un hilo que lleva a una sola cosa
+no cruza nada. Los contextos de cada hilo los decide él.
+
+### Los documentos de una obra
+
+Una obra puede llevar `doc`, uno solo, o `docs`, una lista. Cada uno con `src`,
+`paginas`, `nombre` y `clave`. Se leen «Leer el diagnóstico, 9 páginas» y el
+aviso de que pide clave sale una sola vez. Los PDF con clave se suben solo en su
+versión `-protegido.pdf`, los originales están en `.gitignore`.
 
 ---
 
@@ -135,7 +168,9 @@ navegador y nunca sale de su máquina.
 ### La cortina de la portada
 
 Desde el 2026-09-30 el sitio entero puede quedar detrás de una pantalla negra
-que pide la clave, antes del escritorio. Es **una cortina, no una cerradura**,
+que pide la clave, antes del escritorio. **El 2026-10-30 la sacó**, con la opción
+2 del lanzador 7, y el sitio está abierto. El mecanismo sigue ahí para cuando la
+quiera de vuelta. Es **una cortina, no una cerradura**,
 y así hay que nombrarla siempre. El contenido viaja igual dentro de
 `contenido.js`, `arte.js` y las imágenes, así que quien mire el código lo
 encuentra sin la clave. Sirve para que nadie entre de casualidad antes del
@@ -233,6 +268,14 @@ Igual que lo velado, **tapa a la vista**. Los datos de la sección viajan en los
 archivos del sitio. Es un freno para que nadie entre de casualidad antes de
 tiempo, no una caja fuerte.
 
+## La medida del texto
+
+Lo pidió el 2026-10-30. El texto corrido va **justificado y con corte de
+palabra**, `text-align:justify` con `hyphens:auto`, para que no queden líneas
+largas seguidas de una cortita. Los títulos van con `text-wrap:balance` y los
+textos chicos que no se justifican con `text-wrap:pretty`. El cuerpo va en
+peso 400, el 300 aplastado no se leía.
+
 ## La anchura de la letra
 
 Todo el texto del sitio va **aplastado al 75%**, que es lo que en Illustrator
@@ -290,9 +333,18 @@ al lado del nombre.
 
 Se lee **como un documento y no como una galería**, y eso es a propósito, lo
 pidió el 2026-09-30 porque quería que esa sección se sintiera otro lugar.
-Margen numerado, filete al costado, los estados en pastilla llena, y **el
+Margen numerado, filete al costado, el estado en versalitas sueltas, y **el
 artículo publicado se da vuelta entero**, campo por tinta. Es el contraste más
 fuerte que tiene el sitio sin inventarle un color nuevo.
+
+Desde el 2026-10-30 `articulos` va **partido por lo que es cada trabajo**,
+Publicación, Ponencias y Tesis de grado, cada grupo con su título grande y su
+filete. Antes los sellos solos se confundían al leer. El grupo sale del campo
+`tipo` de cada entrada de `PERFIL.investigacion` y la lista vive en `TIPOS_ACA`.
+Una entrada con un tipo que no está ahí cae en «Otros», no se pierde.
+
+Los estados y los sellos iban en pastilla negra y los sacó junto con las
+etiquetas. **Ningún texto metido en una caja** que no sea un botón.
 
 Lo activa la clase `lec-aca` en `#lec-cuerpo`, que pone la bandera `aca` del
 `leer()`. Los tres destinos académicos, `articulos`, `voluntariado` y

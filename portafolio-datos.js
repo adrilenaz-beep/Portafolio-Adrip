@@ -98,7 +98,7 @@ const SECCIONES = [
  {
   "id": "branding",
   "titulo": "Identidad · Branding",
-  "cuenta": "7 proyectos",
+  "cuenta": "8 proyectos",
   "oculta": false,
   "abierta": false,
   "aMano": false,
@@ -1509,6 +1509,59 @@ const OBRAS = [
    {
     "src": "https://res.cloudinary.com/dmvmqykud/image/upload/v1775597179/Captura_de_pantalla_2026-04-07_a_la_s_5.19.39_p._m._tqkehj.png",
     "alt": "Composición de marca"
+   }
+  ]
+ },
+ {
+  "id": "ice-ingenieros",
+  "seccion": "branding",
+  "fecha": "2024",
+  "titulo": "ICE Ingenieros · Diagnóstico de marca",
+  "nota": "Pasantía en una empresa boliviana fundada en 1968 para obras de ingeniería, que hoy construye y vende inmuebles. Primero el diagnóstico de la marca y el análisis de la competencia y de los medios, los de la empresa y los ajenos. Después una guía de construcción para el logotipo, que hasta entonces salía distinto en cada aplicación, y la presentación de la estrategia de branding ante la empresa.",
+  "layout": "2col",
+  "tags": [
+   "Branding",
+   "Diagnóstico",
+   "Análisis de medios"
+  ],
+  "docs": [
+   {
+    "src": "obra/ice/diagnostico-branding-protegido.pdf",
+    "paginas": 9,
+    "clave": true,
+    "nombre": "el diagnóstico"
+   },
+   {
+    "src": "obra/ice/presentacion-branding-protegido.pdf",
+    "paginas": 27,
+    "clave": true,
+    "nombre": "la presentación"
+   }
+  ],
+  "imgs": [
+   {
+    "src": "obra/ice/branding-01-portada.jpg",
+    "alt": "Portada de la presentación"
+   },
+   {
+    "src": "obra/ice/branding-19-logotipo-antes-despues.jpg",
+    "alt": "El logotipo, antes y después"
+   },
+   {
+    "src": "obra/ice/branding-18-guia-logotipo.jpg",
+    "alt": "Guía de construcción del logotipo"
+   },
+   {
+    "src": "obra/ice/branding-20-inconsistencias.jpg",
+    "alt": "Usos inconsistentes de la marca"
+   },
+   {
+    "src": "obra/ice/branding-13-medios.jpg",
+    "alt": "Las redes de la empresa, análisis de medios"
+   },
+   {
+    "src": "obra/ice/branding-25-estrategia.jpg",
+    "alt": "Los pasos de la estrategia de branding"
    }
   ]
  },

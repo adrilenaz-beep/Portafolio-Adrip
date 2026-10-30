@@ -68,6 +68,7 @@ const PERFIL = {
  ],
  "experiencia": [
   {
+   "id": "pbfcc",
    "periodo": "Agosto 2026 → Septiembre 2026",
    "donde": "Plataforma Boliviana Frente al Cambio Climático — Cochabamba, BO",
    "tipo": "Pasantía",
@@ -89,6 +90,22 @@ const PERFIL = {
    ]
   },
   {
+   "id": "ice",
+   "periodo": "2024",
+   "donde": "ICE Ingenieros S.A. — Cochabamba, BO",
+   "tipo": "Pasantía",
+   "rol": "Diseñador Gráfico — Diseño de Marca",
+   "desc": "Diagnóstico de la marca de una empresa boliviana fundada en 1968 para obras de ingeniería, que hoy construye y vende inmuebles, y propuesta para ordenar su identidad visual.",
+   "puntos": [
+    "Diagnóstico de branding, con el concepto, la identidad, la conciencia, el capital y la influencia de la marca, y el recorrido de un cliente desde que busca vivienda hasta la posventa",
+    "Análisis de la competencia, cinco competidores directos y nueve indirectos, con un FODA de los principales y otro de la propia empresa",
+    "Análisis de medios de las redes de la empresa y de la competencia, presencia, frecuencia de publicación, calidad del contenido y respuesta del público",
+    "Guía de construcción del logotipo, para que se reproduzca igual en cada aplicación, y relevamiento de sus usos inconsistentes",
+    "Presentación de la estrategia de branding ante la empresa, con conceptos de marca, diagnóstico, elementos a estandarizar y referencias"
+   ]
+  },
+  {
+   "id": "opinion",
    "periodo": "Julio 2023 → Junio 2025",
    "donde": "Periódico Opinión — Cochabamba, BO",
    "tipo": "Dependencia",
@@ -112,6 +129,7 @@ const PERFIL = {
    ]
   },
   {
+   "id": "adrip",
    "periodo": "2022 → Presente",
    "donde": "ADRIP — Marca Creativa, Cochabamba, BO",
    "tipo": "Dirección Creativa",
@@ -135,6 +153,8 @@ const PERFIL = {
  ],
  "investigacion": [
   {
+   "id": "articulo-chixi",
+   "tipo": "publicacion",
    "titulo": "Cultura boliviana. Ch'ixi y abigarrado. Decolonialidad a través de la interpretación semiótica",
    "cuerpo": "<strong>Autores:</strong> Adriano Lenaz Zenteno y Laura Elena Bustos Quitón<br> <strong>DOI:</strong> <a href=\"https://doi.org/10.23881/idupbo.025.2-11e\" target=\"_blank\">https://doi.org/10.23881/idupbo.025.2-11e</a><br> <strong>Palabras clave:</strong> Diseño gráfico, Semiología, Cultura, Descolonización<br><br> <strong>Resumen:</strong> Este estudio aplica un enfoque cualitativo, descriptivo e interpretativo, utilizando el método semiótico propuesto por Umberto Eco y Roland Barthes para desentrañar los discursos ideológicos en la producción visual colonial. A través de una perspectiva descolonial, basada en Silvia Rivera Cusicanqui y Walter Mignolo. La investigación cuestiona las estructuras de poder coloniales inscritas en las obras pictóricas virreinales y su influencia en la construcción de la identidad boliviana contemporánea.<br><br> <strong>Publicado en:</strong> Investigación &amp; Desarrollo, 25(2), 64–73. Universidad Privada Boliviana, 2026",
    "tags": [
@@ -146,6 +166,8 @@ const PERFIL = {
    "estado": "Publicado"
   },
   {
+   "id": "ponencia-hiphop",
+   "tipo": "ponencia",
    "titulo": "Hip hop ch'ixi. Prácticas culturales urbanas en Cochabamba",
    "cuerpo": "<strong>Evento:</strong> XXI Semana Internacional de Diseño en Palermo · XVI Congreso de Enseñanza del Diseño<br> <strong>Sede:</strong> Universidad de Palermo, Buenos Aires, Argentina<br> <strong>Fechas:</strong> 13 al 21 de julio de 2026<br><br> <strong>Resumen:</strong> Investigación que extiende el marco ch'ixi desarrollado en la tesis de grado. Estudia las expresiones del hiphop, el graffiti y el rap como prácticas visuales y discursivas que retratan realidades urbanas contemporáneas, donde se juntan sistemas de signos de identidad y resistencia locales y globales.<br><br> <strong>Marco de referencia:</strong> Rivera Cusicanqui, Zavaleta, Barthes, Peirce, De Certeau, Rose",
    "tags": [
@@ -157,6 +179,8 @@ const PERFIL = {
    "estado": "Presentado"
   },
   {
+   "id": "ponencia-simbolos",
+   "tipo": "ponencia",
    "titulo": "Deconstrucción de símbolos gráficos coloniales en Bolivia. Una aproximación desde el diseño gráfico crítico y la semiótica decolonial",
    "cuerpo": "<strong>Evento:</strong> XX Semana Internacional de Diseño en Palermo · XVI Congreso de Enseñanza del Diseño<br> <strong>Sede:</strong> Universidad de Palermo, Buenos Aires, Argentina<br> <strong>Fechas:</strong> 14 de julio al 1 de agosto de 2025<br><br> <strong>Resumen:</strong> Análisis crítico de los símbolos gráficos coloniales desde la teoría del diseño, la semiótica y el pensamiento decolonial. La presentación propone el diseño gráfico como una disciplina capaz de producir conocimiento crítico sobre la cultura visual latinoamericana.",
    "tags": [
@@ -168,6 +192,8 @@ const PERFIL = {
    "estado": "Presentado"
   },
   {
+   "id": "tesis",
+   "tipo": "tesis",
    "titulo": "La cultura como ch'ixi. Vanguardia por medio de la interpretación y la descolonización de signos gráficos en obras coloniales del Virreinato del Perú",
    "cuerpo": "<strong>Institución:</strong> Universidad Privada Boliviana, Cochabamba<br> <strong>Grado:</strong> Licenciatura en Diseño Gráfico, 2020 a 2026<br><br> <strong>Resumen:</strong> Análisis crítico de los símbolos gráficos presentes en obras coloniales mediante herramientas de la semiótica y los estudios decoloniales. El estudio propone nuevas interpretaciones sobre la construcción visual de la identidad latinoamericana y plantea posibilidades de aplicación de estos enfoques dentro del diseño gráfico contemporáneo.<br><br> <strong>Marco de referencia:</strong> Gisbert y Mesa, Alcalá y Brown, Rivera Cusicanqui, Zavaleta, Mignolo, Barthes, Peirce, Eco",
    "tags": [
@@ -191,36 +217,43 @@ const PERFIL = {
    "sello": "Intercambio"
   },
   {
+   "id": "mediacion-museo",
    "anio": "2024 octubre",
    "texto": "Participación como mediador cultural durante la 17ª Feria Internacional del Libro de Cochabamba, representando al Museo Nacional de Arte. Interacción y explicación de contenidos artísticos y culturales al público.",
    "sello": "Mediación"
   },
   {
+   "id": "beca-connectas",
    "anio": "2024",
    "texto": "Seleccionado para el programa internacional CONNECTAS de fortalecimiento del periodismo de investigación en América Latina, en un proyecto colaborativo con el periódico Opinión. En el reportaje «Cuarteles de la muerte. El lado oscuro del servicio militar en Bolivia» estuvo a cargo de la construcción gráfica de los recursos visuales, con ilustración editorial, diseño y comunicación visual al servicio de la narrativa periodística.",
    "sello": "Beca"
   },
   {
+   "id": "masterclass-stickers",
    "anio": "2025 abril",
    "texto": "Dictado presencial en la Universidad Privada Boliviana sobre la historia y evolución gráfica/material de los stickers. Evento transmitido en vivo para La Paz.",
    "sello": "Masterclass"
   },
   {
+   "id": "ponente-2025",
    "anio": "2025 julio",
    "texto": "XX Semana Internacional de Diseño en Palermo, XVI Congreso de Enseñanza del Diseño. Universidad de Palermo, Buenos Aires. Presentación de «Deconstrucción de símbolos gráficos coloniales en Bolivia», una aproximación desde el diseño gráfico crítico y la semiótica decolonial.",
    "sello": "Ponente"
   },
   {
+   "id": "ponente-2026",
    "anio": "2026 julio",
    "texto": "XXI Semana Internacional de Diseño en Palermo, XVI Congreso de Enseñanza del Diseño. Universidad de Palermo, Buenos Aires, del 13 al 21 de julio. Presentación de «Hip hop ch'ixi. Prácticas culturales urbanas en Cochabamba», que extiende el marco ch'ixi de la tesis de grado.",
    "sello": "Ponente"
   },
   {
+   "id": "titulacion",
    "anio": "2026",
    "texto": "Licenciatura en Diseño Gráfico por la Universidad Privada Boliviana. Trabajo de grado «La cultura como ch'ixi. Vanguardia por medio de la interpretación y la descolonización de signos gráficos en obras coloniales del Virreinato del Perú», defendido.",
    "sello": "Titulación"
   },
   {
+   "id": "triple-impacto",
    "anio": "2026 agosto",
    "texto": "Curso de 21 horas académicas en Formación Continua de la Universidad Privada Boliviana, del 3 al 7 de agosto, en torno a los proyectos de triple impacto, económico, social y ambiental. La participación derivó en la vinculación con la Plataforma Boliviana Frente al Cambio Climático.",
    "sello": "Formación"
@@ -228,6 +261,7 @@ const PERFIL = {
  ],
  "formacion": [
   {
+   "id": "licenciatura",
    "titulo": "Licenciatura en Diseño Gráfico",
    "donde": "Universidad Privada Boliviana · Cochabamba, Bolivia",
    "periodo": "2020 → 2026",
@@ -235,6 +269,7 @@ const PERFIL = {
    "refs": "Gisbert & Mesa · Alcalá & Brown · Rivera · Zavaleta · Mignolo · Barthes · Peirce · Eco"
   },
   {
+   "id": "triple-impacto-curso",
    "titulo": "Triple Impact in Action",
    "donde": "Formación Continua · Universidad Privada Boliviana · Cochabamba, Bolivia",
    "periodo": "Agosto 2026",
