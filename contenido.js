@@ -218,45 +218,59 @@ const PERFIL = {
   },
   {
    "id": "mediacion-museo",
+   "titulo": "Mediación en la Feria Internacional del Libro",
    "anio": "2024 octubre",
    "texto": "Participación como mediador cultural durante la 17ª Feria Internacional del Libro de Cochabamba, representando al Museo Nacional de Arte. Interacción y explicación de contenidos artísticos y culturales al público.",
    "sello": "Mediación"
   },
   {
    "id": "beca-connectas",
+   "titulo": "Beca CONNECTAS",
    "anio": "2024",
    "texto": "Seleccionado para el programa internacional CONNECTAS de fortalecimiento del periodismo de investigación en América Latina, en un proyecto colaborativo con el periódico Opinión. En el reportaje «Cuarteles de la muerte. El lado oscuro del servicio militar en Bolivia» estuvo a cargo de la construcción gráfica de los recursos visuales, con ilustración editorial, diseño y comunicación visual al servicio de la narrativa periodística.",
    "sello": "Beca"
   },
   {
    "id": "masterclass-stickers",
+   "titulo": "Masterclass sobre stickers",
    "anio": "2025 abril",
    "texto": "Dictado presencial en la Universidad Privada Boliviana sobre la historia y evolución gráfica/material de los stickers. Evento transmitido en vivo para La Paz.",
    "sello": "Masterclass"
   },
   {
    "id": "ponente-2025",
+   "titulo": "Semana Internacional de Diseño en Palermo, 2025",
    "anio": "2025 julio",
    "texto": "XX Semana Internacional de Diseño en Palermo, XVI Congreso de Enseñanza del Diseño. Universidad de Palermo, Buenos Aires. Presentación de «Deconstrucción de símbolos gráficos coloniales en Bolivia», una aproximación desde el diseño gráfico crítico y la semiótica decolonial.",
    "sello": "Ponente"
   },
   {
    "id": "ponente-2026",
+   "titulo": "Semana Internacional de Diseño en Palermo, 2026",
    "anio": "2026 julio",
    "texto": "XXI Semana Internacional de Diseño en Palermo, XVI Congreso de Enseñanza del Diseño. Universidad de Palermo, Buenos Aires, del 13 al 21 de julio. Presentación de «Hip hop ch'ixi. Prácticas culturales urbanas en Cochabamba», que extiende el marco ch'ixi de la tesis de grado.",
    "sello": "Ponente"
   },
   {
    "id": "titulacion",
+   "titulo": "Defensa del trabajo de grado",
    "anio": "2026",
    "texto": "Licenciatura en Diseño Gráfico por la Universidad Privada Boliviana. Trabajo de grado «La cultura como ch'ixi. Vanguardia por medio de la interpretación y la descolonización de signos gráficos en obras coloniales del Virreinato del Perú», defendido.",
    "sello": "Titulación"
   },
   {
    "id": "triple-impacto",
+   "titulo": "Triple Impact in Action",
    "anio": "2026 agosto",
    "texto": "Curso de 21 horas académicas en Formación Continua de la Universidad Privada Boliviana, del 3 al 7 de agosto, en torno a los proyectos de triple impacto, económico, social y ambiental. La participación derivó en la vinculación con la Plataforma Boliviana Frente al Cambio Climático.",
    "sello": "Formación"
+  },
+  {
+   "id": "premio-ensayo",
+   "titulo": "Premio Departamental de Ensayo «Gustavo Rodríguez Ostria»",
+   "anio": "2026 octubre",
+   "texto": "Ganador del premio único de la cuarta edición, convocada por la Gobernación de Cochabamba, con el ensayo «La pantalla: fútbol, espejismo e identidad en Bolivia», elegido entre 17 obras postuladas.",
+   "sello": "Premio"
   }
  ],
  "formacion": [

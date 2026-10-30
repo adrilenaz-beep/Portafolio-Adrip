@@ -94,9 +94,8 @@ Cualquier elemento con `data-ir="<destino>"` dentro del lector salta a ese
 destino sin cerrarlo. Así funcionan los puentes entre secciones que comparten una
 obra, por ejemplo La Ramona con Periodismo gráfico.
 
-Desde el 2026-10-30 hay dos formas más. `hilo:<id>` abre la página de un hilo, y
-cualquier destino puede llevar **ancla**, `cv#e-ice`, que baja hasta esa entrada
-y la marca un instante. Las anclas que existen son `o-<obra>` en las páginas del
+Desde el 2026-10-30 cualquier destino puede llevar **ancla**, `cv#e-ice`, que
+baja hasta esa entrada y la marca un instante. Las anclas que existen son `o-<obra>` en las páginas del
 portafolio, `e-<experiencia>` y `f-<formación>` en `cv`, `a-<id>` en `articulos`
 y `x-<id>` en `voluntariado` y `distinciones`. Por eso las entradas de
 `contenido.js` llevan `id`.
@@ -108,16 +107,29 @@ Reemplazan a las etiquetas, que se veían en cajitas y no llevaban a ningún lad
 `OBRAS`** porque el lanzador 1 las usa para ordenar, pero el sitio ya no las
 muestra. No volver a dibujarlas.
 
-Un hilo junta lo que vive en lugares distintos, una obra del portafolio, una
-entrada de la trayectoria, una ponencia. Se arman a mano en `hilos.js`, que
-explica arriba cómo se nombra cada cosa. Aparecen en tres lugares, la rama
-`HILOS.` del portafolio en el escritorio, una línea «Hilos» al pie de cada obra
-y entrada, y arriba de cada página de sección.
+Un hilo es lo que comparten cosas que el sitio presenta separadas, una obra del
+portafolio, una entrada de la trayectoria, una ponencia. Se arman a mano en
+`hilos.js`, que explica arriba cómo se nombra cada cosa.
 
-Dos reglas. **Lo trabado o escondido no aparece en ningún hilo** hasta que se
-abra, así un hilo nunca es la puerta trasera de una traba. Y **un hilo con menos
-de dos cosas visibles no se muestra**, porque un hilo que lleva a una sola cosa
-no cruza nada. Los contextos de cada hilo los decide él.
+**Un hilo no es un lugar.** La primera versión tenía rama `HILOS.` en el
+escritorio y una página por hilo que juntaba todo, y la hizo rehacer el mismo
+día. Dijo que no tenía que ser una sección aparte ni un lugar donde encontrar
+todo, sino algo que encontrás donde estás y te conecta con el resto. Por eso al
+pie de cada obra, proyecto y entrada sale **«Se cruza con»**, el nombre de lo que
+comparten y las otras cosas con su enlace derecho a donde viven. Una sección
+entera lo lleva al final de su página. No volver a hacerles página ni rama.
+
+Lo arma `htmlCruces()`. Reglas. **Lo trabado o escondido no aparece** hasta que
+se abra, así un cruce nunca es la puerta trasera de una traba. **Lo de la misma
+página no se nombra**, ya está a la vista, y para eso `leer()` anota
+`paginaActual`. **Una cosa se nombra una sola vez** aunque comparta dos hilos. Una
+sección entera sobra si ya se nombra una obra que vive en ella. Y el puente viejo
+de una obra (`enlace`) no se dibuja si un cruce ya lleva a esa página. Una obra
+con cruces no va a la hoja de contactos, se muestra entera. Los contextos de cada
+hilo los decide él.
+
+Las entradas de voluntariado y distinciones pueden llevar `titulo`, que sale como
+título de la ficha y es el nombre corto con que se las nombra en un cruce.
 
 ### Los documentos de una obra
 

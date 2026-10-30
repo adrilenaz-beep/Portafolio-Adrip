@@ -1,9 +1,15 @@
-// Hilos. Cruzan el sitio por tema y juntan lo que vive en lugares distintos,
-// el portafolio, la obra, la trayectoria y lo académico. Reemplazan a las
-// etiquetas, que se veían pero no llevaban a ningún lado.
+// Hilos. Lo que comparten cosas que el sitio presenta separadas, una obra del
+// portafolio, una entrada de la trayectoria, una ponencia, una distinción.
+// Reemplazan a las etiquetas, que se veían pero no llevaban a ningún lado.
 //
-// Cada hilo tiene un id, el nombre que se lee, una frase corta y la lista de
-// lo que junta. Cada cosa se nombra con su tipo y su id.
+// Un hilo no es un lugar. No tiene página ni rama en el escritorio. Al pie de
+// cada cosa aparece «Se cruza con» y, por cada hilo que pasa por ella, las
+// otras cosas del hilo que viven en otro lugar del sitio, cada una con su
+// enlace derecho a donde está. Lo de la misma página no se repite, ya está a
+// la vista, y una cosa que comparte dos hilos se nombra una sola vez.
+//
+// Cada hilo tiene un id, el nombre de lo que comparten y la lista de lo que
+// junta. Cada cosa se nombra con su tipo y su id.
 //
 //   seccion:<id>   una sección entera del portafolio, en portafolio-datos.js
 //   obra:<id>      una obra del portafolio, en portafolio-datos.js
@@ -14,15 +20,13 @@
 //   extra:<id>     una entrada de voluntariado o distinciones, en contenido.js
 //   blog:<id>      una entrada del blog
 //
-// Lo que está trabado o escondido no aparece en ningún hilo hasta que se
-// abra, y un hilo con menos de dos cosas visibles no se muestra.
+// Lo que está trabado o escondido no aparece en ningún cruce hasta que se abra.
 // El orden de la lista es el orden en que se leen.
 
 const HILOS = [
  {
   "id": "opinion",
   "nombre": "Opinión",
-  "texto": "El periódico de Cochabamba, de 2023 a 2025. Lo diario, el reportaje de investigación, el suplemento y los encargos de la casa.",
   "con": [
    "exp:opinion",
    "seccion:periodismo",
@@ -36,7 +40,6 @@ const HILOS = [
  {
   "id": "sociedad-civil",
   "nombre": "Sociedad civil",
-  "texto": "Trabajo para organizaciones que hacen incidencia, en clima y en género.",
   "con": [
    "exp:pbfcc",
    "obra:pbfcc-compromisos",
@@ -51,7 +54,6 @@ const HILOS = [
  {
   "id": "diagnostico",
   "nombre": "Diagnóstico y medios",
-  "texto": "Leer cómo se ve y cómo comunica una institución antes de proponerle nada. Auditorías de redes, análisis de competencia y de marca.",
   "con": [
    "obra:ice-ingenieros",
    "exp:ice",
@@ -62,7 +64,6 @@ const HILOS = [
  {
   "id": "marca",
   "nombre": "Marca",
-  "texto": "Identidades por encargo y la marca propia.",
   "con": [
    "seccion:branding",
    "exp:ice",
@@ -72,7 +73,6 @@ const HILOS = [
  {
   "id": "datos",
   "nombre": "Datos",
-  "texto": "Cifras puestas en imagen, para prensa y para investigación.",
   "con": [
    "obra:cuarteles-de-la-muerte",
    "obra:pbfcc-biocombustibles",
@@ -81,13 +81,13 @@ const HILOS = [
  },
  {
   "id": "chixi",
-  "nombre": "Ch'ixi y decolonialidad",
-  "texto": "La línea de investigación que sale de la tesis de grado y sigue en el artículo y las ponencias.",
+  "nombre": "Lo ch'ixi",
   "con": [
    "aca:tesis",
    "aca:articulo-chixi",
    "aca:ponencia-simbolos",
    "aca:ponencia-hiphop",
+   "extra:premio-ensayo",
    "extra:ponente-2025",
    "extra:ponente-2026",
    "extra:titulacion",
@@ -97,7 +97,6 @@ const HILOS = [
  {
   "id": "calle",
   "nombre": "La calle",
-  "texto": "Lo que se pega, se pinta y se reparte en Cochabamba.",
   "con": [
    "arte:stickers",
    "arte:rosa-embelleciendo",
